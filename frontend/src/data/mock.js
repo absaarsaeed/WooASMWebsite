@@ -34,7 +34,7 @@ export const features = [
     icon: 'BarChart3',
     title: 'Store Insights Dashboard',
     tagline: 'Real-time Pulse of Your Store',
-    shortDesc: 'Real-time dashboard showing exactly what's working and what needs attention.',
+    shortDesc: 'Real-time dashboard showing exactly what is working and what needs attention.',
     category: 'core',
     plans: ['free', 'starter', 'professional'],
     seo: {
@@ -47,7 +47,7 @@ export const features = [
     id: 'health-score',
     icon: 'Heart',
     title: 'Store Health Score',
-    tagline: 'Your Store's Vital Signs in One Number',
+    tagline: 'Your Store Vital Signs in One Number',
     shortDesc: 'A single number (0-100) that tells you how your store is performing across all metrics.',
     category: 'core',
     plans: ['free', 'starter', 'professional'],
@@ -132,12 +132,12 @@ export const features = [
     icon: 'Eye',
     title: 'Competitor Price Watch',
     tagline: 'Track Competitor Pricing in Real-Time',
-    shortDesc: 'Track competitor pricing and get alerts when you're being undercut.',
+    shortDesc: 'Track competitor pricing and get alerts when you are being undercut.',
     category: 'growth',
     plans: ['professional'],
     seo: {
       title: 'Competitor Price Watch - Real-time Price Monitoring',
-      description: 'Monitor competitor prices in real-time. Get alerts when you're being undercut and optimize your pricing strategy.',
+      description: 'Monitor competitor prices in real-time. Get alerts when you are being undercut and optimize your pricing strategy.',
       keywords: 'competitor pricing, price monitoring, competitive analysis, WooCommerce pricing, price alerts'
     }
   },
@@ -207,7 +207,7 @@ export const features = [
     plans: ['starter', 'professional'],
     seo: {
       title: 'AI Memory System - Personalized AI Knowledge',
-      description: 'Train the AI with your store's unique knowledge. Policies, products, and brand voice for personalized, accurate responses.',
+      description: 'Train the AI with your store unique knowledge. Policies, products, and brand voice for personalized, accurate responses.',
       keywords: 'AI training, store knowledge, brand voice, WooCommerce AI, personalized AI'
     }
   },
@@ -231,10 +231,10 @@ export const features = [
 export const featureContent = {
   'ai-assistant': {
     heroImage: 'https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=1200&h=600&fit=crop',
-    problem: 'Running an ecommerce store means constantly jumping between dashboards, spreadsheets, and admin panels. Finding a simple answer like "what's my best seller this month?" requires clicking through multiple screens, exporting data, and doing manual analysis. Store owners waste 10+ hours per week just trying to understand what's happening in their own store.',
-    solution: 'WooASM's AI Assistant lets you simply ask. Type "what's my best seller this month?" and get an instant, accurate answer with context. No more dashboard diving. But it doesn't stop at questions. The AI can also take actions — create coupons, update prices, adjust inventory — all through natural conversation. And every action requires your confirmation first.',
+    problem: 'Running an ecommerce store means constantly jumping between dashboards, spreadsheets, and admin panels. Finding a simple answer like "what is my best seller this month?" requires clicking through multiple screens, exporting data, and doing manual analysis. Store owners waste 10+ hours per week just trying to understand what is happening in their own store.',
+    solution: 'WooASM AI Assistant lets you simply ask. Type "what is my best seller this month?" and get an instant, accurate answer with context. No more dashboard diving. But it does not stop at questions. The AI can also take actions — create coupons, update prices, adjust inventory — all through natural conversation. And every action requires your confirmation first.',
     howItWorks: [
-      { step: 1, title: 'Ask Anything', description: 'Type your question in plain English. The AI understands context and intent, whether you're asking about sales, inventory, or customer data.' },
+      { step: 1, title: 'Ask Anything', description: 'Type your question in plain English. The AI understands context and intent, whether you are asking about sales, inventory, or customer data.' },
       { step: 2, title: 'Get Instant Answers', description: 'Receive accurate, data-backed responses pulled directly from your WooCommerce data. See charts, tables, and summaries as needed.' },
       { step: 3, title: 'Request Actions', description: 'Want to make changes? Simply ask. "Create a 20% coupon" or "Update price of Blue Widget to $29.99".' },
       { step: 4, title: 'Review & Confirm', description: 'Every action shows a detailed plan first. You see exactly what will happen before confirming. One click to execute, one click to restore if needed.' }
@@ -250,21 +250,21 @@ export const featureContent = {
       'Complete action logging with one-click restore'
     ],
     useCases: [
-      { title: 'Morning Store Check', example: '"Give me a summary of yesterday's sales"', result: 'Get revenue, orders, top products, and any issues that need attention.' },
-      { title: 'Inventory Management', example: '"Show products running low on stock"', result: 'See all products below threshold with reorder recommendations.' },
-      { title: 'Quick Actions', example: '"Create a flash sale coupon for 25% off"', result: 'AI creates the coupon with your confirmation before going live.' },
-      { title: 'Customer Insights', example: '"Who are my top 10 customers this month?"', result: 'See customer rankings with total spend and order history.' }
+      { title: 'Morning Store Check', example: 'Give me a summary of yesterday sales', result: 'Get revenue, orders, top products, and any issues that need attention.' },
+      { title: 'Inventory Management', example: 'Show products running low on stock', result: 'See all products below threshold with reorder recommendations.' },
+      { title: 'Quick Actions', example: 'Create a flash sale coupon for 25% off', result: 'AI creates the coupon with your confirmation before going live.' },
+      { title: 'Customer Insights', example: 'Who are my top 10 customers this month?', result: 'See customer rankings with total spend and order history.' }
     ],
     demoConversation: [
-      { role: 'user', message: 'What's my revenue this week compared to last week?' },
-      { role: 'ai', message: 'Your revenue this week is $4,230 — that's a 12% increase from last week ($3,775)! Here's the breakdown:\\n\\n📈 Orders: 67 (up from 58)\\n💰 Average Order Value: $63.13\\n⭐ Top Seller: Wireless Headphones Pro (23 sold)\\n\\nWould you like to see a daily breakdown or learn what's driving the increase?' }
+      { role: 'user', message: 'What is my revenue this week compared to last week?' },
+      { role: 'ai', message: 'Your revenue this week is $4,230 — that is a 12% increase from last week ($3,775)! Here is the breakdown:\n\n📈 Orders: 67 (up from 58)\n💰 Average Order Value: $63.13\n⭐ Top Seller: Wireless Headphones Pro (23 sold)\n\nWould you like to see a daily breakdown or learn what is driving the increase?' }
     ],
     relatedBlogs: ['ai-revolutionizing-woocommerce', 'chatbot-support-tips', 'product-descriptions-ai-vs-human']
   },
   'customer-chatbot': {
     heroImage: 'https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=1200&h=600&fit=crop',
-    problem: 'Customers have questions at all hours. "Do you ship to Canada?" "Is this jacket waterproof?" "What's your return policy?" Every unanswered question is a potential lost sale. But hiring 24/7 support is expensive, and generic chatbots give frustrating, irrelevant answers that damage your brand.',
-    solution: 'WooASM's Customer Chatbot is trained on YOUR store. It knows your products, your policies, and your brand voice. When a customer asks "Do you ship to Canada?", they get YOUR shipping policy — not a generic "Please contact support." The chatbot is product-aware, meaning it knows exactly which product the customer is viewing and can answer specific questions about it.',
+    problem: 'Customers have questions at all hours. "Do you ship to Canada?" "Is this jacket waterproof?" "What is your return policy?" Every unanswered question is a potential lost sale. But hiring 24/7 support is expensive, and generic chatbots give frustrating, irrelevant answers that damage your brand.',
+    solution: 'WooASM Customer Chatbot is trained on YOUR store. It knows your products, your policies, and your brand voice. When a customer asks "Do you ship to Canada?", they get YOUR shipping policy — not a generic "Please contact support." The chatbot is product-aware, meaning it knows exactly which product the customer is viewing and can answer specific questions about it.',
     howItWorks: [
       { step: 1, title: 'Enable & Customize', description: 'Turn on the chatbot from your WooASM dashboard. Customize colors, position, and welcome message to match your brand.' },
       { step: 2, title: 'Train with Knowledge', description: 'Add your store policies, FAQs, and product info to AI Memory. The more you add, the smarter your chatbot becomes.' },
@@ -273,8 +273,8 @@ export const featureContent = {
     ],
     capabilities: [
       'Product-aware responses based on the page customer is viewing',
-      'Multi-language support - responds in customer's language',
-      'Brand voice customization to match your store's tone',
+      'Multi-language support - responds in customer language',
+      'Brand voice customization to match your store tone',
       'Product recommendations in chat with direct links',
       'Order status lookups for logged-in customers',
       'Smart escalation to human support when needed',
@@ -282,21 +282,21 @@ export const featureContent = {
       'Complete conversation analytics'
     ],
     useCases: [
-      { title: 'Shipping Questions', example: '"Do you ship to Australia?"', result: 'Instant response with your exact shipping rates and delivery times to Australia.' },
-      { title: 'Product Questions', example: '"Is this bag waterproof?" (on product page)', result: 'Chatbot knows the product and gives specific answer about that bag's waterproof rating.' },
-      { title: 'Size Guidance', example: '"What size should I get if I'm usually a Medium?"', result: 'Responds with your size chart and any fit notes for that specific product.' },
-      { title: 'Policy Questions', example: '"Can I return this if it doesn't fit?"', result: 'Explains your return policy clearly with any conditions.' }
+      { title: 'Shipping Questions', example: 'Do you ship to Australia?', result: 'Instant response with your exact shipping rates and delivery times to Australia.' },
+      { title: 'Product Questions', example: 'Is this bag waterproof? (on product page)', result: 'Chatbot knows the product and gives specific answer about that bag waterproof rating.' },
+      { title: 'Size Guidance', example: 'What size should I get if I am usually a Medium?', result: 'Responds with your size chart and any fit notes for that specific product.' },
+      { title: 'Policy Questions', example: 'Can I return this if it does not fit?', result: 'Explains your return policy clearly with any conditions.' }
     ],
     demoConversation: [
       { role: 'user', message: 'Do you ship to Canada?' },
-      { role: 'ai', message: 'Yes! We ship to Canada 🇨🇦\\n\\n📦 Standard Shipping: 7-10 business days ($15)\\n🚀 Express Shipping: 3-5 business days ($35)\\n✨ Free shipping on orders over $100!\\n\\nIs there anything else I can help you with?' }
+      { role: 'ai', message: 'Yes! We ship to Canada 🇨🇦\n\n📦 Standard Shipping: 7-10 business days ($15)\n🚀 Express Shipping: 3-5 business days ($35)\n✨ Free shipping on orders over $100!\n\nIs there anything else I can help you with?' }
     ],
     relatedBlogs: ['chatbot-support-tips', 'ai-revolutionizing-woocommerce', 'store-health-deep-dive']
   },
   'content-studio': {
     heroImage: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1200&h=600&fit=crop',
-    problem: 'Writing product content is exhausting. For a store with 100 products, you need 100 product descriptions, 100 short descriptions, and 500+ product tags. At 15 minutes per product, that's 25+ hours of writing. And then you need to keep everything updated as products change.',
-    solution: 'WooASM's Content Studio generates high-quality content in seconds. Select a product, choose a content type, and click generate. The AI writes SEO-optimized content based on your product data. Click "Save to Product" and the content is automatically added to your WooCommerce product. No copy-pasting required.',
+    problem: 'Writing product content is exhausting. For a store with 100 products, you need 100 product descriptions, 100 short descriptions, and 500+ product tags. At 15 minutes per product, that is 25+ hours of writing. And then you need to keep everything updated as products change.',
+    solution: 'WooASM Content Studio generates high-quality content in seconds. Select a product, choose a content type, and click generate. The AI writes SEO-optimized content based on your product data. Click "Save to Product" and the content is automatically added to your WooCommerce product. No copy-pasting required.',
     howItWorks: [
       { step: 1, title: 'Select Content Type', description: 'Choose from descriptions, short descriptions, tags, or review summaries.' },
       { step: 2, title: 'Pick Your Product', description: 'Search and select any product from your catalog. The AI loads all product data.' },
@@ -321,14 +321,14 @@ export const featureContent = {
     ],
     demoConversation: [
       { role: 'user', message: 'Generate tags for "Wireless Bluetooth Headphones"' },
-      { role: 'ai', message: 'Generated 12 tags for Wireless Bluetooth Headphones:\\n\\nwireless, bluetooth, headphones, over-ear, noise-canceling, gaming, music, podcast, work-from-home, comfortable, long-battery, premium-audio\\n\\n[Save Tags to Product] [Regenerate]' }
+      { role: 'ai', message: 'Generated 12 tags for Wireless Bluetooth Headphones:\n\nwireless, bluetooth, headphones, over-ear, noise-canceling, gaming, music, podcast, work-from-home, comfortable, long-battery, premium-audio\n\n[Save Tags to Product] [Regenerate]' }
     ],
     relatedBlogs: ['product-descriptions-ai-vs-human', 'ai-revolutionizing-woocommerce', 'inventory-management-guide']
   },
   'health-score': {
     heroImage: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=600&fit=crop',
-    problem: 'How do you know if your store is healthy? Revenue is up, but conversion is down. Inventory is good, but customer retention is dropping. There's no single metric that tells you the whole picture. Without a holistic view, problems hide until they become crises.',
-    solution: 'WooASM's Health Score analyzes five key areas of your business and combines them into a single, easy-to-understand number from 0-100. Like a doctor's checkup for your store. When your score drops, you know exactly which area needs attention. When it goes up, you know your efforts are working.',
+    problem: 'How do you know if your store is healthy? Revenue is up, but conversion is down. Inventory is good, but customer retention is dropping. There is no single metric that tells you the whole picture. Without a holistic view, problems hide until they become crises.',
+    solution: 'WooASM Health Score analyzes five key areas of your business and combines them into a single, easy-to-understand number from 0-100. Like a doctor checkup for your store. When your score drops, you know exactly which area needs attention. When it goes up, you know your efforts are working.',
     howItWorks: [
       { step: 1, title: 'Automatic Calculation', description: 'WooASM continuously analyzes your store data across five key categories.' },
       { step: 2, title: 'Category Breakdown', description: 'See individual scores for Revenue, Conversion, Inventory, Customers, and Operations.' },
@@ -352,15 +352,15 @@ export const featureContent = {
       { title: 'Reporting', example: 'Monthly business review', result: 'Show stakeholders a clear picture of store health over time.' }
     ],
     demoConversation: [
-      { role: 'user', message: 'What's my store health score?' },
-      { role: 'ai', message: 'Your Store Health Score: 78/100 (Good ✅)\\n\\nCategory Breakdown:\\n💰 Revenue: 16/20\\n🛒 Conversion: 10/20 ⚠️\\n📦 Inventory: 18/20\\n👥 Customers: 16/20\\n⚡ Operations: 18/20\\n\\n⚠️ Conversion needs attention:\\nYour conversion rate (1.8%) is below industry average (2.5%).\\nRecommendation: Focus on product page optimization and checkout flow.' }
+      { role: 'user', message: 'What is my store health score?' },
+      { role: 'ai', message: 'Your Store Health Score: 78/100 (Good ✅)\n\nCategory Breakdown:\n💰 Revenue: 16/20\n🛒 Conversion: 10/20 ⚠️\n📦 Inventory: 18/20\n👥 Customers: 16/20\n⚡ Operations: 18/20\n\n⚠️ Conversion needs attention:\nYour conversion rate (1.8%) is below industry average (2.5%).\nRecommendation: Focus on product page optimization and checkout flow.' }
     ],
     relatedBlogs: ['store-health-deep-dive', 'inventory-management-guide', 'case-study-fashion-boutique']
   },
   'inventory-autopilot': {
     heroImage: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1200&h=600&fit=crop',
-    problem: 'Inventory is a constant headache. Stockouts mean lost sales and frustrated customers. Overstock means cash tied up in products that don't sell. Manual tracking takes hours of spreadsheet work. Most store owners are either running out of popular items or sitting on products that haven't sold in months.',
-    solution: 'WooASM's Inventory Autopilot uses AI to analyze your sales patterns, seasonality, and trends to predict exactly what you need to restock and when. Get alerts before you run out, find dead stock that's tying up cash, and make smarter purchasing decisions based on data.',
+    problem: 'Inventory is a constant headache. Stockouts mean lost sales and frustrated customers. Overstock means cash tied up in products that do not sell. Manual tracking takes hours of spreadsheet work. Most store owners are either running out of popular items or sitting on products that have not sold in months.',
+    solution: 'WooASM Inventory Autopilot uses AI to analyze your sales patterns, seasonality, and trends to predict exactly what you need to restock and when. Get alerts before you run out, find dead stock that is tying up cash, and make smarter purchasing decisions based on data.',
     howItWorks: [
       { step: 1, title: 'Connect Your Data', description: 'Inventory Autopilot analyzes your sales history, current stock, and product performance.' },
       { step: 2, title: 'AI Forecasting', description: 'Machine learning predicts future demand based on trends, seasonality, and historical patterns.' },
@@ -385,7 +385,7 @@ export const featureContent = {
     ],
     demoConversation: [
       { role: 'user', message: 'Show me products that need restocking' },
-      { role: 'ai', message: '🚨 Needs Restock Now (3 products):\\n\\n• Blue Widget: 3 left, runs out in 4 days\\n  → Suggested order: 50 units\\n\\n• Red Gadget: 5 left, runs out in 6 days\\n  → Suggested order: 30 units\\n\\n• Green Tool: 2 left, runs out in 2 days\\n  → Suggested order: 40 units\\n\\nWould you like me to generate a supplier order list?' }
+      { role: 'ai', message: '🚨 Needs Restock Now (3 products):\n\n• Blue Widget: 3 left, runs out in 4 days\n  → Suggested order: 50 units\n\n• Red Gadget: 5 left, runs out in 6 days\n  → Suggested order: 30 units\n\n• Green Tool: 2 left, runs out in 2 days\n  → Suggested order: 40 units\n\nWould you like me to generate a supplier order list?' }
     ],
     relatedBlogs: ['inventory-management-guide', 'ai-revolutionizing-woocommerce', 'case-study-fashion-boutique']
   }
@@ -474,7 +474,7 @@ export const pricingPlans = [
 export const testimonials = [
   {
     id: 1,
-    quote: "WooASM saved me 15 hours a week. I just ask 'what needs attention today' and it tells me exactly what to do. Game changer.",
+    quote: 'WooASM saved me 15 hours a week. I just ask "what needs attention today" and it tells me exactly what to do. Game changer.',
     author: 'Sarah M.',
     role: 'Fashion Boutique Owner',
     rating: 5,
@@ -482,7 +482,7 @@ export const testimonials = [
   },
   {
     id: 2,
-    quote: "The customer chatbot handles 70% of our support questions automatically. Our response time went from hours to seconds.",
+    quote: 'The customer chatbot handles 70% of our support questions automatically. Our response time went from hours to seconds.',
     author: 'James K.',
     role: 'Electronics Store',
     rating: 5,
@@ -490,7 +490,7 @@ export const testimonials = [
   },
   {
     id: 3,
-    quote: "I used to dread writing product descriptions. Now I generate them in seconds and they're better than what I wrote myself.",
+    quote: 'I used to dread writing product descriptions. Now I generate them in seconds and they are better than what I wrote myself.',
     author: 'Maria L.',
     role: 'Home Goods Store',
     rating: 5,
@@ -498,7 +498,7 @@ export const testimonials = [
   },
   {
     id: 4,
-    quote: "The inventory autopilot is incredible. I haven't had a single stockout since installing WooASM three months ago.",
+    quote: 'The inventory autopilot is incredible. I have not had a single stockout since installing WooASM three months ago.',
     author: 'David R.',
     role: 'Sports Equipment Store',
     rating: 5,
@@ -516,7 +516,7 @@ export const faqs = [
     answer: 'Absolutely. WooASM runs entirely within your WordPress installation. Your data never leaves your server except for API calls to OpenAI, which are encrypted and not stored.'
   },
   {
-    question: "What's the cost of using OpenAI's API?",
+    question: 'What is the cost of using OpenAI API?',
     answer: 'Most stores spend $5-20/month on API costs depending on usage. The time savings far outweigh this minimal expense.'
   },
   {
@@ -525,11 +525,11 @@ export const faqs = [
   },
   {
     question: 'Does it work with my theme/plugins?',
-    answer: "WooASM works with any WordPress theme and is compatible with all major WooCommerce extensions. It uses WordPress's native REST API."
+    answer: 'WooASM works with any WordPress theme and is compatible with all major WooCommerce extensions. It uses WordPress native REST API.'
   },
   {
     question: 'What if the AI makes a mistake?',
-    answer: "Every risky action requires your confirmation first. Plus, all actions are logged and can be restored with one click. You're always in control."
+    answer: 'Every risky action requires your confirmation first. Plus, all actions are logged and can be restored with one click. You are always in control.'
   }
 ];
 

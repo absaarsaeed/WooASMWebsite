@@ -1,10 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { useInView } from 'react-intersection-observer';
 import { ArrowRight, MessageSquare, Bot, BarChart3, Heart, Package, Users, FlaskConical, PenTool, TrendingUp, Eye, Star, Headphones, Shield, ClipboardList, Brain, Download } from 'lucide-react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
+import SEO from '../components/SEO';
 import { features } from '../data/mock';
 
 const iconMap = {
@@ -14,11 +14,6 @@ const iconMap = {
 };
 
 const FeaturesPage = () => {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1
-  });
-
   const categories = [
     { id: 'core', label: 'Core Intelligence', description: 'The brain behind your store management' },
     { id: 'customer', label: 'Customer Experience', description: 'Delight your customers at every touchpoint' },
@@ -29,6 +24,12 @@ const FeaturesPage = () => {
 
   return (
     <div className="min-h-screen">
+      <SEO
+        title="Features - 16 Powerful Tools for WooCommerce"
+        description="Discover all 16 powerful features of WooASM: AI Assistant, Customer Chatbot, Inventory Autopilot, Content Studio, and more. Everything you need to run a smarter store."
+        keywords="WooCommerce features, AI features, store management tools, ecommerce automation, inventory management, customer chatbot"
+        url="https://wooasm.ai/features"
+      />
       <Header />
       <main>
         {/* Hero Section */}
@@ -48,7 +49,7 @@ const FeaturesPage = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="text-xl text-gray-600 dark:text-gray-400"
+                className="text-xl text-gray-700 dark:text-gray-400"
               >
                 WooASM is packed with 16 powerful tools that work together seamlessly.
                 No bloat, no complexity — just intelligent features that save you time.
@@ -116,17 +117,17 @@ const FeaturesPage = () => {
                             <div className="mt-4 flex items-center justify-between">
                               <div className="flex gap-1">
                                 {feature.plans.includes('free') && (
-                                  <span className="px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs">
+                                  <span className="px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs">
                                     Free
                                   </span>
                                 )}
                                 {feature.plans.includes('starter') && !feature.plans.includes('free') && (
-                                  <span className="px-2 py-0.5 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 text-xs">
+                                  <span className="px-2 py-0.5 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 text-xs">
                                     Starter+
                                   </span>
                                 )}
                                 {feature.plans.length === 1 && feature.plans[0] === 'professional' && (
-                                  <span className="px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-xs">
+                                  <span className="px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 text-xs">
                                     Pro
                                   </span>
                                 )}

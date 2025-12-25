@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Check, X, ArrowRight, HelpCircle } from 'lucide-react';
+import { Check, X } from 'lucide-react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
+import SEO from '../components/SEO';
 import { pricingPlans, faqs } from '../data/mock';
 import {
   Accordion,
@@ -17,6 +18,12 @@ const PricingPage = () => {
 
   return (
     <div className="min-h-screen">
+      <SEO
+        title="Pricing - Simple, Transparent Plans"
+        description="Choose the perfect WooASM plan for your store. Start free, upgrade when you're ready. No hidden fees, cancel anytime. Free tier available."
+        keywords="WooASM pricing, WooCommerce AI pricing, store manager pricing, ecommerce AI cost"
+        url="https://wooasm.ai/pricing"
+      />
       <Header />
       <main>
         {/* Hero */}
@@ -34,7 +41,7 @@ const PricingPage = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="text-xl text-gray-600 dark:text-gray-400 mb-10"
+                className="text-xl text-gray-700 dark:text-gray-400 mb-10"
               >
                 Start free, upgrade when you're ready. No hidden fees.
               </motion.p>
@@ -65,7 +72,7 @@ const PricingPage = () => {
                   }`}
                 >
                   Yearly
-                  <span className="px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-xs font-semibold">
+                  <span className="px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-xs font-semibold">
                     Save 20%
                   </span>
                 </button>
@@ -209,7 +216,7 @@ const PricingPage = () => {
                   <AccordionItem
                     key={index}
                     value={`item-${index}`}
-                    className="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 px-6 overflow-hidden"
+                    className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 px-6 overflow-hidden"
                   >
                     <AccordionTrigger className="py-5 text-left text-gray-900 dark:text-white font-semibold hover:no-underline">
                       {faq.question}

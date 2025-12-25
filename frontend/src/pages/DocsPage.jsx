@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Search, Rocket, MessageSquare, Bot, Brain, PenTool, BarChart3, ChevronRight, BookOpen } from 'lucide-react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
+import SEO from '../components/SEO';
 import { docsCategories } from '../data/mock';
 
 const iconMap = {
@@ -15,6 +16,12 @@ const DocsPage = () => {
 
   return (
     <div className="min-h-screen">
+      <SEO
+        title="Documentation - Knowledge Base & Help Center"
+        description="Learn how to use WooASM with our comprehensive documentation. Guides, tutorials, and API references for getting the most out of your AI store manager."
+        keywords="WooASM documentation, help center, tutorials, guides, API docs, WooCommerce AI help"
+        url="https://wooasm.ai/docs"
+      />
       <Header />
       <main>
         {/* Hero */}
@@ -32,7 +39,7 @@ const DocsPage = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="text-xl text-gray-600 dark:text-gray-400 mb-10"
+                className="text-xl text-gray-700 dark:text-gray-400 mb-10"
               >
                 Everything you need to get started with WooASM
               </motion.p>
@@ -70,7 +77,7 @@ const DocsPage = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
-                    className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700"
+                    className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700"
                   >
                     <div className="flex items-center gap-3 mb-6">
                       <div className="w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
@@ -116,7 +123,7 @@ const DocsPage = () => {
                   Join Discord Community
                 </a>
               </div>
-              <p className="text-gray-500 dark:text-gray-400 text-sm mt-4">
+              <p className="text-gray-600 dark:text-gray-400 text-sm mt-4">
                 We typically respond within 24 hours.
               </p>
             </div>

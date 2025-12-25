@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Bot, User, Package, AlertTriangle, TrendingUp } from 'lucide-react';
+import { Send, Bot, User, Package, AlertTriangle } from 'lucide-react';
 
 const ChatDemo = () => {
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
   const [currentDemo, setCurrentDemo] = useState(0);
-  const chatEndRef = useRef(null);
+  const chatContainerRef = useRef(null);
 
   const demoConversations = [
     {
@@ -29,26 +29,32 @@ const ChatDemo = () => {
     },
     {
       user: "Create a 20% off coupon for VIP customers",
-      ai: "I'll create a coupon with these settings:\n\n🎫 Code: VIP20OFF\n💰 Discount: 20% off entire order\n👥 For: VIP segment (156 customers)\n⏰ Valid: 7 days\n\nReady to create this coupon?",
+      ai: "I'll create a coupon with these settings:\n\nCode: VIP20OFF\nDiscount: 20% off entire order\nFor: VIP segment (156 customers)\nValid: 7 days\n\nReady to create this coupon?",
       action: true
     }
   ];
 
   useEffect(() => {
+    let isMounted = true;
+    
     const runDemo = async () => {
+      if (!isMounted) return;
       setMessages([]);
       const demo = demoConversations[currentDemo];
       
       // Add user message
       await new Promise(r => setTimeout(r, 1000));
+      if (!isMounted) return;
       setMessages([{ type: 'user', text: demo.user }]);
       
       // Show typing
       await new Promise(r => setTimeout(r, 500));
+      if (!isMounted) return;
       setIsTyping(true);
       
       // Add AI response
       await new Promise(r => setTimeout(r, 2000));
+      if (!isMounted) return;
       setIsTyping(false);
       setMessages(prev => [...prev, { 
         type: 'ai', 
@@ -60,14 +66,22 @@ const ChatDemo = () => {
 
       // Wait then switch to next demo
       await new Promise(r => setTimeout(r, 6000));
+      if (!isMounted) return;
       setCurrentDemo(prev => (prev + 1) % demoConversations.length);
     };
 
     runDemo();
+    
+    return () => {
+      isMounted = false;
+    };
   }, [currentDemo]);
 
+  // Scroll only within the chat container, not the page
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
   }, [messages, isTyping]);
 
   return (
@@ -78,21 +92,24 @@ const ChatDemo = () => {
       {/* Chat Window */}
       <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl shadow-purple-500/10 border border-gray-200 dark:border-gray-700 overflow-hidden">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center gap-3">
+        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-purple-700 flex items-center justify-center">
             <Bot className="w-5 h-5 text-white" />
           </div>
           <div>
             <h3 className="font-semibold text-gray-900 dark:text-white">WooASM Assistant</h3>
-            <p className="text-sm text-emerald-500 flex items-center gap-1">
+            <p className="text-sm text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
               <span className="w-2 h-2 rounded-full bg-emerald-500" />
               Online
             </p>
           </div>
         </div>
 
-        {/* Messages */}
-        <div className="h-[360px] overflow-y-auto p-6 space-y-4">
+        {/* Messages - Internal scroll only */}
+        <div 
+          ref={chatContainerRef}
+          className="h-[360px] overflow-y-auto p-6 space-y-4"
+        >
           <AnimatePresence mode="wait">
             {messages.map((message, index) => (
               <motion.div
@@ -114,7 +131,7 @@ const ChatDemo = () => {
                     className={`rounded-2xl px-4 py-3 ${
                       message.type === 'user'
                         ? 'bg-purple-600 text-white'
-                        : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
+                        : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white'
                     }`}
                   >
                     <p className="text-sm whitespace-pre-line">{message.text}</p>
@@ -126,7 +143,7 @@ const ChatDemo = () => {
                       {message.products.map((product, i) => (
                         <div
                           key={i}
-                          className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 border border-gray-100 dark:border-gray-600"
+                          className="flex items-center gap-3 p-3 rounded-xl bg-white dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600"
                         >
                           <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
                             product.urgent 
@@ -141,7 +158,7 @@ const ChatDemo = () => {
                           </div>
                           <div className="flex-1">
                             <p className="text-sm font-medium text-gray-900 dark:text-white">{product.name}</p>
-                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                            <p className="text-xs text-gray-600 dark:text-gray-400">
                               {product.stock} left • {product.daysLeft} days
                             </p>
                           </div>
@@ -156,11 +173,11 @@ const ChatDemo = () => {
                       {message.stats.map((stat, i) => (
                         <div
                           key={i}
-                          className="p-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 border border-gray-100 dark:border-gray-600 text-center"
+                          className="p-3 rounded-xl bg-white dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 text-center"
                         >
                           <p className="text-lg font-bold text-gray-900 dark:text-white">{stat.value}</p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">{stat.label}</p>
-                          <p className="text-xs text-emerald-500 font-medium">{stat.change}</p>
+                          <p className="text-xs text-gray-600 dark:text-gray-400">{stat.label}</p>
+                          <p className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">{stat.change}</p>
                         </div>
                       ))}
                     </div>
@@ -180,8 +197,8 @@ const ChatDemo = () => {
                 </div>
 
                 {message.type === 'user' && (
-                  <div className="w-8 h-8 rounded-lg bg-gray-200 dark:bg-gray-600 flex items-center justify-center flex-shrink-0">
-                    <User className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+                  <div className="w-8 h-8 rounded-lg bg-purple-100 dark:bg-gray-600 flex items-center justify-center flex-shrink-0">
+                    <User className="w-4 h-4 text-purple-600 dark:text-gray-300" />
                   </div>
                 )}
               </motion.div>
@@ -207,11 +224,10 @@ const ChatDemo = () => {
               </motion.div>
             )}
           </AnimatePresence>
-          <div ref={chatEndRef} />
         </div>
 
         {/* Input */}
-        <div className="px-6 py-4 border-t border-gray-100 dark:border-gray-700">
+        <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700">
           <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gray-100 dark:bg-gray-700">
             <input
               type="text"
@@ -235,7 +251,7 @@ const ChatDemo = () => {
             className={`w-2 h-2 rounded-full transition-all ${
               currentDemo === index
                 ? 'bg-purple-600 w-6'
-                : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400'
+                : 'bg-gray-400 dark:bg-gray-600 hover:bg-gray-500'
             }`}
           />
         ))}

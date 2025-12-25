@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { CheckCircle, Circle, Clock, Sparkles, ArrowRight } from 'lucide-react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
+import SEO from '../components/SEO';
 
 const RoadmapPage = () => {
   const roadmapItems = [
@@ -69,6 +70,12 @@ const RoadmapPage = () => {
 
   return (
     <div className="min-h-screen">
+      <SEO
+        title="Roadmap - Upcoming Features & Plans"
+        description="See what we're building next at WooASM. View our public roadmap with upcoming features, improvements, and planned releases."
+        keywords="WooASM roadmap, upcoming features, future plans, WooCommerce AI roadmap"
+        url="https://wooasm.ai/roadmap"
+      />
       <Header />
       <main>
         {/* Hero */}
@@ -86,7 +93,7 @@ const RoadmapPage = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="text-xl text-gray-600 dark:text-gray-400"
+                className="text-xl text-gray-700 dark:text-gray-400"
               >
                 See what we're building and what's coming next
               </motion.p>
@@ -122,7 +129,7 @@ const RoadmapPage = () => {
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: qIndex * 0.1 + iIndex * 0.05 }}
-                          className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 border border-gray-100 dark:border-gray-700"
+                          className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700"
                         >
                           <div className="flex items-start justify-between mb-3">
                             {getStatusIcon(item.status)}

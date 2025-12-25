@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Mail, MessageCircle, MapPin, Send, CheckCircle } from 'lucide-react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
+import SEO from '../components/SEO';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Textarea } from '../components/ui/textarea';
@@ -50,6 +51,12 @@ const ContactPage = () => {
 
   return (
     <div className="min-h-screen">
+      <SEO
+        title="Contact Us - Get in Touch"
+        description="Have questions about WooASM? Contact our team for support, sales inquiries, or partnership opportunities. We typically respond within 24 hours."
+        keywords="contact WooASM, WooASM support, get help, WooCommerce AI support"
+        url="https://wooasm.ai/contact"
+      />
       <Header />
       <main>
         {/* Hero */}
@@ -67,7 +74,7 @@ const ContactPage = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="text-xl text-gray-600 dark:text-gray-400"
+                className="text-xl text-gray-700 dark:text-gray-400"
               >
                 Have a question or feedback? We'd love to hear from you.
               </motion.p>
@@ -118,7 +125,7 @@ const ContactPage = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
-                  className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-8 border border-gray-100 dark:border-gray-700"
+                  className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-8 border border-gray-200 dark:border-gray-700"
                 >
                   {isSubmitted ? (
                     <div className="text-center py-12">

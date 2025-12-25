@@ -1,9 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { Calendar, Sparkles, Bug, Zap, ArrowRight } from 'lucide-react';
+import { Calendar, Sparkles, Bug, Zap } from 'lucide-react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
+import SEO from '../components/SEO';
 
 const ChangelogPage = () => {
   const releases = [
@@ -77,9 +77,9 @@ const ChangelogPage = () => {
       case 'feature':
         return <Sparkles className="w-5 h-5 text-purple-600 dark:text-purple-400" />;
       case 'bugfix':
-        return <Bug className="w-5 h-5 text-red-500" />;
+        return <Bug className="w-5 h-5 text-red-600 dark:text-red-400" />;
       case 'improvement':
-        return <Zap className="w-5 h-5 text-amber-500" />;
+        return <Zap className="w-5 h-5 text-amber-600 dark:text-amber-400" />;
       default:
         return <Sparkles className="w-5 h-5 text-purple-600" />;
     }
@@ -100,6 +100,12 @@ const ChangelogPage = () => {
 
   return (
     <div className="min-h-screen">
+      <SEO
+        title="Changelog - Version History & Updates"
+        description="See what's new in WooASM. Browse our complete version history, new features, improvements, and bug fixes."
+        keywords="WooASM changelog, version history, updates, new features, release notes"
+        url="https://wooasm.ai/changelog"
+      />
       <Header />
       <main>
         {/* Hero */}
@@ -117,7 +123,7 @@ const ChangelogPage = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="text-xl text-gray-600 dark:text-gray-400"
+                className="text-xl text-gray-700 dark:text-gray-400"
               >
                 See what's new in WooASM
               </motion.p>
@@ -147,7 +153,7 @@ const ChangelogPage = () => {
                       <div className="absolute left-5 w-6 h-6 rounded-full bg-white dark:bg-gray-800 border-4 border-purple-600 dark:border-purple-400" />
 
                       {/* Content */}
-                      <div className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700">
+                      <div className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700">
                         <div className="flex flex-wrap items-center gap-3 mb-4">
                           <span className="px-3 py-1 rounded-full bg-purple-600 text-white text-sm font-bold">
                             v{release.version}
@@ -167,7 +173,7 @@ const ChangelogPage = () => {
 
                         <ul className="space-y-2">
                           {release.changes.map((change, i) => (
-                            <li key={i} className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                            <li key={i} className="flex items-start gap-2 text-gray-700 dark:text-gray-300">
                               {getTypeIcon(release.type)}
                               <span>{change}</span>
                             </li>

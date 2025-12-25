@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Zap, Target, Heart, Users, ArrowRight } from 'lucide-react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
+import SEO from '../components/SEO';
 
 const AboutPage = () => {
   const values = [
@@ -52,6 +53,12 @@ const AboutPage = () => {
 
   return (
     <div className="min-h-screen">
+      <SEO
+        title="About Us - Our Mission & Team"
+        description="Learn about WooASM's mission to make e-commerce effortless with AI. Meet our team and discover why we're building the most powerful AI store manager for WooCommerce."
+        keywords="about WooASM, WooASM team, ecommerce AI company, WooCommerce plugin company"
+        url="https://wooasm.ai/about"
+      />
       <Header />
       <main>
         {/* Hero */}
@@ -70,7 +77,7 @@ const AboutPage = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="text-xl text-gray-600 dark:text-gray-400"
+                className="text-xl text-gray-700 dark:text-gray-400"
               >
                 We're on a mission to help every WooCommerce store owner work smarter, 
                 not harder, with the power of AI.
@@ -96,21 +103,21 @@ const AboutPage = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.1 }}
-                className="prose prose-lg dark:prose-invert"
+                className="space-y-4"
               >
-                <p className="text-gray-600 dark:text-gray-400 mb-4">
+                <p className="text-gray-700 dark:text-gray-400 leading-relaxed">
                   WooASM was born from frustration. As WooCommerce developers and store consultants, 
                   we watched countless store owners struggle with the same problems: endless hours 
                   analyzing data, writing product content, managing inventory, and answering the 
                   same customer questions over and over.
                 </p>
-                <p className="text-gray-600 dark:text-gray-400 mb-4">
+                <p className="text-gray-700 dark:text-gray-400 leading-relaxed">
                   When GPT-4 and advanced AI models became available, we saw an opportunity. 
                   What if we could build an AI that truly understood e-commerce? One that could 
                   answer any question about your store, take actions on your behalf, and even 
                   talk to your customers 24/7?
                 </p>
-                <p className="text-gray-600 dark:text-gray-400">
+                <p className="text-gray-700 dark:text-gray-400 leading-relaxed">
                   That's WooASM. Not just another AI tool, but a complete AI store manager that 
                   works tirelessly alongside you. Today, we're proud to serve hundreds of store 
                   owners who are saving time and growing their businesses with our help.

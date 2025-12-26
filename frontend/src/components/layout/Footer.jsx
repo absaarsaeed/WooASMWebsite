@@ -4,23 +4,23 @@ import { Zap, Twitter, Linkedin, Youtube, MessageCircle } from 'lucide-react';
 
 const Footer = () => {
   const footerLinks = {
-    Products: [
+    Product: [
       { label: 'Features', to: '/features' },
       { label: 'Pricing', to: '/pricing' },
       { label: 'Changelog', to: '/changelog' },
-      { label: 'Roadmap', to: '/roadmap' }
+      { label: 'Roadmap', to: '/roadmap' },
+      { label: 'Request Feature', to: '/request-feature' }
     ],
     Resources: [
       { label: 'Documentation', to: '/docs' },
       { label: 'Blog', to: '/blog' },
       { label: 'Help Center', to: '/docs' },
-      { label: 'API Docs', to: '/docs' }
+      { label: 'Getting Started', to: '/docs' }
     ],
     Company: [
       { label: 'About', to: '/about' },
       { label: 'Contact', to: '/contact' },
-      { label: 'Careers', to: '/about' },
-      { label: 'Press Kit', to: '/about' }
+      { label: 'Careers', to: '/about' }
     ],
     Legal: [
       { label: 'Privacy Policy', to: '/privacy' },
@@ -31,10 +31,10 @@ const Footer = () => {
   };
 
   const socialLinks = [
-    { icon: Twitter, href: '#', label: 'Twitter' },
-    { icon: Linkedin, href: '#', label: 'LinkedIn' },
-    { icon: Youtube, href: '#', label: 'YouTube' },
-    { icon: MessageCircle, href: '#', label: 'Discord' }
+    { icon: Twitter, href: 'https://twitter.com/wooasm', label: 'Twitter' },
+    { icon: Linkedin, href: 'https://linkedin.com/company/wooasm', label: 'LinkedIn' },
+    { icon: Youtube, href: 'https://youtube.com/@wooasm', label: 'YouTube' },
+    { icon: MessageCircle, href: 'https://discord.gg/wooasm', label: 'Discord' }
   ];
 
   return (
@@ -49,14 +49,18 @@ const Footer = () => {
               </div>
               <span className="text-xl font-bold text-gray-900 dark:text-white">WooASM</span>
             </Link>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
-              AI Store Manager for WooCommerce
+            <p className="text-gray-600 dark:text-gray-400 mb-4">
+              AI Store Manager for WooCommerce.
+              <br />
+              Manage your store by just asking.
             </p>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               {socialLinks.map(({ icon: Icon, href, label }) => (
                 <a
                   key={label}
                   href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors group"
                   aria-label={label}
                 >
@@ -75,7 +79,7 @@ const Footer = () => {
                   <li key={link.label}>
                     <Link
                       to={link.to}
-                      className="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+                      className="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors text-sm"
                     >
                       {link.label}
                     </Link>
@@ -90,11 +94,19 @@ const Footer = () => {
         <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-gray-600 dark:text-gray-400 text-sm">
-              © 2024 WooASM. All rights reserved.
+              © {new Date().getFullYear()} WooASM. All rights reserved.
             </p>
-            <p className="text-gray-500 dark:text-gray-500 text-sm">
-              Made with <span className="text-purple-600">💜</span> for WooCommerce store owners
-            </p>
+            <div className="flex items-center gap-6">
+              <Link to="/privacy" className="text-gray-500 dark:text-gray-500 text-sm hover:text-purple-600 dark:hover:text-purple-400">
+                Privacy
+              </Link>
+              <Link to="/terms" className="text-gray-500 dark:text-gray-500 text-sm hover:text-purple-600 dark:hover:text-purple-400">
+                Terms
+              </Link>
+              <Link to="/cookies" className="text-gray-500 dark:text-gray-500 text-sm hover:text-purple-600 dark:hover:text-purple-400">
+                Cookies
+              </Link>
+            </div>
           </div>
         </div>
       </div>

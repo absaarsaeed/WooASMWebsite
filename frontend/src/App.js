@@ -16,6 +16,15 @@ import ContactPage from "./pages/ContactPage";
 import ChangelogPage from "./pages/ChangelogPage";
 import RoadmapPage from "./pages/RoadmapPage";
 
+// Legal Pages
+import PrivacyPage from "./pages/PrivacyPage";
+import TermsPage from "./pages/TermsPage";
+import CookiesPage from "./pages/CookiesPage";
+import GDPRPage from "./pages/GDPRPage";
+
+// Feature Request
+import RequestFeaturePage from "./pages/RequestFeaturePage";
+
 function App() {
   return (
     <HelmetProvider>
@@ -23,6 +32,7 @@ function App() {
         <div className="App">
           <BrowserRouter>
             <Routes>
+              {/* Main Pages */}
               <Route path="/" element={<HomePage />} />
               <Route path="/features" element={<FeaturesPage />} />
               <Route path="/features/:featureId" element={<FeatureDetailPage />} />
@@ -33,6 +43,16 @@ function App() {
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/changelog" element={<ChangelogPage />} />
               <Route path="/roadmap" element={<RoadmapPage />} />
+              
+              {/* Legal Pages */}
+              <Route path="/privacy" element={<PrivacyPage />} />
+              <Route path="/terms" element={<TermsPage />} />
+              <Route path="/cookies" element={<CookiesPage />} />
+              <Route path="/gdpr" element={<GDPRPage />} />
+              
+              {/* Feature Request */}
+              <Route path="/request-feature" element={<RequestFeaturePage />} />
+              
               {/* Fallback to home */}
               <Route path="*" element={<HomePage />} />
             </Routes>

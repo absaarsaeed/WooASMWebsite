@@ -59,7 +59,7 @@ backend:
     endpoint: "GET /api/dashboard/license"
     implemented: true
     working: true
-    file: "/app/backend/routes/dashboard.py"
+    file: "/app/backend/src/routes/dashboard.js"
     stuck_count: 0
     priority: "high"
     needs_retesting: false
@@ -67,6 +67,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ License data retrieved successfully - Returns license key, plan (free), status (active), sites used (0), sites allowed (1). License management working correctly."
+      - working: true
+        agent: "testing"
+        comment: "✅ Node.js backend - License data retrieved successfully. Returns license key WASM-0WLG-EPHZ-P5WN, plan (starter), status (active), sites used (1), sites allowed (3). License management working correctly."
   
   - task: "Test Plan Activation"
     description: "Test activating a plan without Stripe"

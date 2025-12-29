@@ -80,6 +80,22 @@ def make_request(method, endpoint, data=None, headers=None, expected_status=200)
         print(f"❌ Request failed: {e}")
         return None, 0
 
+def test_health_check():
+    """Test 0: Health Check"""
+    print("\n🧪 Test 0: Health Check")
+    
+    data, status = make_request('GET', '', expected_status=200)
+    
+    if data and data.get('status') == 'ok':
+        print("✅ Health check successful")
+        print(f"   Status: {data.get('status')}")
+        print(f"   Message: {data.get('message')}")
+        return True
+    else:
+        print("❌ Health check failed")
+        print(f"   Response: {data}")
+        return False
+
 def test_user_registration():
     """Test 1: User Registration"""
     print("\n🧪 Test 1: User Registration")

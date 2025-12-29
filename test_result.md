@@ -110,7 +110,7 @@ backend:
     endpoint: "POST /api/admin/login"
     implemented: true
     working: true
-    file: "/app/backend/routes/admin.py"
+    file: "/app/backend/src/routes/admin.js"
     stuck_count: 0
     priority: "high"
     needs_retesting: false
@@ -118,6 +118,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ Admin login successful - Authenticated with hardcoded credentials (absaar/AbsaarAdmin@12345), generated admin token with super_admin role."
+      - working: true
+        agent: "testing"
+        comment: "✅ Node.js backend - Admin login working correctly. Successfully authenticated with hardcoded credentials (absaar/AbsaarAdmin@12345), generated admin JWT token with super_admin role."
   
   - task: "Admin Stats"
     description: "Test admin dashboard statistics"

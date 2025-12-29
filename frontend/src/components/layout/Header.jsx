@@ -27,7 +27,13 @@ const Header = () => {
   useEffect(() => {
     setIsMobileMenuOpen(false);
     setIsFeatureDropdownOpen(false);
+    setIsUserDropdownOpen(false);
   }, [location]);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
 
   const categories = [
     { id: 'core', label: 'Core Intelligence' },

@@ -199,11 +199,11 @@ def test_activate_test_plan():
     
     data, status = make_request('POST', '/billing/activate-test-plan', plan_data, headers=headers, expected_status=200)
     
-    if data and data.get('success'):
+    if data and data.get('message') and 'activated successfully' in data.get('message'):
         print("✅ Test plan activated successfully")
-        print(f"   Plan: {data.get('user', {}).get('plan')}")
-        print(f"   Billing Cycle: {data.get('user', {}).get('billing_cycle')}")
-        print(f"   Status: {data.get('user', {}).get('subscription_status')}")
+        print(f"   Plan: {data.get('plan')}")
+        print(f"   Billing Cycle: {data.get('billing_cycle')}")
+        print(f"   Ends At: {data.get('ends_at')}")
         return True
     else:
         print("❌ Test plan activation failed")

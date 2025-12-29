@@ -335,7 +335,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Complete frontend UI testing completed"
+    - "Node.js backend migration testing completed"
   stuck_tasks: []
   test_all: true
   test_priority: "high_first"

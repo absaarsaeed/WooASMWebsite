@@ -225,8 +225,8 @@ def test_plugin_license_validation():
     
     validation_data = {
         "license_key": license_key,
-        "site_url": "https://teststore.com",
-        "site_id": "test-site-123",
+        "site_url": "https://nodetest.com",
+        "site_id": "node-test-site-456",
         "plugin_version": "1.0.0"
     }
     

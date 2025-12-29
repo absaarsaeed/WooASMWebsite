@@ -326,6 +326,7 @@ def main():
     print(f"⏰ Test started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     
     tests = [
+        ("Health Check", test_health_check),
         ("User Registration", test_user_registration),
         ("User Login", test_user_login),
         ("Dashboard API", test_dashboard),

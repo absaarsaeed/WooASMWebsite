@@ -42,7 +42,7 @@ backend:
     endpoint: "GET /api/dashboard"
     implemented: true
     working: true
-    file: "/app/backend/routes/dashboard.py"
+    file: "/app/backend/src/routes/dashboard.js"
     stuck_count: 0
     priority: "high"
     needs_retesting: false
@@ -50,6 +50,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ Dashboard data retrieved successfully - Returns user info (Test User, free plan), subscription status (active), usage stats, and limits. All required fields present."
+      - working: true
+        agent: "testing"
+        comment: "✅ Node.js backend - Dashboard API working correctly. Returns user info (Node Test User, starter plan), subscription status (active), usage stats, and limits. All required fields present."
   
   - task: "License Key Management"
     description: "Test license key retrieval and regeneration"

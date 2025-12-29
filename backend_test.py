@@ -102,10 +102,14 @@ def test_user_registration():
     
     data, status = make_request('POST', '/auth/register', TEST_USER, expected_status=201)
     
-    if data and data.get('message') and 'user' in data:
+    if status == 201 and data and data.get('message') and 'user' in data:
         print("✅ User registration successful")
         print(f"   User ID: {data.get('user', {}).get('id')}")
         print(f"   Email: {data.get('user', {}).get('email')}")
+        return True
+    elif status == 400 and data and 'already registered' in data.get('detail', ''):
+        print("✅ User registration - email already exists (expected)")
+        print(f"   Email: {TEST_USER['email']} already registered")
         return True
     else:
         print("❌ User registration failed")

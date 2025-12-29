@@ -114,7 +114,7 @@ app.add_middleware(
 
 @app.on_event("startup")
 async def startup_db_client():
-    \"\"\"Initialize database indexes and seed data on startup\"\"\"
+    """Initialize database indexes and seed data on startup"""
     logger.info("Starting up WooASM API...")
     
     # Create indexes

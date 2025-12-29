@@ -3,6 +3,20 @@
 ## Test Sequence: SaaS Integration Testing
 
 backend:
+  - task: "Health Check API"
+    description: "Test API health check endpoint"
+    endpoint: "GET /api"
+    implemented: true
+    working: true
+    file: "/app/backend/src/server.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ Node.js backend - Health check working correctly. Returns status: 'ok' and message: 'WooASM API is running'. API is accessible and responding."
+
   - task: "User Registration Flow"
     description: "Test user registration with email/password"
     endpoint: "POST /api/auth/register"

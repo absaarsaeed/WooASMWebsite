@@ -25,7 +25,7 @@ backend:
     endpoint: "POST /api/auth/login"
     implemented: true
     working: true
-    file: "/app/backend/routes/auth.py"
+    file: "/app/backend/src/routes/auth.js"
     stuck_count: 0
     priority: "high"
     needs_retesting: false
@@ -33,6 +33,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ User login successful - Generated access token and refresh token, returned user object with license key WASM-FMNW-85QT-O7IF. Authentication flow working correctly."
+      - working: true
+        agent: "testing"
+        comment: "✅ Node.js backend - User login working correctly. Successfully authenticates nodetest@example.com, generates JWT access token and returns license key WASM-0WLG-EPHZ-P5WN."
   
   - task: "Dashboard API"
     description: "Test dashboard data retrieval"

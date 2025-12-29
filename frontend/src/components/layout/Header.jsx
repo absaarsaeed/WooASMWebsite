@@ -143,10 +143,74 @@ const Header = () => {
               )}
             </button>
 
-            {/* CTA Button */}
-            <Link to="/pricing" className="hidden sm:flex btn-primary">
-              Get Started Free
-            </Link>
+            {/* Authenticated User Menu */}
+            {isAuthenticated ? (
+              <div 
+                className="relative hidden sm:block"
+                onMouseEnter={() => setIsUserDropdownOpen(true)}
+                onMouseLeave={() => setIsUserDropdownOpen(false)}
+              >
+                <button className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                  <div className="w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+                    <span className="text-purple-600 dark:text-purple-400 text-sm font-semibold">
+                      {user?.name?.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                  <span className="text-gray-700 dark:text-gray-300 font-medium hidden md:block">
+                    {user?.name?.split(' ')[0]}
+                  </span>
+                  <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform ${isUserDropdownOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                <AnimatePresence>
+                  {isUserDropdownOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute top-full right-0 pt-2"
+                    >
+                      <div className="w-48 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 py-2">
+                        <Link
+                          to="/dashboard"
+                          className="flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        >
+                          <LayoutDashboard className="w-4 h-4" />
+                          Dashboard
+                        </Link>
+                        <Link
+                          to="/dashboard/settings"
+                          className="flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        >
+                          <User className="w-4 h-4" />
+                          Account
+                        </Link>
+                        <hr className="my-2 border-gray-100 dark:border-gray-700" />
+                        <button
+                          onClick={handleLogout}
+                          className="flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 w-full"
+                        >
+                          <LogOut className="w-4 h-4" />
+                          Logout
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ) : (
+              <>
+                {/* Login Link */}
+                <Link to="/login" className="hidden sm:block text-gray-700 dark:text-gray-300 font-medium hover:text-purple-600 dark:hover:text-purple-400 transition-colors">
+                  Login
+                </Link>
+                {/* CTA Button */}
+                <Link to="/signup" className="hidden sm:flex btn-primary">
+                  Get Started Free
+                </Link>
+              </>
+            )}
 
             {/* Mobile Menu Toggle */}
             <button

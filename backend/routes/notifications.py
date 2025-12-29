@@ -103,6 +103,47 @@ async def get_recent_purchases():
     return {"notifications": notifications[:20]}
 
 
+@router.get("/recent")
+async def get_recent_notification():
+    """Get a single recent notification for floating trust badge"""
+    # Get real notifications from database
+    real_notifications = await db.purchase_notifications.find(
+        {},
+        {"_id": 0}
+    ).sort("created_at", -1).limit(10).to_list(10)
+    
+    # If we have real notifications, pick one randomly
+    if real_notifications:
+        notif = random.choice(real_notifications)
+        display_name = notif.get("display_name") or notif.get("user_name", "Customer")
+        
+        created_at = notif.get("created_at")
+        if isinstance(created_at, str):
+            created_at = datetime.fromisoformat(created_at.replace('Z', '+00:00'))
+        
+        seconds_ago = int((datetime.now(timezone.utc) - created_at).total_seconds()) if created_at else 300
+        
+        return {
+            "notification": {
+                "display_name": display_name,
+                "plan": notif.get("plan", "starter"),
+                "seconds_ago": min(seconds_ago, 86400)  # Max 1 day
+            }
+        }
+    
+    # Use seed data if no real notifications
+    seed = random.choice(SEED_NOTIFICATIONS)
+    seconds_ago = random.randint(300, 7200)  # 5 mins to 2 hours ago
+    
+    return {
+        "notification": {
+            "display_name": f"{seed['user_name']} from {seed['country']}",
+            "plan": seed["plan"],
+            "seconds_ago": seconds_ago
+        }
+    }
+
+
 @router.get("/count")
 async def get_notification_count():
     """Get total purchase count for social proof"""

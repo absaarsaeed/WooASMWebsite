@@ -100,9 +100,9 @@ def test_user_registration():
     """Test 1: User Registration"""
     print("\n🧪 Test 1: User Registration")
     
-    data, status = make_request('POST', '/auth/register', TEST_USER, expected_status=200)
+    data, status = make_request('POST', '/auth/register', TEST_USER, expected_status=201)
     
-    if data and data.get('success'):
+    if data and data.get('message') and 'user' in data:
         print("✅ User registration successful")
         print(f"   User ID: {data.get('user', {}).get('id')}")
         print(f"   Email: {data.get('user', {}).get('email')}")

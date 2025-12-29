@@ -76,7 +76,7 @@ backend:
     endpoint: "POST /api/billing/activate-test-plan"
     implemented: true
     working: true
-    file: "/app/backend/routes/billing.py"
+    file: "/app/backend/src/routes/billing.js"
     stuck_count: 0
     priority: "high"
     needs_retesting: false
@@ -84,6 +84,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ Test plan activated successfully - Upgraded user from free to starter plan with monthly billing cycle. Plan activation working without Stripe integration."
+      - working: true
+        agent: "testing"
+        comment: "✅ Node.js backend - Test plan activation working correctly. Successfully activated starter plan with monthly billing cycle, expires 2026-01-29. Plan activation working without Stripe integration."
   
   - task: "Plugin License Validation"
     description: "Test plugin license validation endpoint"

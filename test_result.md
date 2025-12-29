@@ -93,7 +93,7 @@ backend:
     endpoint: "POST /api/plugin/validate-license"
     implemented: true
     working: true
-    file: "/app/backend/routes/plugin.py"
+    file: "/app/backend/src/routes/plugin.js"
     stuck_count: 0
     priority: "high"
     needs_retesting: false
@@ -101,6 +101,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ Plugin license validation successful - Validated license for site https://teststore.com, returned valid=true with starter plan features and limits. Site activation recorded correctly."
+      - working: true
+        agent: "testing"
+        comment: "✅ Node.js backend - Plugin license validation working correctly. Validated license for site https://nodetest.com (site_id: node-test-site-456), returned valid=true with starter plan features and limits. Site activation recorded correctly."
   
   - task: "Admin Login"
     description: "Test admin login with hardcoded credentials"

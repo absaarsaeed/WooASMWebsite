@@ -262,10 +262,29 @@ const Header = () => {
                 >
                   Blog
                 </Link>
-                <div className="pt-4">
-                  <Link to="/pricing" className="btn-primary w-full justify-center">
-                    Get Started Free
-                  </Link>
+                <div className="pt-4 space-y-2">
+                  {isAuthenticated ? (
+                    <>
+                      <Link to="/dashboard" className="btn-primary w-full justify-center">
+                        Dashboard
+                      </Link>
+                      <button 
+                        onClick={handleLogout}
+                        className="w-full px-4 py-3 rounded-lg text-gray-600 dark:text-gray-400 font-medium hover:bg-gray-100 dark:hover:bg-gray-800"
+                      >
+                        Logout
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <Link to="/login" className="block px-4 py-3 rounded-lg text-gray-900 dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800 text-center">
+                        Login
+                      </Link>
+                      <Link to="/signup" className="btn-primary w-full justify-center">
+                        Get Started Free
+                      </Link>
+                    </>
+                  )}
                 </div>
               </div>
             </motion.div>

@@ -144,7 +144,7 @@ backend:
     endpoint: "GET /api/notifications/recent"
     implemented: true
     working: true
-    file: "/app/backend/routes/notifications.py"
+    file: "/app/backend/src/routes/notifications.js"
     stuck_count: 0
     priority: "high"
     needs_retesting: false
@@ -152,6 +152,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ Trust notification retrieved successfully - Returns notification with display name 'Test (Test)', plan 'starter', and seconds_ago timestamp. Social proof notifications working."
+      - working: true
+        agent: "testing"
+        comment: "✅ Node.js backend - Trust notifications working correctly. Returns notification with display name 'Node (Test)', plan 'starter', and seconds_ago timestamp (0). Social proof notifications working."
 
 frontend:
   - task: "Homepage UI and Trust Notifications"

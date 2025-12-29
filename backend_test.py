@@ -33,9 +33,9 @@ print(f"🔗 Testing API at: {API_BASE}")
 
 # Test data
 TEST_USER = {
-    "email": "testuser@example.com",
+    "email": "nodetest@example.com",
     "password": "TestPassword123",
-    "name": "Test User"
+    "name": "Node Test User"
 }
 
 ADMIN_CREDS = {

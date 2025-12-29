@@ -8,7 +8,7 @@ backend:
     endpoint: "POST /api/auth/register"
     implemented: true
     working: true
-    file: "/app/backend/routes/auth.py"
+    file: "/app/backend/src/routes/auth.js"
     stuck_count: 0
     priority: "high"
     needs_retesting: false
@@ -16,6 +16,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ User registration successful - Created user with ID 64515aa5-979a-4675-a00e-9c1d0cfae0c5, email testuser@example.com. Returns success message and user object as expected."
+      - working: true
+        agent: "testing"
+        comment: "✅ Node.js backend - User registration working correctly. Handles new registrations (201 status) and existing email validation (400 status). Tested with nodetest@example.com user."
   
   - task: "User Login Flow"
     description: "Test user login and token generation"

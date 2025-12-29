@@ -127,7 +127,7 @@ backend:
     endpoint: "GET /api/admin/stats"
     implemented: true
     working: true
-    file: "/app/backend/routes/admin.py"
+    file: "/app/backend/src/routes/admin.js"
     stuck_count: 0
     priority: "high"
     needs_retesting: false
@@ -135,6 +135,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ Admin stats retrieved successfully - Returns overview (2 total users), plans distribution (1 free, 1 starter), revenue ($29 MRR), usage stats, and sites data. All admin dashboard metrics working."
+      - working: true
+        agent: "testing"
+        comment: "✅ Node.js backend - Admin stats working correctly. Returns overview (4 total users), plans distribution (1 free, 3 starter), revenue ($87 MRR), usage stats, and sites data (3 total activated, 3 active). All admin dashboard metrics working."
   
   - task: "Trust Notifications"
     description: "Test trust notifications for social proof"

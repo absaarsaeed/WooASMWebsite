@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingCart, X } from 'lucide-react';
-
-const API_URL = process.env.REACT_APP_BACKEND_URL;
+import api from '../services/api';
 
 const TrustNotifications = () => {
   const [notification, setNotification] = useState(null);
@@ -41,12 +40,9 @@ const TrustNotifications = () => {
 
   const fetchNotification = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/notifications/recent`);
-      if (response.ok) {
-        const data = await response.json();
-        if (data.notification) {
-          setNotification(data.notification);
-        }
+      const response = await api.getRecentNotification();
+      if (response.success && response.data?.notification) {
+        setNotification(response.data.notification);
       }
     } catch (error) {
       // Silently fail - this is non-critical

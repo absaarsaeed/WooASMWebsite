@@ -1,205 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import api from '../services/api';
 
 const AuthContext = createContext(null);
-
-const API_URL = process.env.REACT_APP_BACKEND_URL;
-
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  // Load user from localStorage on mount
-  useEffect(() => {
-    const storedUser = localStorage.getItem('wooasm_user');
-    const storedToken = localStorage.getItem('wooasm_token');
-    
-    if (storedUser && storedToken) {
-      setUser(JSON.parse(storedUser));
-      // Verify token is still valid
-      verifyToken(storedToken);
-    } else {
-      setLoading(false);
-    }
-  }, []);
-
-  const verifyToken = async (token) => {
-    try {
-      const response = await fetch(`${API_URL}/api/auth/me`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        setUser(data.user);
-        localStorage.setItem('wooasm_user', JSON.stringify(data.user));
-      } else {
-        // Token invalid, clear storage
-        logout();
-      }
-    } catch (err) {
-      console.error('Token verification failed:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const register = async (email, password, name, companyName = null) => {
-    setError(null);
-    try {
-      const response = await fetch(`${API_URL}/api/auth/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, name, company_name: companyName })
-      });
-      
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.detail || 'Registration failed');
-      }
-      
-      return { success: true, data };
-    } catch (err) {
-      setError(err.message);
-      return { success: false, error: err.message };
-    }
-  };
-
-  const login = async (email, password) => {
-    setError(null);
-    try {
-      const response = await fetch(`${API_URL}/api/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
-      
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.detail || 'Login failed');
-      }
-      
-      // Store tokens and user
-      localStorage.setItem('wooasm_token', data.access_token);
-      localStorage.setItem('wooasm_refresh_token', data.refresh_token);
-      localStorage.setItem('wooasm_user', JSON.stringify(data.user));
-      
-      setUser(data.user);
-      
-      return { success: true, data };
-    } catch (err) {
-      setError(err.message);
-      return { success: false, error: err.message };
-    }
-  };
-
-  const logout = () => {
-    localStorage.removeItem('wooasm_token');
-    localStorage.removeItem('wooasm_refresh_token');
-    localStorage.removeItem('wooasm_user');
-    setUser(null);
-  };
-
-  const forgotPassword = async (email) => {
-    setError(null);
-    try {
-      const response = await fetch(`${API_URL}/api/auth/forgot-password`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
-      });
-      
-      const data = await response.json();
-      return { success: true, data };
-    } catch (err) {
-      setError(err.message);
-      return { success: false, error: err.message };
-    }
-  };
-
-  const resetPassword = async (token, newPassword) => {
-    setError(null);
-    try {
-      const response = await fetch(`${API_URL}/api/auth/reset-password`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token, new_password: newPassword })
-      });
-      
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.detail || 'Reset failed');
-      }
-      
-      return { success: true, data };
-    } catch (err) {
-      setError(err.message);
-      return { success: false, error: err.message };
-    }
-  };
-
-  const verifyEmail = async (token) => {
-    setError(null);
-    try {
-      const response = await fetch(`${API_URL}/api/auth/verify-email?token=${token}`, {
-        method: 'POST'
-      });
-      
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.detail || 'Verification failed');
-      }
-      
-      // Update user's verified status if logged in
-      if (user) {
-        const updatedUser = { ...user, email_verified: true };
-        setUser(updatedUser);
-        localStorage.setItem('wooasm_user', JSON.stringify(updatedUser));
-      }
-      
-      return { success: true, data };
-    } catch (err) {
-      setError(err.message);
-      return { success: false, error: err.message };
-    }
-  };
-
-  const getToken = () => localStorage.getItem('wooasm_token');
-
-  const refreshUser = async () => {
-    const token = getToken();
-    if (token) {
-      await verifyToken(token);
-    }
-  };
-
-  const value = {
-    user,
-    loading,
-    error,
-    register,
-    login,
-    logout,
-    forgotPassword,
-    resetPassword,
-    verifyEmail,
-    getToken,
-    refreshUser,
-    isAuthenticated: !!user
-  };
-
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -207,6 +9,113 @@ export const useAuth = () => {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
+};
+
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // Check for stored token on mount
+  useEffect(() => {
+    const checkAuth = async () => {
+      const token = localStorage.getItem('wooasm_access_token');
+      if (token) {
+        try {
+          const response = await api.getCurrentUser();
+          if (response.success) {
+            setUser(response.data);
+            setIsAuthenticated(true);
+          } else {
+            // Token invalid, clear storage
+            clearAuth();
+          }
+        } catch (error) {
+          clearAuth();
+        }
+      }
+      setLoading(false);
+    };
+
+    checkAuth();
+  }, []);
+
+  const clearAuth = () => {
+    localStorage.removeItem('wooasm_access_token');
+    localStorage.removeItem('wooasm_refresh_token');
+    setUser(null);
+    setIsAuthenticated(false);
+  };
+
+  const login = async (email, password) => {
+    try {
+      const response = await api.login(email, password);
+      
+      if (response.success) {
+        localStorage.setItem('wooasm_access_token', response.data.access_token);
+        localStorage.setItem('wooasm_refresh_token', response.data.refresh_token);
+        setUser(response.data.user);
+        setIsAuthenticated(true);
+        return { success: true };
+      }
+      
+      return { success: false, error: response.message || 'Login failed' };
+    } catch (error) {
+      return { success: false, error: 'Connection error. Please try again.' };
+    }
+  };
+
+  const register = async (name, email, password, companyName = '') => {
+    try {
+      const response = await api.register(name, email, password, companyName);
+      
+      if (response.success) {
+        return { success: true, user: response.data.user };
+      }
+      
+      return { success: false, error: response.message || 'Registration failed' };
+    } catch (error) {
+      return { success: false, error: 'Connection error. Please try again.' };
+    }
+  };
+
+  const logout = async () => {
+    try {
+      await api.logout();
+    } catch {
+      // Ignore errors, clear local state anyway
+    }
+    clearAuth();
+  };
+
+  const refreshUser = async () => {
+    try {
+      const response = await api.getCurrentUser();
+      if (response.success) {
+        setUser(response.data);
+        return true;
+      }
+    } catch {
+      // Ignore
+    }
+    return false;
+  };
+
+  const value = {
+    user,
+    loading,
+    isAuthenticated,
+    login,
+    register,
+    logout,
+    refreshUser,
+  };
+
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export default AuthContext;

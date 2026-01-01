@@ -8,6 +8,17 @@ WooASM.ai is a frontend-only React application for a SaaS platform that provides
 - **Backend**: External NestJS API (hosted at api.wooasm.com) - NOT part of this project
 - **Plugin**: WordPress/WooCommerce plugin - separate project
 
+## Correct User Workflow
+
+```
+1. User signs up → Account created (NO license key, plan='none')
+2. User logs in → Dashboard shows "No subscription" prompt
+3. User clicks "Subscribe" → Stripe Checkout
+4. Stripe payment succeeds → Backend webhook generates license key
+5. User returns to dashboard → License key now visible
+6. User can activate WooASM plugin with license key
+```
+
 ## Core Requirements
 
 ### Marketing Website
@@ -19,15 +30,15 @@ WooASM.ai is a frontend-only React application for a SaaS platform that provides
 
 ### Authentication
 - [x] Login page with email/password
-- [x] Signup page with name, email, password, company name (optional)
+- [x] Signup page - redirects to pricing after registration
 - [x] Forgot password flow
 - [x] Reset password flow
 - [x] Email verification flow
 - [x] JWT token storage and refresh logic
 
 ### User Dashboard
-- [x] Dashboard Overview - usage stats, license key, quick actions
-- [x] License Page - view/copy license key, regenerate, installation guide
+- [x] Dashboard Overview - shows "Subscribe" prompt if no license
+- [x] License Page - shows license key OR subscribe prompt
 - [x] Sites Page - view/manage activated WordPress sites
 - [x] Usage Page - view monthly usage across all features
 - [x] Settings Page - update profile, change password, delete account

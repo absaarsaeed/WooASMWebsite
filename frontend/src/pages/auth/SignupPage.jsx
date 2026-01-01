@@ -42,10 +42,10 @@ const SignupPage = () => {
     setLoading(true);
 
     const result = await register(
+      formData.name,
       formData.email,
       formData.password,
-      formData.name,
-      formData.companyName || null
+      formData.companyName || ''
     );
     
     if (result.success) {

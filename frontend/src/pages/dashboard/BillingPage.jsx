@@ -20,8 +20,11 @@ const BillingPage = () => {
   const fetchSubscription = async () => {
     try {
       const response = await api.getSubscription();
-      if (response.success) {
-        setSubscriptionData(response.data);
+      // Backend returns: { hasSubscription, subscription?: {...} }
+      if (response.hasSubscription && response.subscription) {
+        setSubscriptionData(response.subscription);
+      } else {
+        setSubscriptionData(null);
       }
     } catch (error) {
       console.error('Failed to fetch subscription:', error);

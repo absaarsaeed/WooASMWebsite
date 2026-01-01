@@ -64,14 +64,14 @@ class ApiService {
       const response = await fetch(`${this.baseUrl}/auth/refresh`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ refreshToken }), // camelCase
+        body: JSON.stringify({ refreshToken }), // camelCase per API spec
       });
       
-      const data = await response.json();
+      const result = await response.json();
       
-      if (data.success) {
-        localStorage.setItem('wooasm_access_token', data.accessToken);
-        localStorage.setItem('wooasm_refresh_token', data.refreshToken);
+      // Backend returns: { success: true, data: { accessToken, tokenType, expiresIn } }
+      if (result.success && result.data?.accessToken) {
+        localStorage.setItem('wooasm_access_token', result.data.accessToken);
         return true;
       }
       return false;
@@ -228,8 +228,11 @@ class ApiService {
   }
 
   // POST /billing/cancel
-  async cancelSubscription() {
-    return this.request('/billing/cancel', { method: 'POST' });
+  async cancelSubscription(reason = '', feedback = '') {
+    return this.request('/billing/cancel', { 
+      method: 'POST',
+      body: JSON.stringify({ reason, feedback }),
+    });
   }
 
   // POST /billing/resume

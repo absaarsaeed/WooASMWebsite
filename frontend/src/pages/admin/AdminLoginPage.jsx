@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Zap, User, Lock, ArrowRight, Shield } from 'lucide-react';
+import { Zap, Mail, Lock, ArrowRight, Shield } from 'lucide-react';
+import api from '../../services/api';
 import SEO from '../../components/SEO';
 
-const API_URL = process.env.REACT_APP_BACKEND_URL;
-
 const AdminLoginPage = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -19,19 +18,13 @@ const AdminLoginPage = () => {
     setLoading(true);
 
     try {
-      const response = await fetch(`${API_URL}/api/admin/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        localStorage.setItem('wooasm_admin_token', data.admin_token);
+      const response = await api.adminLogin(email, password);
+      // Backend returns: { success: true, data: { adminToken, role, expiresIn } }
+      if (response.success && response.data?.adminToken) {
+        localStorage.setItem('wooasm_admin_token', response.data.adminToken);
         navigate('/admin');
       } else {
-        setError(data.detail || 'Invalid credentials');
+        setError(response.message || 'Invalid credentials');
       }
     } catch (err) {
       setError('Failed to connect to server');
@@ -67,17 +60,17 @@ const AdminLoginPage = () => {
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
-                Username
+                Email
               </label>
               <div className="relative">
-                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
                 <input
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                   className="w-full pl-12 pr-4 py-3 rounded-xl bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                  placeholder="Enter username"
+                  placeholder="admin@wooasm.com"
                 />
               </div>
             </div>

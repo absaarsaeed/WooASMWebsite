@@ -3,9 +3,8 @@ import { motion } from 'framer-motion';
 import { 
   Users, DollarSign, Globe, BarChart3, TrendingUp, Calendar
 } from 'lucide-react';
+import api from '../../services/api';
 import SEO from '../../components/SEO';
-
-const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState(null);
@@ -17,14 +16,10 @@ const AdminDashboard = () => {
 
   const fetchStats = async () => {
     try {
-      const token = localStorage.getItem('wooasm_admin_token');
-      const response = await fetch(`${API_URL}/api/admin/stats`, {
-        headers: { 'X-Admin-Token': token }
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        setStats(data);
+      const response = await api.getAdminStats();
+      // Backend returns: { success: true, data: { overview, plans, revenue, usage, sites } }
+      if (response.success && response.data) {
+        setStats(response.data);
       }
     } catch (error) {
       console.error('Failed to fetch stats:', error);
@@ -44,8 +39,8 @@ const AdminDashboard = () => {
   const statCards = [
     {
       label: 'Total Users',
-      value: stats?.overview?.total_users || 0,
-      change: `+${stats?.overview?.users_today || 0} today`,
+      value: stats?.overview?.totalUsers || 0,
+      change: `+${stats?.overview?.usersToday || 0} today`,
       icon: Users,
       color: 'purple'
     },
@@ -58,14 +53,14 @@ const AdminDashboard = () => {
     },
     {
       label: 'Active Sites',
-      value: stats?.sites?.total_activated || 0,
-      change: `${stats?.sites?.active_last_7_days || 0} active this week`,
+      value: stats?.sites?.totalActivated || 0,
+      change: `${stats?.sites?.activeLast7Days || 0} active this week`,
       icon: Globe,
       color: 'blue'
     },
     {
       label: 'AI Queries',
-      value: stats?.usage?.total_ai_queries_this_month?.toLocaleString() || 0,
+      value: stats?.usage?.totalAiQueriesThisMonth?.toLocaleString() || 0,
       change: 'This month',
       icon: BarChart3,
       color: 'amber'
@@ -159,10 +154,10 @@ const AdminDashboard = () => {
           <h2 className="text-lg font-semibold text-white mb-6">Usage This Month</h2>
           <div className="grid grid-cols-2 gap-4">
             {[
-              { label: 'Assistant Actions', value: stats?.usage?.assistant_actions || 0, icon: TrendingUp },
-              { label: 'Chatbot Messages', value: stats?.usage?.chatbot_messages || 0, icon: BarChart3 },
-              { label: 'Content Generated', value: stats?.usage?.content_generations || 0, icon: Calendar },
-              { label: 'Insights Refreshes', value: stats?.usage?.insights_refreshes || 0, icon: Globe }
+              { label: 'Assistant Actions', value: stats?.usage?.assistantActions || 0, icon: TrendingUp },
+              { label: 'Chatbot Messages', value: stats?.usage?.chatbotMessages || 0, icon: BarChart3 },
+              { label: 'Content Generated', value: stats?.usage?.contentGenerations || 0, icon: Calendar },
+              { label: 'Insights Refreshes', value: stats?.usage?.insightsRefreshes || 0, icon: Globe }
             ].map((item) => (
               <div key={item.label} className="bg-gray-700 rounded-xl p-4">
                 <item.icon className="w-5 h-5 text-gray-400 mb-2" />
@@ -184,15 +179,15 @@ const AdminDashboard = () => {
         <h2 className="text-lg font-semibold text-white mb-6">Growth Metrics</h2>
         <div className="grid sm:grid-cols-4 gap-6">
           <div className="text-center">
-            <p className="text-3xl font-bold text-purple-400">{stats?.overview?.users_today || 0}</p>
+            <p className="text-3xl font-bold text-purple-400">{stats?.overview?.usersToday || 0}</p>
             <p className="text-sm text-gray-400">New Today</p>
           </div>
           <div className="text-center">
-            <p className="text-3xl font-bold text-emerald-400">{stats?.overview?.users_this_week || 0}</p>
+            <p className="text-3xl font-bold text-emerald-400">{stats?.overview?.usersThisWeek || 0}</p>
             <p className="text-sm text-gray-400">This Week</p>
           </div>
           <div className="text-center">
-            <p className="text-3xl font-bold text-blue-400">{stats?.overview?.users_this_month || 0}</p>
+            <p className="text-3xl font-bold text-blue-400">{stats?.overview?.usersThisMonth || 0}</p>
             <p className="text-sm text-gray-400">This Month</p>
           </div>
           <div className="text-center">

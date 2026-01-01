@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Globe, ExternalLink, Clock, Server } from 'lucide-react';
+import api from '../../services/api';
 import SEO from '../../components/SEO';
-
-const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 const AdminSites = () => {
   const [sitesData, setSitesData] = useState(null);
@@ -15,14 +14,10 @@ const AdminSites = () => {
 
   const fetchSites = async () => {
     try {
-      const token = localStorage.getItem('wooasm_admin_token');
-      const response = await fetch(`${API_URL}/api/admin/sites`, {
-        headers: { 'X-Admin-Token': token }
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        setSitesData(data);
+      const response = await api.getAdminSites();
+      // Backend returns: { success: true, data: { sites, pagination } }
+      if (response.success && response.data) {
+        setSitesData(response.data);
       }
     } catch (error) {
       console.error('Failed to fetch sites:', error);
@@ -50,8 +45,18 @@ const AdminSites = () => {
   }
 
   const sites = sitesData?.sites || [];
-  const versionStats = sitesData?.by_plugin_version || {};
-  const wpStats = sitesData?.by_wordpress_version || {};
+  
+  // Calculate version stats from sites data
+  const versionStats = {};
+  const wpStats = {};
+  sites.forEach(site => {
+    if (site.pluginVersion) {
+      versionStats[site.pluginVersion] = (versionStats[site.pluginVersion] || 0) + 1;
+    }
+    if (site.wordpressVersion) {
+      wpStats[site.wordpressVersion] = (wpStats[site.wordpressVersion] || 0) + 1;
+    }
+  });
 
   return (
     <div className="p-8">
@@ -93,7 +98,7 @@ const AdminSites = () => {
               <Server className="w-6 h-6 text-emerald-400" />
             </div>
           </div>
-          <p className="text-3xl font-bold text-white">{sites.filter(s => s.is_active).length}</p>
+          <p className="text-3xl font-bold text-white">{sites.filter(s => s.isActive).length}</p>
           <p className="text-sm text-gray-400">Active Sites</p>
         </motion.div>
       </div>
@@ -172,13 +177,13 @@ const AdminSites = () => {
                 </tr>
               ) : (
                 sites.map((site) => (
-                  <tr key={site.site_id} className="border-b border-gray-700 hover:bg-gray-700/50">
+                  <tr key={site.siteId} className="border-b border-gray-700 hover:bg-gray-700/50">
                     <td className="py-4 px-6">
                       <div className="flex items-center gap-2">
                         <Globe className="w-4 h-4 text-gray-500" />
-                        <span className="text-white">{site.site_url}</span>
+                        <span className="text-white">{site.siteUrl}</span>
                         <a
-                          href={site.site_url}
+                          href={site.siteUrl}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-gray-500 hover:text-gray-300"
@@ -188,24 +193,24 @@ const AdminSites = () => {
                       </div>
                     </td>
                     <td className="py-4 px-6 text-gray-400">
-                      v{site.plugin_version}
+                      v{site.pluginVersion}
                     </td>
                     <td className="py-4 px-6 text-gray-400">
-                      {site.wordpress_version || 'Unknown'}
+                      {site.wordpressVersion || 'Unknown'}
                     </td>
                     <td className="py-4 px-6">
                       <div className="flex items-center gap-1 text-gray-400">
                         <Clock className="w-4 h-4" />
-                        {formatDate(site.last_seen_at)}
+                        {formatDate(site.lastSeenAt)}
                       </div>
                     </td>
                     <td className="py-4 px-6">
                       <span className={`px-2 py-1 rounded text-xs font-medium ${
-                        site.is_active 
+                        site.isActive 
                           ? 'bg-emerald-900/50 text-emerald-300'
                           : 'bg-gray-700 text-gray-400'
                       }`}>
-                        {site.is_active ? 'Active' : 'Inactive'}
+                        {site.isActive ? 'Active' : 'Inactive'}
                       </span>
                     </td>
                   </tr>

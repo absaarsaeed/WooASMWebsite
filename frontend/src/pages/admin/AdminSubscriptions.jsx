@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { DollarSign, Users, TrendingUp, CreditCard, AlertTriangle } from 'lucide-react';
+import api from '../../services/api';
 import SEO from '../../components/SEO';
-
-const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 const AdminSubscriptions = () => {
   const [subscriptions, setSubscriptions] = useState(null);
@@ -15,14 +14,11 @@ const AdminSubscriptions = () => {
 
   const fetchSubscriptions = async () => {
     try {
-      const token = localStorage.getItem('wooasm_admin_token');
-      const response = await fetch(`${API_URL}/api/admin/subscriptions`, {
-        headers: { 'X-Admin-Token': token }
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        setSubscriptions(data);
+      // Using admin stats endpoint which includes subscription data
+      const response = await api.getAdminStats();
+      // Backend returns: { success: true, data: { overview, plans, revenue, ... } }
+      if (response.success && response.data) {
+        setSubscriptions(response.data);
       }
     } catch (error) {
       console.error('Failed to fetch subscriptions:', error);
@@ -38,6 +34,11 @@ const AdminSubscriptions = () => {
       </div>
     );
   }
+
+  // Calculate active subscriptions (starter + professional)
+  const activeStarter = subscriptions?.plans?.starter || 0;
+  const activeProfessional = subscriptions?.plans?.professional || 0;
+  const activeTotal = activeStarter + activeProfessional;
 
   return (
     <div className="p-8">
@@ -94,7 +95,7 @@ const AdminSubscriptions = () => {
               <Users className="w-6 h-6 text-blue-400" />
             </div>
           </div>
-          <p className="text-3xl font-bold text-white">{subscriptions?.active?.total || 0}</p>
+          <p className="text-3xl font-bold text-white">{activeTotal}</p>
           <p className="text-sm text-gray-400">Active Subscriptions</p>
         </motion.div>
 
@@ -109,8 +110,8 @@ const AdminSubscriptions = () => {
               <AlertTriangle className="w-6 h-6 text-red-400" />
             </div>
           </div>
-          <p className="text-3xl font-bold text-white">{subscriptions?.cancelled || 0}</p>
-          <p className="text-sm text-gray-400">Cancelled</p>
+          <p className="text-3xl font-bold text-white">{subscriptions?.revenue?.today || 0}</p>
+          <p className="text-sm text-gray-400">Revenue Today ($)</p>
         </motion.div>
       </div>
 
@@ -135,7 +136,7 @@ const AdminSubscriptions = () => {
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-2xl font-bold text-white">{subscriptions?.active?.starter || 0}</p>
+                <p className="text-2xl font-bold text-white">{activeStarter}</p>
                 <p className="text-sm text-gray-500">subscribers</p>
               </div>
             </div>
@@ -151,7 +152,7 @@ const AdminSubscriptions = () => {
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-2xl font-bold text-white">{subscriptions?.active?.professional || 0}</p>
+                <p className="text-2xl font-bold text-white">{activeProfessional}</p>
                 <p className="text-sm text-gray-500">subscribers</p>
               </div>
             </div>
@@ -164,50 +165,40 @@ const AdminSubscriptions = () => {
           transition={{ delay: 0.5 }}
           className="bg-gray-800 rounded-2xl p-6 border border-gray-700"
         >
-          <h2 className="text-lg font-semibold text-white mb-6">Subscription Health</h2>
+          <h2 className="text-lg font-semibold text-white mb-6">Revenue Breakdown</h2>
           <div className="space-y-4">
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-gray-300">Active</span>
-                <span className="text-emerald-400">{subscriptions?.active?.total || 0}</span>
+                <span className="text-gray-300">Starter MRR</span>
+                <span className="text-purple-400">${(activeStarter * 29).toLocaleString()}</span>
               </div>
               <div className="h-2 bg-gray-700 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-emerald-500 rounded-full"
-                  style={{ width: '100%' }}
+                  className="h-full bg-purple-500 rounded-full"
+                  style={{ width: activeTotal > 0 ? `${(activeStarter / activeTotal) * 100}%` : '0%' }}
                 />
               </div>
             </div>
 
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-gray-300">Cancelled</span>
-                <span className="text-amber-400">{subscriptions?.cancelled || 0}</span>
+                <span className="text-gray-300">Professional MRR</span>
+                <span className="text-amber-400">${(activeProfessional * 79).toLocaleString()}</span>
               </div>
               <div className="h-2 bg-gray-700 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-amber-500 rounded-full"
-                  style={{ 
-                    width: `${subscriptions?.active?.total ? 
-                      (subscriptions?.cancelled / (subscriptions?.active?.total + subscriptions?.cancelled)) * 100 : 0}%` 
-                  }}
+                  style={{ width: activeTotal > 0 ? `${(activeProfessional / activeTotal) * 100}%` : '0%' }}
                 />
               </div>
             </div>
 
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-gray-300">Past Due</span>
-                <span className="text-red-400">{subscriptions?.past_due || 0}</span>
-              </div>
-              <div className="h-2 bg-gray-700 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-red-500 rounded-full"
-                  style={{ 
-                    width: `${subscriptions?.active?.total ? 
-                      (subscriptions?.past_due / (subscriptions?.active?.total + subscriptions?.past_due)) * 100 : 0}%` 
-                  }}
-                />
+            <div className="pt-4 border-t border-gray-700">
+              <div className="flex items-center justify-between">
+                <span className="text-gray-300 font-medium">Total MRR</span>
+                <span className="text-emerald-400 font-bold text-lg">
+                  ${subscriptions?.revenue?.mrr || 0}
+                </span>
               </div>
             </div>
           </div>

@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Search, ChevronLeft, ChevronRight, User, Mail, Calendar, Globe } from 'lucide-react';
+import api from '../../services/api';
 import SEO from '../../components/SEO';
-
-const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 const AdminUsers = () => {
   const [users, setUsers] = useState([]);
@@ -20,19 +19,15 @@ const AdminUsers = () => {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem('wooasm_admin_token');
-      let url = `${API_URL}/api/admin/users?page=${page}&limit=20`;
-      if (planFilter) url += `&plan=${planFilter}`;
-      if (search) url += `&search=${encodeURIComponent(search)}`;
+      const filters = {};
+      if (planFilter) filters.plan = planFilter;
+      if (search) filters.search = search;
       
-      const response = await fetch(url, {
-        headers: { 'X-Admin-Token': token }
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        setUsers(data.users);
-        setTotalPages(data.pages);
+      const response = await api.getAdminUsers(page, 20, filters);
+      // Backend returns: { success: true, data: { users, pagination: { total, page, pages, limit } } }
+      if (response.success && response.data) {
+        setUsers(response.data.users || []);
+        setTotalPages(response.data.pagination?.pages || 1);
       }
     } catch (error) {
       console.error('Failed to fetch users:', error);
@@ -158,19 +153,19 @@ const AdminUsers = () => {
                       <td className="py-4 px-6">
                         <div className="flex items-center gap-1 text-gray-400">
                           <Globe className="w-4 h-4" />
-                          {user.sites_count || 0}
+                          {user.sitesCount || 0}
                         </div>
                       </td>
                       <td className="py-4 px-6 text-gray-400">
-                        {formatDate(user.created_at)}
+                        {formatDate(user.createdAt)}
                       </td>
                       <td className="py-4 px-6">
                         <span className={`px-2 py-1 rounded text-xs font-medium ${
-                          user.email_verified 
+                          user.emailVerified 
                             ? 'bg-emerald-900/50 text-emerald-300'
                             : 'bg-amber-900/50 text-amber-300'
                         }`}>
-                          {user.email_verified ? 'Verified' : 'Pending'}
+                          {user.emailVerified ? 'Verified' : 'Pending'}
                         </span>
                       </td>
                     </tr>

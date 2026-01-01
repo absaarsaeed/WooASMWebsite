@@ -210,6 +210,24 @@ const LicensePage = () => {
         <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
           Generate a new license key if you suspect your current key has been compromised.
         </p>
+
+        {/* Success/Error Message */}
+        {message.text && (
+          <div className={`mb-4 p-4 rounded-xl ${
+            message.type === 'success' 
+              ? 'bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300'
+              : 'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300'
+          }`}>
+            <div className="flex items-start gap-3">
+              {message.type === 'success' ? (
+                <Check className="w-5 h-5 flex-shrink-0 mt-0.5" />
+              ) : (
+                <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+              )}
+              <p className="text-sm">{message.text}</p>
+            </div>
+          </div>
+        )}
         
         {showConfirm ? (
           <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4">
@@ -219,16 +237,19 @@ const LicensePage = () => {
                 <p className="font-medium text-amber-800 dark:text-amber-200 mb-2">
                   Are you sure you want to regenerate your license key?
                 </p>
-                <p className="text-sm text-amber-700 dark:text-amber-300 mb-4">
-                  This will deactivate all currently connected sites. You'll need to re-enter the new key in your WordPress plugin.
-                </p>
+                <ul className="text-sm text-amber-700 dark:text-amber-300 mb-4 list-disc list-inside space-y-1">
+                  <li>Your current key will be <strong>immediately invalidated</strong></li>
+                  <li>All WordPress sites using this key will be <strong>deactivated</strong></li>
+                  <li>You will need to enter the new key in each WordPress site</li>
+                  <li>This action <strong>cannot be undone</strong></li>
+                </ul>
                 <div className="flex gap-3">
                   <button
                     onClick={handleRegenerate}
                     disabled={regenerating}
                     className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-medium disabled:opacity-50"
                   >
-                    {regenerating ? 'Regenerating...' : 'Yes, Regenerate'}
+                    {regenerating ? 'Regenerating...' : 'Yes, Regenerate Key'}
                   </button>
                   <button
                     onClick={() => setShowConfirm(false)}
@@ -242,7 +263,7 @@ const LicensePage = () => {
           </div>
         ) : (
           <button
-            onClick={() => setShowConfirm(true)}
+            onClick={() => { setShowConfirm(true); setMessage({ type: '', text: '' }); }}
             className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
           >
             <RefreshCw className="w-4 h-4" />

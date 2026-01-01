@@ -73,10 +73,10 @@ export const AuthProvider = ({ children }) => {
       const response = await api.register(name, email, password, companyName);
       
       // Backend response format:
-      // { success: true, message, data: { user: { id, email, name, plan, licenseKey, ... } } }
-      if (response.success && response.data?.user) {
-        // Note: Registration may not return tokens - user needs to verify email first
-        // If tokens are provided, auto-login
+      // { success: true, message, data: { accessToken, refreshToken, user: { id, email, name, plan, ... } } }
+      // NOTE: User does NOT have a license key yet - they need to purchase a subscription first
+      if (response.success && response.data) {
+        // Auto-login after registration if tokens provided
         if (response.data.accessToken) {
           localStorage.setItem('wooasm_access_token', response.data.accessToken);
           localStorage.setItem('wooasm_refresh_token', response.data.refreshToken);
@@ -85,8 +85,7 @@ export const AuthProvider = ({ children }) => {
         }
         return { 
           success: true, 
-          user: response.data.user, 
-          licenseKey: response.data.user.licenseKey,
+          user: response.data.user,
           message: response.message 
         };
       }

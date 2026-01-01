@@ -121,14 +121,14 @@ const SitesPage = () => {
           <div>
             <p className="text-sm text-gray-600 dark:text-gray-400">Sites Used</p>
             <p className="text-3xl font-bold text-gray-900 dark:text-white">
-              {sitesData?.sitesUsed || activeSites.length} / {sitesData?.sitesAllowed || 1}
+              {sitesUsed} / {sitesAllowed}
             </p>
           </div>
-          {(sitesData?.sitesAllowed - sitesData?.sitesUsed) > 0 && (
+          {sitesRemaining > 0 && (
             <div className="text-right">
               <p className="text-sm text-gray-600 dark:text-gray-400">Sites Remaining</p>
               <p className="text-2xl font-bold text-emerald-600">
-                {sitesData?.sitesAllowed - sitesData?.sitesUsed}
+                {sitesRemaining}
               </p>
             </div>
           )}

@@ -112,6 +112,42 @@ export const AuthProvider = ({ children }) => {
     return false;
   };
 
+  const forgotPassword = async (email) => {
+    try {
+      const response = await api.forgotPassword(email);
+      // Backend always returns success to prevent email enumeration
+      return { success: response.success || true };
+    } catch (error) {
+      return { success: false, error: 'Connection error. Please try again.' };
+    }
+  };
+
+  const resetPassword = async (token, newPassword) => {
+    try {
+      const response = await api.resetPassword(token, newPassword);
+      if (response.success) {
+        return { success: true };
+      }
+      return { success: false, error: response.message || 'Reset failed' };
+    } catch (error) {
+      return { success: false, error: 'Connection error. Please try again.' };
+    }
+  };
+
+  const verifyEmail = async (token) => {
+    try {
+      const response = await api.verifyEmail(token);
+      if (response.success) {
+        // Refresh user data after verification
+        await refreshUser();
+        return { success: true };
+      }
+      return { success: false, error: response.message || 'Verification failed' };
+    } catch (error) {
+      return { success: false, error: 'Connection error. Please try again.' };
+    }
+  };
+
   const value = {
     user,
     loading,
@@ -120,6 +156,9 @@ export const AuthProvider = ({ children }) => {
     register,
     logout,
     refreshUser,
+    forgotPassword,
+    resetPassword,
+    verifyEmail,
   };
 
   return (

@@ -62,7 +62,49 @@ const LicensePage = () => {
     );
   }
 
-  const licenseKey = licenseData?.licenseKey || user?.licenseKey || 'Loading...';
+  const licenseKey = licenseData?.licenseKey || user?.licenseKey;
+  const hasLicense = !!licenseKey;
+
+  // If user doesn't have a license, show subscribe prompt
+  if (!hasLicense) {
+    return (
+      <div className="p-8 max-w-4xl">
+        <SEO title="License Key - WooASM Dashboard" />
+        
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8"
+        >
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">License Key</h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            Get your license key to activate WooASM on your WordPress site
+          </p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-gradient-to-br from-purple-600 to-purple-700 rounded-2xl p-8 text-center"
+        >
+          <div className="w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center mx-auto mb-6">
+            <Key className="w-8 h-8 text-white" />
+          </div>
+          <h2 className="text-2xl font-bold text-white mb-4">No License Key Yet</h2>
+          <p className="text-purple-100 mb-6 max-w-md mx-auto">
+            Subscribe to a plan to get your license key. Once subscribed, you'll be able to activate WooASM on your WordPress store.
+          </p>
+          <Link
+            to="/dashboard/billing"
+            className="inline-flex items-center gap-2 bg-white text-purple-600 font-semibold px-8 py-3 rounded-xl hover:bg-purple-50 transition-colors"
+          >
+            Choose a Plan
+            <ArrowRight className="w-5 h-5" />
+          </Link>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-8 max-w-4xl">

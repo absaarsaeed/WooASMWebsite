@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { Check, X } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Check, X, Loader2 } from 'lucide-react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import SEO from '../components/SEO';
+import { useAuth } from '../context/AuthContext';
+import api from '../services/api';
 import { pricingPlans, faqs } from '../data/mock';
 import {
   Accordion,
@@ -15,14 +17,58 @@ import {
 
 const PricingPage = () => {
   const [isYearly, setIsYearly] = useState(false);
+  const [loadingPlan, setLoadingPlan] = useState(null);
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSelectPlan = async (plan) => {
+    // Free plan - redirect to signup
+    if (plan.id === 'free') {
+      if (isAuthenticated) {
+        navigate('/dashboard');
+      } else {
+        navigate('/signup');
+      }
+      return;
+    }
+
+    // Paid plans - need to be logged in first
+    if (!isAuthenticated) {
+      // Store intent and redirect to signup
+      sessionStorage.setItem('checkout_intent', JSON.stringify({
+        plan: plan.id,
+        billingCycle: isYearly ? 'yearly' : 'monthly'
+      }));
+      navigate('/signup');
+      return;
+    }
+
+    // User is logged in - create Stripe checkout
+    setLoadingPlan(plan.id);
+    try {
+      const response = await api.createCheckout(plan.id, isYearly ? 'yearly' : 'monthly');
+      
+      if (response.success && response.data?.checkoutUrl) {
+        // Redirect to Stripe Checkout
+        window.location.href = response.data.checkoutUrl;
+      } else {
+        alert(response.message || 'Failed to create checkout. Please try again.');
+      }
+    } catch (error) {
+      console.error('Checkout error:', error);
+      alert('Failed to create checkout session. Please try again.');
+    } finally {
+      setLoadingPlan(null);
+    }
+  };
 
   return (
     <div className="min-h-screen">
       <SEO
-        title="Pricing - Simple, Transparent Plans"
-        description="Choose the perfect WooASM plan for your store. Start free, upgrade when you're ready. No hidden fees, cancel anytime. Free tier available."
-        keywords="WooASM pricing, WooCommerce AI pricing, store manager pricing, ecommerce AI cost"
-        url="https://wooasm.ai/pricing"
+        title="Pricing - WooASM | Simple, Transparent Plans for WooCommerce AI"
+        description="Choose the perfect WooASM plan for your WooCommerce store. Start with our free tier or upgrade for advanced AI features. Monthly and yearly billing available. No hidden fees."
+        keywords="WooASM pricing, WooCommerce AI pricing, ecommerce AI cost, store manager pricing, WooCommerce plugin pricing"
+        url="https://wooasm.com/pricing"
       />
       <Header />
       <main>
@@ -135,19 +181,29 @@ const PricingPage = () => {
                       <p className={`text-sm mt-1 ${
                         plan.popular ? 'text-purple-200' : 'text-gray-500 dark:text-gray-400'
                       }`}>
-                        Billed annually
+                        Billed annually (${plan.yearlyPrice * 12}/year)
                       </p>
                     )}
                   </div>
 
                   <button
-                    className={`w-full py-3 rounded-xl font-semibold transition-all mb-8 ${
+                    onClick={() => handleSelectPlan(plan)}
+                    disabled={loadingPlan === plan.id}
+                    data-testid={`pricing-btn-${plan.id}`}
+                    className={`w-full py-3 rounded-xl font-semibold transition-all mb-8 flex items-center justify-center gap-2 disabled:opacity-70 ${
                       plan.popular
                         ? 'bg-white text-purple-700 hover:bg-purple-50'
                         : 'bg-purple-600 text-white hover:bg-purple-700'
                     }`}
                   >
-                    {plan.cta}
+                    {loadingPlan === plan.id ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        Processing...
+                      </>
+                    ) : (
+                      plan.cta
+                    )}
                   </button>
 
                   <div className="space-y-3">
@@ -196,9 +252,12 @@ const PricingPage = () => {
                     For large stores & agencies. Custom pricing with multiple stores, white-label options, and dedicated support.
                   </p>
                 </div>
-                <button className="btn-secondary whitespace-nowrap">
+                <Link 
+                  to="/contact"
+                  className="btn-secondary whitespace-nowrap"
+                >
                   Contact Sales
-                </button>
+                </Link>
               </div>
             </motion.div>
           </div>
@@ -212,7 +271,7 @@ const PricingPage = () => {
             </h2>
             <div className="max-w-3xl mx-auto">
               <Accordion type="single" collapsible className="space-y-4">
-                {faqs.slice(0, 4).map((faq, index) => (
+                {faqs.slice(0, 6).map((faq, index) => (
                   <AccordionItem
                     key={index}
                     value={`item-${index}`}
@@ -227,6 +286,21 @@ const PricingPage = () => {
                   </AccordionItem>
                 ))}
               </Accordion>
+            </div>
+          </div>
+        </section>
+
+        {/* Money Back Guarantee */}
+        <section className="py-16 bg-white dark:bg-gray-900">
+          <div className="container-wide">
+            <div className="max-w-3xl mx-auto text-center">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                30-Day Money-Back Guarantee
+              </h2>
+              <p className="text-gray-600 dark:text-gray-400">
+                Try WooASM risk-free. If you're not completely satisfied within 30 days, 
+                we'll refund your payment in full. No questions asked.
+              </p>
             </div>
           </div>
         </section>

@@ -158,7 +158,7 @@ const DashboardOverview = () => {
       </div>
 
       {/* License Key Section - Only show if user has a subscription */}
-      {hasSubscription && license?.licenseKey ? (
+      {hasSubscription && licenseKey ? (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -176,9 +176,9 @@ const DashboardOverview = () => {
             </Link>
           </div>
           <div className="bg-gray-900 dark:bg-gray-700 rounded-xl p-4 font-mono text-lg text-emerald-400 flex items-center justify-between">
-            <span>{license.licenseKey}</span>
+            <span>{licenseKey}</span>
             <button
-              onClick={() => navigator.clipboard.writeText(license.licenseKey)}
+              onClick={() => navigator.clipboard.writeText(licenseKey)}
               className="text-gray-400 hover:text-white transition-colors"
             >
               Copy

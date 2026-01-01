@@ -230,6 +230,14 @@ class ApiService {
     return this.request(`/billing/checkout/status/${sessionId}`);
   }
 
+  // POST /billing/mock-checkout - Process mock payment in test mode
+  async processMockCheckout(plan, billingCycle) {
+    return this.request('/billing/mock-checkout', {
+      method: 'POST',
+      body: JSON.stringify({ plan, billingCycle }),
+    });
+  }
+
   // GET /billing/subscription
   async getSubscription() {
     return this.request('/billing/subscription');

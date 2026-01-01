@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { BarChart3, TrendingUp, Download } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import api from '../../services/api';
 import SEO from '../../components/SEO';
 
-const API_URL = process.env.REACT_APP_BACKEND_URL;
-
 const UsagePage = () => {
-  const { getToken, user } = useAuth();
+  const { user } = useAuth();
   const [usageData, setUsageData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -17,12 +16,10 @@ const UsagePage = () => {
 
   const fetchUsage = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/dashboard/usage`, {
-        headers: { 'Authorization': `Bearer ${getToken()}` }
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setUsageData(data);
+      const response = await api.getUsage();
+      // Backend returns: { success: true, data: { currentMonth, usage, limits, history } }
+      if (response.success && response.data) {
+        setUsageData(response.data);
       }
     } catch (error) {
       console.error('Failed to fetch usage:', error);
@@ -39,24 +36,17 @@ const UsagePage = () => {
     );
   }
 
-  const currentMonth = usageData?.current_month || {};
+  // Backend response uses camelCase
+  const currentUsage = usageData?.usage || {};
+  const limits = usageData?.limits || {};
   const history = usageData?.history || [];
 
   const usageItems = [
-    { label: 'AI Assistant Actions', key: 'assistant_actions', color: 'purple', limit: 50 },
-    { label: 'Chatbot Messages', key: 'chatbot_messages', color: 'emerald', limit: 100 },
-    { label: 'Content Generations', key: 'content_generations', color: 'blue', limit: 10 },
-    { label: 'Insights Refreshes', key: 'insights_refreshes', color: 'amber', limit: 5 }
+    { label: 'AI Assistant Actions', key: 'assistantActions', color: 'purple' },
+    { label: 'Chatbot Messages', key: 'chatbotMessages', color: 'emerald' },
+    { label: 'Content Generations', key: 'contentGenerations', color: 'blue' },
+    { label: 'Insights Refreshes', key: 'insightsRefreshes', color: 'amber' }
   ];
-
-  // Adjust limits based on plan
-  const planLimits = {
-    free: { assistant_actions: 50, chatbot_messages: 100, content_generations: 10, insights_refreshes: 5 },
-    starter: { assistant_actions: 500, chatbot_messages: 1000, content_generations: 100, insights_refreshes: 50 },
-    professional: { assistant_actions: 2000, chatbot_messages: 5000, content_generations: 500, insights_refreshes: 200 }
-  };
-
-  const limits = planLimits[user?.plan] || planLimits.free;
 
   return (
     <div className="p-8 max-w-4xl">
@@ -83,7 +73,7 @@ const UsagePage = () => {
           <div>
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Current Month</h2>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              {currentMonth.month || new Date().toISOString().slice(0, 7)}
+              {usageData?.currentMonth || new Date().toISOString().slice(0, 7)}
             </p>
           </div>
           <button className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
@@ -94,8 +84,8 @@ const UsagePage = () => {
 
         <div className="grid sm:grid-cols-2 gap-6">
           {usageItems.map((item, index) => {
-            const used = currentMonth[item.key] || 0;
-            const limit = limits[item.key] || item.limit;
+            const used = currentUsage[item.key] || 0;
+            const limit = limits[item.key] || 0;
             const percentage = limit > 0 ? Math.min(100, (used / limit) * 100) : 0;
             
             return (
@@ -124,7 +114,7 @@ const UsagePage = () => {
                 </div>
                 <div className="h-2 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden">
                   <div
-                    className={`h-full rounded-full transition-all bg-${item.color}-500`}
+                    className={`h-full rounded-full transition-all`}
                     style={{ 
                       width: `${percentage}%`,
                       backgroundColor: item.color === 'purple' ? '#8B5CF6' : 
@@ -137,6 +127,26 @@ const UsagePage = () => {
             );
           })}
         </div>
+
+        {/* Weighted Total */}
+        {usageData?.usage?.weightedTotal !== undefined && (
+          <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Weighted Total Usage</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Combined weighted score of all features</p>
+              </div>
+              <div className="text-right">
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                  {(usageData.usage.weightedTotal || 0).toLocaleString()}
+                </p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  / {(limits.weightedCap || 0).toLocaleString()}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
       </motion.div>
 
       {/* Usage History */}
@@ -171,16 +181,16 @@ const UsagePage = () => {
                       {record.month}
                     </td>
                     <td className="py-3 px-4 text-sm text-right text-gray-600 dark:text-gray-400">
-                      {(record.assistant_actions || 0).toLocaleString()}
+                      {(record.assistantActions || 0).toLocaleString()}
                     </td>
                     <td className="py-3 px-4 text-sm text-right text-gray-600 dark:text-gray-400">
-                      {(record.chatbot_messages || 0).toLocaleString()}
+                      {(record.chatbotMessages || 0).toLocaleString()}
                     </td>
                     <td className="py-3 px-4 text-sm text-right text-gray-600 dark:text-gray-400">
-                      {(record.content_generations || 0).toLocaleString()}
+                      {(record.contentGenerations || 0).toLocaleString()}
                     </td>
                     <td className="py-3 px-4 text-sm text-right text-gray-600 dark:text-gray-400">
-                      {(record.insights_refreshes || 0).toLocaleString()}
+                      {(record.insightsRefreshes || 0).toLocaleString()}
                     </td>
                   </tr>
                 ))}

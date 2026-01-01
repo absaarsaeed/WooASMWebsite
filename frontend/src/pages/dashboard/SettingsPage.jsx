@@ -2,21 +2,20 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { User, Mail, Building, Lock, Trash2, AlertTriangle, Check } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import api from '../../services/api';
 import SEO from '../../components/SEO';
 
-const API_URL = process.env.REACT_APP_BACKEND_URL;
-
 const SettingsPage = () => {
-  const { user, getToken, refreshUser, logout } = useAuth();
+  const { user, refreshUser, logout } = useAuth();
   const [formData, setFormData] = useState({
     name: user?.name || '',
     email: user?.email || '',
-    company_name: user?.company_name || ''
+    companyName: user?.companyName || ''
   });
   const [passwordData, setPasswordData] = useState({
-    current_password: '',
-    new_password: '',
-    confirm_password: ''
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
   });
   const [loading, setLoading] = useState(false);
   const [passwordLoading, setPasswordLoading] = useState(false);
@@ -30,21 +29,16 @@ const SettingsPage = () => {
     setMessage('');
 
     try {
-      const response = await fetch(`${API_URL}/api/dashboard/settings`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${getToken()}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
+      const response = await api.updateSettings({
+        name: formData.name,
+        companyName: formData.companyName
       });
 
-      if (response.ok) {
+      if (response.success) {
         await refreshUser();
         setMessage('Profile updated successfully!');
       } else {
-        const error = await response.json();
-        setMessage(error.detail || 'Failed to update profile');
+        setMessage(response.message || 'Failed to update profile');
       }
     } catch (error) {
       setMessage('Failed to update profile');
@@ -58,31 +52,23 @@ const SettingsPage = () => {
     setPasswordLoading(true);
     setPasswordMessage('');
 
-    if (passwordData.new_password !== passwordData.confirm_password) {
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
       setPasswordMessage('Passwords do not match');
       setPasswordLoading(false);
       return;
     }
 
     try {
-      const response = await fetch(`${API_URL}/api/dashboard/change-password`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${getToken()}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          current_password: passwordData.current_password,
-          new_password: passwordData.new_password
-        })
-      });
+      const response = await api.changePassword(
+        passwordData.currentPassword,
+        passwordData.newPassword
+      );
 
-      if (response.ok) {
+      if (response.success) {
         setPasswordMessage('Password changed successfully!');
-        setPasswordData({ current_password: '', new_password: '', confirm_password: '' });
+        setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
       } else {
-        const error = await response.json();
-        setPasswordMessage(error.detail || 'Failed to change password');
+        setPasswordMessage(response.message || 'Failed to change password');
       }
     } catch (error) {
       setPasswordMessage('Failed to change password');
@@ -93,12 +79,8 @@ const SettingsPage = () => {
 
   const handleDeleteAccount = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/dashboard/account`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${getToken()}` }
-      });
-
-      if (response.ok) {
+      const response = await api.deleteAccount();
+      if (response.success) {
         logout();
         window.location.href = '/';
       }
@@ -165,10 +147,11 @@ const SettingsPage = () => {
               <input
                 type="email"
                 value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full pl-12 pr-4 py-3 rounded-xl bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white"
+                disabled
+                className="w-full pl-12 pr-4 py-3 rounded-xl bg-gray-100 dark:bg-gray-600 border border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed"
               />
             </div>
+            <p className="text-xs text-gray-500 mt-1">Email cannot be changed</p>
           </div>
 
           <div>
@@ -179,8 +162,8 @@ const SettingsPage = () => {
               <Building className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input
                 type="text"
-                value={formData.company_name}
-                onChange={(e) => setFormData({ ...formData, company_name: e.target.value })}
+                value={formData.companyName}
+                onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
                 className="w-full pl-12 pr-4 py-3 rounded-xl bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white"
               />
             </div>
@@ -224,8 +207,8 @@ const SettingsPage = () => {
               <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input
                 type="password"
-                value={passwordData.current_password}
-                onChange={(e) => setPasswordData({ ...passwordData, current_password: e.target.value })}
+                value={passwordData.currentPassword}
+                onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
                 className="w-full pl-12 pr-4 py-3 rounded-xl bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white"
               />
             </div>
@@ -239,8 +222,8 @@ const SettingsPage = () => {
               <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input
                 type="password"
-                value={passwordData.new_password}
-                onChange={(e) => setPasswordData({ ...passwordData, new_password: e.target.value })}
+                value={passwordData.newPassword}
+                onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
                 className="w-full pl-12 pr-4 py-3 rounded-xl bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white"
               />
             </div>
@@ -254,8 +237,8 @@ const SettingsPage = () => {
               <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input
                 type="password"
-                value={passwordData.confirm_password}
-                onChange={(e) => setPasswordData({ ...passwordData, confirm_password: e.target.value })}
+                value={passwordData.confirmPassword}
+                onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
                 className="w-full pl-12 pr-4 py-3 rounded-xl bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white"
               />
             </div>

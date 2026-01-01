@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Key, Copy, RefreshCw, AlertTriangle, Check, Download, ExternalLink } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import api from '../../services/api';
 import SEO from '../../components/SEO';
 
-const API_URL = process.env.REACT_APP_BACKEND_URL;
-
 const LicensePage = () => {
-  const { user, getToken, refreshUser } = useAuth();
+  const { user, refreshUser } = useAuth();
   const [licenseData, setLicenseData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [regenerating, setRegenerating] = useState(false);
@@ -20,12 +19,10 @@ const LicensePage = () => {
 
   const fetchLicenseData = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/dashboard/license`, {
-        headers: { 'Authorization': `Bearer ${getToken()}` }
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setLicenseData(data);
+      const response = await api.getLicense();
+      // Backend returns: { success: true, data: { licenseKey, status, plan, maxSites, sitesUsed, ... } }
+      if (response.success && response.data) {
+        setLicenseData(response.data);
       }
     } catch (error) {
       console.error('Failed to fetch license:', error);
@@ -35,7 +32,7 @@ const LicensePage = () => {
   };
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(licenseData?.license_key || user?.license_key);
+    navigator.clipboard.writeText(licenseData?.licenseKey || user?.licenseKey);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -43,13 +40,10 @@ const LicensePage = () => {
   const handleRegenerate = async () => {
     setRegenerating(true);
     try {
-      const response = await fetch(`${API_URL}/api/dashboard/regenerate-license`, {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${getToken()}` }
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setLicenseData({ ...licenseData, license_key: data.new_license_key });
+      const response = await api.regenerateLicense();
+      // Backend returns: { success: true, data: { licenseKey } }
+      if (response.success) {
+        await fetchLicenseData();
         await refreshUser();
       }
     } catch (error) {
@@ -68,7 +62,7 @@ const LicensePage = () => {
     );
   }
 
-  const licenseKey = licenseData?.license_key || user?.license_key;
+  const licenseKey = licenseData?.licenseKey || user?.licenseKey || 'Loading...';
 
   return (
     <div className="p-8 max-w-4xl">

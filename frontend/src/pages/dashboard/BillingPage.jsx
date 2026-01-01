@@ -35,8 +35,9 @@ const BillingPage = () => {
     try {
       const response = await api.createCheckout(plan, billingCycle);
       
-      if (response.success && response.data.checkout_url) {
-        window.location.href = response.data.checkout_url;
+      // Backend returns: { success: true, checkout_url, session_id }
+      if (response.success && response.checkout_url) {
+        window.location.href = response.checkout_url;
       } else {
         alert(response.message || 'Failed to create checkout');
       }
@@ -52,8 +53,9 @@ const BillingPage = () => {
     setPortalLoading(true);
     try {
       const response = await api.getBillingPortal();
-      if (response.success && response.data.portal_url) {
-        window.location.href = response.data.portal_url;
+      // Backend returns: { success: true, portal_url }
+      if (response.success && response.portal_url) {
+        window.location.href = response.portal_url;
       } else {
         alert('Could not open billing portal');
       }

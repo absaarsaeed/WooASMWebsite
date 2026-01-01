@@ -16,6 +16,7 @@ const CheckoutMockPage = () => {
   const userId = searchParams.get('userId');
   
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [cardNumber, setCardNumber] = useState('');
   const [expiry, setExpiry] = useState('');
   const [cvc, setCvc] = useState('');
@@ -30,18 +31,24 @@ const CheckoutMockPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setError('');
 
-    // Simulate payment processing
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
-    // In mock mode, call the backend to activate subscription
     try {
-      // The backend should have an endpoint to handle mock subscription activation
-      // For now, we'll just redirect to success
-      await refreshUser();
-      navigate('/checkout/success?session_id=mock_success');
+      // Call backend to process mock payment and activate subscription
+      const response = await api.processMockCheckout(plan, billing);
+      
+      if (response.success) {
+        // Refresh user data to get updated plan and license key
+        await refreshUser();
+        // Redirect to success page with the session ID from response
+        const sessionId = response.data?.sessionId || 'mock_success';
+        navigate(`/checkout/success?session_id=${sessionId}`);
+      } else {
+        setError(response.message || 'Payment failed. Please try again.');
+      }
     } catch (error) {
       console.error('Mock checkout error:', error);
+      setError('Payment processing failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -125,6 +132,13 @@ const CheckoutMockPage = () => {
             </div>
           </div>
 
+          {/* Error Message */}
+          {error && (
+            <div className="mx-6 mt-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-600 dark:text-red-400 text-sm">
+              {error}
+            </div>
+          )}
+
           {/* Payment Form */}
           <form onSubmit={handleSubmit} className="px-6 py-6 space-y-4">
             <div>
@@ -196,7 +210,7 @@ const CheckoutMockPage = () => {
 
             <div className="flex items-center justify-center gap-2 text-sm text-gray-500 dark:text-gray-400">
               <Lock className="w-4 h-4" />
-              <span>Secured by Stripe</span>
+              <span>Secured by Stripe (Test Mode)</span>
             </div>
           </form>
 

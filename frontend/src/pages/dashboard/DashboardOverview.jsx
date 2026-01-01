@@ -118,7 +118,7 @@ const DashboardOverview = () => {
           </div>
           <p className="text-sm text-gray-600 dark:text-gray-400">Active Sites</p>
           <p className="text-2xl font-bold text-gray-900 dark:text-white">
-            {license.sitesUsed || 0} / {license.maxSites || 1}
+            {license?.sitesUsed ?? userData?.sitesUsed ?? 0} / {license?.maxSites ?? userData?.maxSites ?? 1}
           </p>
         </motion.div>
 
@@ -135,7 +135,7 @@ const DashboardOverview = () => {
           </div>
           <p className="text-sm text-gray-600 dark:text-gray-400">Usage This Month</p>
           <p className="text-2xl font-bold text-gray-900 dark:text-white">
-            {percentages.weighted || 0}%
+            {percentages?.weighted ?? percentages?.overall ?? 0}%
           </p>
         </motion.div>
 

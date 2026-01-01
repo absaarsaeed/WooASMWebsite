@@ -174,15 +174,15 @@ const LicensePage = () => {
           <div className="flex items-center gap-2 text-sm">
             <span className="text-gray-500 dark:text-gray-400">Status:</span>
             <span className={`font-medium capitalize ${
-              licenseData?.status === 'active' ? 'text-emerald-600' : 'text-amber-600'
+              (licenseData?.status || user?.subscriptionStatus) === 'active' ? 'text-emerald-600' : 'text-amber-600'
             }`}>
-              {licenseData?.status || 'active'}
+              {licenseData?.status || user?.subscriptionStatus || 'active'}
             </span>
           </div>
           <div className="flex items-center gap-2 text-sm">
             <span className="text-gray-500 dark:text-gray-400">Sites:</span>
             <span className="font-medium text-gray-900 dark:text-white">
-              {licenseData?.sitesUsed || 0} / {licenseData?.maxSites || 1}
+              {sitesUsed} / {maxSites}
             </span>
           </div>
         </div>

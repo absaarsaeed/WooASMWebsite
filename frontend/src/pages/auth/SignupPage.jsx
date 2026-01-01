@@ -49,8 +49,9 @@ const SignupPage = () => {
     );
     
     if (result.success) {
-      // Backend auto-logs in and returns tokens, redirect to dashboard
-      navigate('/dashboard');
+      // After successful registration, redirect to pricing page to choose a plan
+      // User doesn't have a license key yet - they need to subscribe first
+      navigate('/pricing');
     } else {
       setError(result.error || 'Registration failed');
     }

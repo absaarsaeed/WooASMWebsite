@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Key, Copy, RefreshCw, AlertTriangle, Check, Download, ExternalLink } from 'lucide-react';
+import { Key, Copy, RefreshCw, AlertTriangle, Check, Download, ExternalLink, ArrowRight } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../services/api';
 import SEO from '../../components/SEO';

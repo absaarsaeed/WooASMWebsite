@@ -260,7 +260,7 @@ const SitesPage = () => {
           <div className="text-sm text-blue-700 dark:text-blue-300">
             <p className="font-medium mb-1">Need more sites?</p>
             <p>
-              Your current plan allows {sitesData?.sitesAllowed || 1} site(s). 
+              Your current plan allows {sitesAllowed} site(s). 
               Upgrade to Professional to connect up to 5 sites with a single license.
             </p>
           </div>

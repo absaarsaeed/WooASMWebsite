@@ -20,9 +20,9 @@ const BillingPage = () => {
   const fetchSubscription = async () => {
     try {
       const response = await api.getSubscription();
-      // Backend returns: { hasSubscription, subscription?: {...} }
-      if (response.hasSubscription && response.subscription) {
-        setSubscriptionData(response.subscription);
+      // Backend returns: { success: true, data: { plan, billingCycle, status, ... } }
+      if (response.success && response.data) {
+        setSubscriptionData(response.data);
       } else {
         setSubscriptionData(null);
       }
@@ -38,9 +38,9 @@ const BillingPage = () => {
     try {
       const response = await api.createCheckout(plan, billingCycle);
       
-      // Backend returns: { success: true, checkout_url, session_id }
-      if (response.success && response.checkout_url) {
-        window.location.href = response.checkout_url;
+      // Backend returns: { success: true, data: { checkoutUrl, sessionId } }
+      if (response.success && response.data?.checkoutUrl) {
+        window.location.href = response.data.checkoutUrl;
       } else {
         alert(response.message || 'Failed to create checkout');
       }
@@ -56,9 +56,9 @@ const BillingPage = () => {
     setPortalLoading(true);
     try {
       const response = await api.getBillingPortal();
-      // Backend returns: { success: true, portal_url }
-      if (response.success && response.portal_url) {
-        window.location.href = response.portal_url;
+      // Backend returns: { success: true, data: { portalUrl } }
+      if (response.success && response.data?.portalUrl) {
+        window.location.href = response.data.portalUrl;
       } else {
         alert('Could not open billing portal');
       }
@@ -190,27 +190,27 @@ const BillingPage = () => {
               'text-amber-600'
             }`}>
               {subscriptionData?.status || 'active'}
-              {subscriptionData?.cancel_at_period_end && ' (Cancelling)'}
+              {subscriptionData?.cancelAtPeriodEnd && ' (Cancelling)'}
             </p>
           </div>
           <div>
             <p className="text-sm text-gray-500 dark:text-gray-400">Billing Cycle</p>
             <p className="text-xl font-bold text-gray-900 dark:text-white capitalize">
-              {subscriptionData?.billing_cycle || 'N/A'}
+              {subscriptionData?.billingCycle || 'N/A'}
             </p>
           </div>
         </div>
 
-        {subscriptionData?.current_period_end && currentPlan !== 'free' && (
+        {subscriptionData?.currentPeriodEnd && currentPlan !== 'free' && (
           <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
             <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
               <Calendar className="w-4 h-4" />
-              {subscriptionData?.cancel_at_period_end ? 'Access until: ' : 'Next billing date: '}
-              {formatDate(subscriptionData.current_period_end)}
+              {subscriptionData?.cancelAtPeriodEnd ? 'Access until: ' : 'Next billing date: '}
+              {formatDate(subscriptionData.currentPeriodEnd)}
             </div>
-            {subscriptionData?.next_invoice && !subscriptionData?.cancel_at_period_end && (
+            {subscriptionData?.nextInvoice && !subscriptionData?.cancelAtPeriodEnd && (
               <p className="text-sm text-gray-500 mt-1">
-                Next charge: ${(subscriptionData.next_invoice.amount / 100).toFixed(2)}
+                Next charge: ${(subscriptionData.nextInvoice.amount / 100).toFixed(2)}
               </p>
             )}
           </div>
@@ -218,7 +218,7 @@ const BillingPage = () => {
 
         {currentPlan !== 'free' && (
           <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-            {subscriptionData?.cancel_at_period_end ? (
+            {subscriptionData?.cancelAtPeriodEnd ? (
               <button
                 onClick={handleResumeSubscription}
                 className="text-sm text-purple-600 hover:text-purple-700 font-medium"

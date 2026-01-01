@@ -146,36 +146,61 @@ const DashboardOverview = () => {
         </motion.div>
       </div>
 
-      {/* License Key Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
-        className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 mb-8"
-      >
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Your License Key</h2>
-          <Link
-            to="/dashboard/license"
-            className="text-purple-600 dark:text-purple-400 text-sm font-medium hover:underline flex items-center gap-1"
-          >
-            Manage
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-        <div className="bg-gray-900 dark:bg-gray-700 rounded-xl p-4 font-mono text-lg text-emerald-400 flex items-center justify-between">
-          <span>{license.licenseKey || userData.licenseKey || user?.licenseKey}</span>
-          <button
-            onClick={() => navigator.clipboard.writeText(license.licenseKey || userData.licenseKey || user?.licenseKey)}
-            className="text-gray-400 hover:text-white transition-colors"
-          >
-            Copy
-          </button>
-        </div>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mt-3">
-          Use this key to activate WooASM on your WordPress site.
-        </p>
-      </motion.div>
+      {/* License Key Section - Only show if user has a subscription */}
+      {(license.licenseKey || userData.licenseKey) ? (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 mb-8"
+        >
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Your License Key</h2>
+            <Link
+              to="/dashboard/license"
+              className="text-purple-600 dark:text-purple-400 text-sm font-medium hover:underline flex items-center gap-1"
+            >
+              Manage
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+          <div className="bg-gray-900 dark:bg-gray-700 rounded-xl p-4 font-mono text-lg text-emerald-400 flex items-center justify-between">
+            <span>{license.licenseKey || userData.licenseKey}</span>
+            <button
+              onClick={() => navigator.clipboard.writeText(license.licenseKey || userData.licenseKey)}
+              className="text-gray-400 hover:text-white transition-colors"
+            >
+              Copy
+            </button>
+          </div>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-3">
+            Use this key to activate WooASM on your WordPress site.
+          </p>
+        </motion.div>
+      ) : (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="bg-gradient-to-br from-purple-600 to-purple-700 rounded-2xl p-6 mb-8"
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-xl font-bold text-white mb-2">Get Your License Key</h3>
+              <p className="text-purple-100">
+                Subscribe to a plan to get your license key and start using WooASM on your store.
+              </p>
+            </div>
+            <Link
+              to="/dashboard/billing"
+              className="flex-shrink-0 bg-white text-purple-600 font-semibold px-6 py-3 rounded-xl hover:bg-purple-50 transition-colors flex items-center gap-2"
+            >
+              <Zap className="w-5 h-5" />
+              Choose Plan
+            </Link>
+          </div>
+        </motion.div>
+      )}
 
       {/* Usage Breakdown */}
       <motion.div

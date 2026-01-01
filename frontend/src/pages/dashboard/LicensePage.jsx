@@ -21,12 +21,9 @@ const LicensePage = () => {
   const fetchLicenseData = async () => {
     try {
       const response = await api.getLicense();
-      // Backend may return: { success: true, data: { ... } } or direct data
+      // Backend returns: { success: true, data: { hasLicense, licenseKey, status, plan, maxSites, sitesUsed, ... } }
       if (response.success && response.data) {
         setLicenseData(response.data);
-      } else if (response.licenseKey) {
-        // Direct format
-        setLicenseData(response);
       }
     } catch (error) {
       console.error('Failed to fetch license:', error);
@@ -48,7 +45,6 @@ const LicensePage = () => {
     setRegenerating(true);
     try {
       const response = await api.regenerateLicense();
-      // Backend returns: { success: true, data: { licenseKey } }
       if (response.success) {
         await fetchLicenseData();
         await refreshUser();
@@ -69,11 +65,11 @@ const LicensePage = () => {
     );
   }
 
-  // Get license key from multiple possible sources
+  // Backend returns hasLicense flag, or check licenseKey directly
+  const hasLicense = licenseData?.hasLicense || !!licenseData?.licenseKey || !!user?.licenseKey;
   const licenseKey = licenseData?.licenseKey || user?.licenseKey;
-  const hasLicense = !!licenseKey;
   
-  // Get sites data
+  // Get sites data from license response or user
   const sitesUsed = licenseData?.sitesUsed ?? user?.sitesUsed ?? 0;
   const maxSites = licenseData?.maxSites ?? user?.maxSites ?? 1;
 

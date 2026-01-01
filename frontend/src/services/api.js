@@ -134,10 +134,10 @@ class ApiService {
   }
 
   // POST /auth/reset-password
-  async resetPassword(token, newPassword) {
+  async resetPassword(token, password) {
     return this.request('/auth/reset-password', {
       method: 'POST',
-      body: JSON.stringify({ token, newPassword }), // camelCase per API spec
+      body: JSON.stringify({ token, password }), // Backend expects 'password'
     });
   }
 

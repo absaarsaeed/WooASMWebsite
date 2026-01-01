@@ -43,17 +43,46 @@ const UsagePage = () => {
     );
   }
 
-  // Handle multiple response formats from backend
-  const currentUsage = usageData?.usage?.current || usageData?.usage || usageData?.current || {};
-  const limits = usageData?.usage?.limits || usageData?.limits || {};
-  const percentages = usageData?.usage?.percentages || usageData?.percentages || {};
+  // Check if user has subscription (backend returns hasSubscription flag)
+  const hasSubscription = usageData?.hasSubscription !== false;
+  
+  // If no subscription, show subscribe prompt
+  if (!hasSubscription || usageData?.message) {
+    return (
+      <div className="p-8 max-w-4xl">
+        <SEO title="Usage - WooASM Dashboard" />
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-gradient-to-br from-purple-600 to-purple-700 rounded-2xl p-8 text-center"
+        >
+          <h2 className="text-2xl font-bold text-white mb-4">No Usage Data Yet</h2>
+          <p className="text-purple-100 mb-6">
+            {usageData?.message || 'Subscribe to a plan to start tracking your usage across all features.'}
+          </p>
+          <a
+            href="/dashboard/billing"
+            className="inline-flex items-center gap-2 bg-white text-purple-600 font-semibold px-6 py-3 rounded-xl hover:bg-purple-50 transition-colors"
+          >
+            Choose a Plan
+          </a>
+        </motion.div>
+      </div>
+    );
+  }
+
+  // Handle backend response format: data.usage.current, data.usage.limits, data.usage.percentages
+  const currentUsage = usageData?.usage?.current || {};
+  const limits = usageData?.usage?.limits || {};
+  const percentages = usageData?.usage?.percentages || {};
   const history = usageData?.history || [];
+  const currentMonth = usageData?.currentMonth || new Date().toISOString().slice(0, 7);
 
   const usageItems = [
-    { label: 'AI Assistant Actions', key: 'assistantActions', altKey: 'assistant_actions', color: 'purple' },
-    { label: 'Chatbot Messages', key: 'chatbotMessages', altKey: 'chatbot_messages', color: 'emerald' },
-    { label: 'Content Generations', key: 'contentGenerations', altKey: 'content_generations', color: 'blue' },
-    { label: 'Insights Refreshes', key: 'insightsRefreshes', altKey: 'insights_refreshes', color: 'amber' }
+    { label: 'AI Assistant Actions', key: 'assistantActions', color: 'purple' },
+    { label: 'Chatbot Messages', key: 'chatbotMessages', color: 'emerald' },
+    { label: 'Content Generations', key: 'contentGenerations', color: 'blue' },
+    { label: 'Insights Refreshes', key: 'insightsRefreshes', color: 'amber' }
   ];
 
   return (

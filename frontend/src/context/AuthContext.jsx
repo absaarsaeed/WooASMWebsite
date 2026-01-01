@@ -16,6 +16,13 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  const clearAuth = () => {
+    localStorage.removeItem('wooasm_access_token');
+    localStorage.removeItem('wooasm_refresh_token');
+    setUser(null);
+    setIsAuthenticated(false);
+  };
+
   // Check for stored token on mount
   useEffect(() => {
     const checkAuth = async () => {
@@ -40,13 +47,6 @@ export const AuthProvider = ({ children }) => {
 
     checkAuth();
   }, []);
-
-  const clearAuth = () => {
-    localStorage.removeItem('wooasm_access_token');
-    localStorage.removeItem('wooasm_refresh_token');
-    setUser(null);
-    setIsAuthenticated(false);
-  };
 
   const login = async (email, password) => {
     try {

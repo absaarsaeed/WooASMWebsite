@@ -45,6 +45,7 @@ import SettingsPage from "./pages/dashboard/SettingsPage";
 // Checkout Pages
 import CheckoutSuccessPage from "./pages/checkout/CheckoutSuccessPage";
 import CheckoutCancelPage from "./pages/checkout/CheckoutCancelPage";
+import CheckoutMockPage from "./pages/checkout/CheckoutMockPage";
 
 // Admin Pages
 import AdminLoginPage from "./pages/admin/AdminLoginPage";

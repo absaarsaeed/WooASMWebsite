@@ -92,9 +92,11 @@ const UsagePage = () => {
 
         <div className="grid sm:grid-cols-2 gap-6">
           {usageItems.map((item, index) => {
-            const used = currentUsage[item.key] || 0;
-            const limit = limits[item.key] || 0;
-            const percentage = limit > 0 ? Math.min(100, (used / limit) * 100) : 0;
+            // Try both camelCase and snake_case keys
+            const used = currentUsage[item.key] ?? currentUsage[item.altKey] ?? 0;
+            const limit = limits[item.key] ?? limits[item.altKey] ?? 100;
+            const pct = percentages[item.key] ?? percentages[item.altKey];
+            const percentage = pct ?? (limit > 0 ? Math.min(100, (used / limit) * 100) : 0);
             
             return (
               <motion.div
@@ -109,15 +111,15 @@ const UsagePage = () => {
                     {item.label}
                   </span>
                   <span className="text-sm text-gray-500 dark:text-gray-400">
-                    {percentage.toFixed(0)}%
+                    {typeof percentage === 'number' ? percentage.toFixed(0) : 0}%
                   </span>
                 </div>
                 <div className="mb-2">
                   <span className="text-2xl font-bold text-gray-900 dark:text-white">
-                    {used.toLocaleString()}
+                    {typeof used === 'number' ? used.toLocaleString() : 0}
                   </span>
                   <span className="text-gray-500 dark:text-gray-400 ml-1">
-                    / {limit.toLocaleString()}
+                    / {typeof limit === 'number' ? limit.toLocaleString() : 0}
                   </span>
                 </div>
                 <div className="h-2 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden">

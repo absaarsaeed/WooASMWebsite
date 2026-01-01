@@ -9,6 +9,7 @@ const UsagePage = () => {
   const { user } = useAuth();
   const [usageData, setUsageData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchUsage();
@@ -17,12 +18,18 @@ const UsagePage = () => {
   const fetchUsage = async () => {
     try {
       const response = await api.getUsage();
-      // Backend returns: { success: true, data: { currentMonth, usage, limits, history } }
+      // Backend may return: { success: true, data: { ... } } or direct data
       if (response.success && response.data) {
         setUsageData(response.data);
+      } else if (response.success === false) {
+        setError(response.message || 'Failed to load usage data');
+      } else {
+        // Direct data format
+        setUsageData(response);
       }
     } catch (error) {
       console.error('Failed to fetch usage:', error);
+      setError('Failed to load usage data');
     } finally {
       setLoading(false);
     }
@@ -36,16 +43,17 @@ const UsagePage = () => {
     );
   }
 
-  // Backend response uses camelCase
-  const currentUsage = usageData?.usage || {};
-  const limits = usageData?.limits || {};
+  // Handle multiple response formats from backend
+  const currentUsage = usageData?.usage?.current || usageData?.usage || usageData?.current || {};
+  const limits = usageData?.usage?.limits || usageData?.limits || {};
+  const percentages = usageData?.usage?.percentages || usageData?.percentages || {};
   const history = usageData?.history || [];
 
   const usageItems = [
-    { label: 'AI Assistant Actions', key: 'assistantActions', color: 'purple' },
-    { label: 'Chatbot Messages', key: 'chatbotMessages', color: 'emerald' },
-    { label: 'Content Generations', key: 'contentGenerations', color: 'blue' },
-    { label: 'Insights Refreshes', key: 'insightsRefreshes', color: 'amber' }
+    { label: 'AI Assistant Actions', key: 'assistantActions', altKey: 'assistant_actions', color: 'purple' },
+    { label: 'Chatbot Messages', key: 'chatbotMessages', altKey: 'chatbot_messages', color: 'emerald' },
+    { label: 'Content Generations', key: 'contentGenerations', altKey: 'content_generations', color: 'blue' },
+    { label: 'Insights Refreshes', key: 'insightsRefreshes', altKey: 'insights_refreshes', color: 'amber' }
   ];
 
   return (

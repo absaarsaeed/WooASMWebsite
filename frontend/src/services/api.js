@@ -47,23 +47,36 @@ class ApiService {
         };
       }
 
-      const data = await response.json();
-
-      // Handle token refresh if needed
-      if (response.status === 401 && data.error === 'token_expired') {
+      // Handle unauthorized - try to refresh token
+      if (response.status === 401) {
         const refreshed = await this.refreshToken();
         if (refreshed) {
           // Retry the request with new token
           config.headers['Authorization'] = `Bearer ${this.getToken()}`;
           const retryResponse = await fetch(url, config);
-          return retryResponse.json();
+          if (retryResponse.ok) {
+            return retryResponse.json();
+          }
         }
+        // Return the original 401 response
+        return {
+          success: false,
+          error: 'unauthorized',
+          message: 'Session expired. Please log in again.',
+          statusCode: 401
+        };
       }
 
+      const data = await response.json();
       return data;
     } catch (error) {
       console.error('API request failed:', error);
-      throw error;
+      // Return error object instead of throwing
+      return {
+        success: false,
+        error: 'network_error',
+        message: 'Network error. Please check your connection.',
+      };
     }
   }
 

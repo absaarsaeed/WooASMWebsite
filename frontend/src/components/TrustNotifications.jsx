@@ -41,8 +41,9 @@ const TrustNotifications = () => {
   const fetchNotification = async () => {
     try {
       const response = await api.getRecentNotification();
-      if (response.success && response.data?.notification) {
-        setNotification(response.data.notification);
+      // Backend returns: { purchase: { id, displayName, plan, billingCycle?, country?, createdAt } }
+      if (response.purchase) {
+        setNotification(response.purchase);
       }
     } catch (error) {
       // Silently fail - this is non-critical
@@ -54,7 +55,9 @@ const TrustNotifications = () => {
     setIsVisible(false);
   };
 
-  const formatTimeAgo = (seconds) => {
+  const formatTimeAgo = (createdAt) => {
+    if (!createdAt) return 'recently';
+    const seconds = Math.floor((Date.now() - new Date(createdAt).getTime()) / 1000);
     if (seconds < 60) return 'just now';
     if (seconds < 3600) return `${Math.floor(seconds / 60)} minutes ago`;
     if (seconds < 86400) return `${Math.floor(seconds / 3600)} hours ago`;

@@ -129,9 +129,9 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const resetPassword = async (token, newPassword) => {
+  const resetPassword = async (token, password) => {
     try {
-      const response = await api.resetPassword(token, newPassword);
+      const response = await api.resetPassword(token, password);
       if (response.success) {
         return { success: true };
       }

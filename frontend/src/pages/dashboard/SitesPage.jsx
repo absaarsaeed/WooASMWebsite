@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Globe, Trash2, AlertTriangle, Clock, ExternalLink } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import api from '../../services/api';
 import SEO from '../../components/SEO';
 
-const API_URL = process.env.REACT_APP_BACKEND_URL;
-
 const SitesPage = () => {
-  const { getToken } = useAuth();
+  const { user } = useAuth();
   const [sitesData, setSitesData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
@@ -18,12 +17,10 @@ const SitesPage = () => {
 
   const fetchSites = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/dashboard/sites`, {
-        headers: { 'Authorization': `Bearer ${getToken()}` }
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setSitesData(data);
+      const response = await api.getSites();
+      // Backend returns: { success: true, data: { sitesAllowed, sitesUsed, sites: [...] } }
+      if (response.success && response.data) {
+        setSitesData(response.data);
       }
     } catch (error) {
       console.error('Failed to fetch sites:', error);
@@ -34,11 +31,8 @@ const SitesPage = () => {
 
   const handleDeactivate = async (siteId) => {
     try {
-      const response = await fetch(`${API_URL}/api/dashboard/sites/${siteId}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${getToken()}` }
-      });
-      if (response.ok) {
+      const response = await api.deactivateSite(siteId);
+      if (response.success) {
         fetchSites();
       }
     } catch (error) {
@@ -69,7 +63,7 @@ const SitesPage = () => {
   }
 
   const sites = sitesData?.sites || [];
-  const activeSites = sites.filter(s => s.is_active);
+  const activeSites = sites.filter(s => s.isActive);
 
   return (
     <div className="p-8 max-w-4xl">
@@ -96,14 +90,14 @@ const SitesPage = () => {
           <div>
             <p className="text-sm text-gray-600 dark:text-gray-400">Sites Used</p>
             <p className="text-3xl font-bold text-gray-900 dark:text-white">
-              {activeSites.length} / {sitesData?.max_sites || 1}
+              {sitesData?.sitesUsed || activeSites.length} / {sitesData?.sitesAllowed || 1}
             </p>
           </div>
-          {sitesData?.sites_remaining > 0 && (
+          {(sitesData?.sitesAllowed - sitesData?.sitesUsed) > 0 && (
             <div className="text-right">
               <p className="text-sm text-gray-600 dark:text-gray-400">Sites Remaining</p>
               <p className="text-2xl font-bold text-emerald-600">
-                {sitesData?.sites_remaining}
+                {sitesData?.sitesAllowed - sitesData?.sitesUsed}
               </p>
             </div>
           )}
@@ -130,12 +124,12 @@ const SitesPage = () => {
         ) : (
           sites.map((site, index) => (
             <motion.div
-              key={site.site_id}
+              key={site.siteId}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
               className={`bg-white dark:bg-gray-800 rounded-2xl p-6 border ${
-                site.is_active 
+                site.isActive 
                   ? 'border-gray-200 dark:border-gray-700' 
                   : 'border-gray-200 dark:border-gray-700 opacity-60'
               }`}
@@ -143,12 +137,12 @@ const SitesPage = () => {
               <div className="flex items-start justify-between">
                 <div className="flex items-start gap-4">
                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                    site.is_active 
+                    site.isActive 
                       ? 'bg-emerald-100 dark:bg-emerald-900/30' 
                       : 'bg-gray-100 dark:bg-gray-700'
                   }`}>
                     <Globe className={`w-6 h-6 ${
-                      site.is_active 
+                      site.isActive 
                         ? 'text-emerald-600 dark:text-emerald-400' 
                         : 'text-gray-400'
                     }`} />
@@ -156,10 +150,10 @@ const SitesPage = () => {
                   <div>
                     <div className="flex items-center gap-2">
                       <h3 className="font-semibold text-gray-900 dark:text-white">
-                        {site.site_url}
+                        {site.siteUrl}
                       </h3>
                       <a
-                        href={site.site_url}
+                        href={site.siteUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-gray-400 hover:text-gray-600"
@@ -169,33 +163,33 @@ const SitesPage = () => {
                     </div>
                     <div className="flex flex-wrap gap-4 mt-2 text-sm">
                       <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                        site.is_active
+                        site.isActive
                           ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400'
                           : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
                       }`}>
-                        {site.is_active ? 'Active' : 'Inactive'}
+                        {site.isActive ? 'Active' : 'Inactive'}
                       </span>
                       <span className="text-gray-500 dark:text-gray-400">
-                        Plugin v{site.plugin_version}
+                        Plugin v{site.pluginVersion}
                       </span>
-                      {site.wordpress_version && (
+                      {site.wordpressVersion && (
                         <span className="text-gray-500 dark:text-gray-400">
-                          WP {site.wordpress_version}
+                          WP {site.wordpressVersion}
                         </span>
                       )}
                     </div>
                     <div className="flex items-center gap-1 mt-2 text-sm text-gray-500 dark:text-gray-400">
                       <Clock className="w-4 h-4" />
-                      Last seen: {formatDate(site.last_seen_at)}
+                      Last seen: {formatDate(site.lastSeenAt)}
                     </div>
                   </div>
                 </div>
 
-                {site.is_active && (
-                  deleteConfirm === site.site_id ? (
+                {site.isActive && (
+                  deleteConfirm === site.siteId ? (
                     <div className="flex items-center gap-2">
                       <button
-                        onClick={() => handleDeactivate(site.site_id)}
+                        onClick={() => handleDeactivate(site.siteId)}
                         className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-sm rounded-lg"
                       >
                         Confirm
@@ -209,7 +203,7 @@ const SitesPage = () => {
                     </div>
                   ) : (
                     <button
-                      onClick={() => setDeleteConfirm(site.site_id)}
+                      onClick={() => setDeleteConfirm(site.siteId)}
                       className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
                       title="Deactivate site"
                     >
@@ -235,7 +229,7 @@ const SitesPage = () => {
           <div className="text-sm text-blue-700 dark:text-blue-300">
             <p className="font-medium mb-1">Need more sites?</p>
             <p>
-              Your current plan allows {sitesData?.max_sites || 1} site(s). 
+              Your current plan allows {sitesData?.sitesAllowed || 1} site(s). 
               Upgrade to Professional to connect up to 5 sites with a single license.
             </p>
           </div>

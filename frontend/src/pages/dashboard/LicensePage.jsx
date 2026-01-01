@@ -134,7 +134,7 @@ const LicensePage = () => {
           <div className="flex items-center gap-2 text-sm">
             <span className="text-gray-500 dark:text-gray-400">Sites:</span>
             <span className="font-medium text-gray-900 dark:text-white">
-              {licenseData?.sites_used || 0} / {licenseData?.sites_allowed || 1}
+              {licenseData?.sitesUsed || 0} / {licenseData?.maxSites || 1}
             </span>
           </div>
         </div>

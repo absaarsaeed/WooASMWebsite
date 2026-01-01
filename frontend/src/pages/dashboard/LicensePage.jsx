@@ -44,14 +44,28 @@ const LicensePage = () => {
 
   const handleRegenerate = async () => {
     setRegenerating(true);
+    setMessage({ type: '', text: '' });
     try {
       const response = await api.regenerateLicense();
       if (response.success) {
         await fetchLicenseData();
         await refreshUser();
+        setMessage({ 
+          type: 'success', 
+          text: 'License key regenerated successfully! Your old key is now invalid. All sites using the old key will need to be reactivated with your new key.' 
+        });
+      } else {
+        setMessage({ 
+          type: 'error', 
+          text: response.message || 'Failed to regenerate license key. Please try again.' 
+        });
       }
     } catch (error) {
       console.error('Failed to regenerate:', error);
+      setMessage({ 
+        type: 'error', 
+        text: 'Failed to regenerate license key. Please try again.' 
+      });
     } finally {
       setRegenerating(false);
       setShowConfirm(false);

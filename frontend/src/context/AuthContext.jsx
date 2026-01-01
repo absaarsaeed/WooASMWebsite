@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import api from '../services/api';
 
 const AuthContext = createContext(null);
@@ -16,37 +16,71 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const clearAuth = () => {
+  const clearAuth = useCallback(() => {
     localStorage.removeItem('wooasm_access_token');
     localStorage.removeItem('wooasm_refresh_token');
     setUser(null);
     setIsAuthenticated(false);
-  };
+  }, []);
+
+  // Fetch current user data
+  const fetchUser = useCallback(async () => {
+    try {
+      const response = await api.getCurrentUser();
+      // Backend returns: { success: true, data: { id, email, name, ... } }
+      const userData = response.data || response;
+      if (userData && userData.id) {
+        setUser(userData);
+        setIsAuthenticated(true);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Failed to fetch user:', error);
+      return false;
+    }
+  }, []);
 
   // Check for stored token on mount
   useEffect(() => {
     const checkAuth = async () => {
-      const token = localStorage.getItem('wooasm_access_token');
-      if (token) {
+      const accessToken = localStorage.getItem('wooasm_access_token');
+      const refreshToken = localStorage.getItem('wooasm_refresh_token');
+      
+      if (!accessToken) {
+        // No token stored - user is not logged in
+        setLoading(false);
+        return;
+      }
+
+      // Try to fetch user with current token
+      const success = await fetchUser();
+      
+      if (!success && refreshToken) {
+        // Token might be expired, try to refresh
         try {
-          const response = await api.getCurrentUser();
-          // Backend returns user object directly or in data property
-          const userData = response.data || response;
-          if (userData && userData.id) {
-            setUser(userData);
-            setIsAuthenticated(true);
+          const refreshed = await api.refreshToken();
+          if (refreshed) {
+            // Token refreshed, try fetching user again
+            await fetchUser();
           } else {
+            // Refresh failed - clear auth
             clearAuth();
           }
         } catch (error) {
+          console.error('Token refresh failed:', error);
           clearAuth();
         }
+      } else if (!success && !refreshToken) {
+        // No refresh token and access token didn't work
+        clearAuth();
       }
+      
       setLoading(false);
     };
 
     checkAuth();
-  }, []);
+  }, [fetchUser, clearAuth]);
 
   const login = async (email, password) => {
     try {
@@ -56,7 +90,9 @@ export const AuthProvider = ({ children }) => {
       // { success: true, data: { accessToken, refreshToken, tokenType, expiresIn, user } }
       if (response.success && response.data) {
         localStorage.setItem('wooasm_access_token', response.data.accessToken);
-        localStorage.setItem('wooasm_refresh_token', response.data.refreshToken);
+        if (response.data.refreshToken) {
+          localStorage.setItem('wooasm_refresh_token', response.data.refreshToken);
+        }
         setUser(response.data.user);
         setIsAuthenticated(true);
         return { success: true };
@@ -64,6 +100,7 @@ export const AuthProvider = ({ children }) => {
       
       return { success: false, error: response.message || 'Login failed' };
     } catch (error) {
+      console.error('Login error:', error);
       return { success: false, error: 'Connection error. Please try again.' };
     }
   };
@@ -73,13 +110,14 @@ export const AuthProvider = ({ children }) => {
       const response = await api.register(name, email, password, companyName);
       
       // Backend response format:
-      // { success: true, message, data: { accessToken, refreshToken, user: { id, email, name, plan, ... } } }
-      // NOTE: User does NOT have a license key yet - they need to purchase a subscription first
+      // { success: true, message, data: { accessToken, refreshToken, user: { ... } } }
       if (response.success && response.data) {
         // Auto-login after registration if tokens provided
         if (response.data.accessToken) {
           localStorage.setItem('wooasm_access_token', response.data.accessToken);
-          localStorage.setItem('wooasm_refresh_token', response.data.refreshToken);
+          if (response.data.refreshToken) {
+            localStorage.setItem('wooasm_refresh_token', response.data.refreshToken);
+          }
           setUser(response.data.user);
           setIsAuthenticated(true);
         }
@@ -92,6 +130,7 @@ export const AuthProvider = ({ children }) => {
       
       return { success: false, error: response.message || 'Registration failed' };
     } catch (error) {
+      console.error('Registration error:', error);
       return { success: false, error: 'Connection error. Please try again.' };
     }
   };
@@ -105,26 +144,17 @@ export const AuthProvider = ({ children }) => {
     clearAuth();
   };
 
-  const refreshUser = async () => {
-    try {
-      const response = await api.getCurrentUser();
-      const userData = response.data || response;
-      if (userData && userData.id) {
-        setUser(userData);
-        return true;
-      }
-    } catch {
-      // Ignore
-    }
-    return false;
-  };
+  const refreshUser = useCallback(async () => {
+    return fetchUser();
+  }, [fetchUser]);
 
   const forgotPassword = async (email) => {
     try {
       const response = await api.forgotPassword(email);
       // Backend always returns success to prevent email enumeration
-      return { success: response.success || true };
+      return { success: response.success !== false };
     } catch (error) {
+      console.error('Forgot password error:', error);
       return { success: false, error: 'Connection error. Please try again.' };
     }
   };
@@ -137,6 +167,7 @@ export const AuthProvider = ({ children }) => {
       }
       return { success: false, error: response.message || 'Reset failed' };
     } catch (error) {
+      console.error('Reset password error:', error);
       return { success: false, error: 'Connection error. Please try again.' };
     }
   };
@@ -151,6 +182,7 @@ export const AuthProvider = ({ children }) => {
       }
       return { success: false, error: response.message || 'Verification failed' };
     } catch (error) {
+      console.error('Verify email error:', error);
       return { success: false, error: 'Connection error. Please try again.' };
     }
   };

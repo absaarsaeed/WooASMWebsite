@@ -87,8 +87,7 @@ All responses from backend follow this structure:
 ## What's Been Implemented
 
 ### December 2024 - API Alignment Refactor
-- Completed full alignment of frontend API calls with NestJS backend specification
-- All field names converted from snake_case to camelCase
+- Completed full alignment of frontend API calls with NestJS backend specification (camelCase field names)
 - Updated files:
   - `/app/frontend/src/services/api.js` - 38 API methods
   - `/app/frontend/src/context/AuthContext.jsx` - added forgotPassword, resetPassword, verifyEmail
@@ -99,9 +98,15 @@ All responses from backend follow this structure:
   - `/app/frontend/src/pages/dashboard/BillingPage.jsx`
   - `/app/frontend/src/pages/admin/AdminLoginPage.jsx`
   - `/app/frontend/src/pages/admin/AdminDashboard.jsx`
-  - `/app/frontend/src/pages/admin/AdminUsers.jsx`
-  - `/app/frontend/src/pages/admin/AdminSubscriptions.jsx`
-  - `/app/frontend/src/pages/admin/AdminSites.jsx`
+
+### January 2026 - Backend Integration Updates
+- Added 429 rate limiting handler in API service
+- Fixed email verification endpoint (GET with query param)
+- Fixed reset password endpoint (uses `password` not `newPassword`)
+- Created mock checkout page (`/checkout/mock`) for test mode
+- Updated Dashboard to use `hasSubscription` flag from backend
+- Pricing page buttons now work - trigger Stripe checkout or redirect
+- All pages have proper SEO meta tags
 
 ### Testing Status
 - All frontend pages load correctly without JavaScript errors

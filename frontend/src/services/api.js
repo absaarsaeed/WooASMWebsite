@@ -1,5 +1,6 @@
 // WooASM API Service
 // Centralized API calls to api.wooasm.com
+// All field names use camelCase to match NestJS backend
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -63,13 +64,14 @@ class ApiService {
       const response = await fetch(`${this.baseUrl}/auth/refresh`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ refresh_token: refreshToken }),
+        body: JSON.stringify({ refreshToken }), // camelCase
       });
       
       const data = await response.json();
       
       if (data.success) {
-        localStorage.setItem('wooasm_access_token', data.data.access_token);
+        localStorage.setItem('wooasm_access_token', data.accessToken);
+        localStorage.setItem('wooasm_refresh_token', data.refreshToken);
         return true;
       }
       return false;
@@ -79,6 +81,27 @@ class ApiService {
   }
 
   // ============ Auth ============
+  
+  // POST /auth/register
+  async register(name, email, password, companyName = '') {
+    const body = {
+      email,
+      password,
+      name,
+    };
+    
+    // Only include companyName if it has a value
+    if (companyName && companyName.trim()) {
+      body.companyName = companyName.trim();
+    }
+    
+    return this.request('/auth/register', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+  }
+
+  // POST /auth/login
   async login(email, password) {
     return this.request('/auth/login', {
       method: 'POST',
@@ -86,13 +109,7 @@ class ApiService {
     });
   }
 
-  async register(name, email, password, companyName = '') {
-    return this.request('/auth/register', {
-      method: 'POST',
-      body: JSON.stringify({ name, email, password, company_name: companyName }),
-    });
-  }
-
+  // POST /auth/verify-email
   async verifyEmail(token) {
     return this.request('/auth/verify-email', {
       method: 'POST',
@@ -100,6 +117,7 @@ class ApiService {
     });
   }
 
+  // POST /auth/forgot-password
   async forgotPassword(email) {
     return this.request('/auth/forgot-password', {
       method: 'POST',
@@ -107,106 +125,131 @@ class ApiService {
     });
   }
 
-  async resetPassword(token, newPassword) {
+  // POST /auth/reset-password
+  async resetPassword(token, password) {
     return this.request('/auth/reset-password', {
       method: 'POST',
-      body: JSON.stringify({ token, new_password: newPassword }),
+      body: JSON.stringify({ token, password }), // camelCase: password not new_password
     });
   }
 
+  // GET /auth/me
   async getCurrentUser() {
     return this.request('/auth/me');
   }
 
+  // POST /auth/logout
   async logout() {
     return this.request('/auth/logout', { method: 'POST' });
   }
 
   // ============ Dashboard ============
+  
+  // GET /dashboard
   async getDashboard() {
     return this.request('/dashboard');
   }
 
+  // GET /dashboard/license
   async getLicense() {
     return this.request('/dashboard/license');
   }
 
+  // POST /dashboard/regenerate-license
   async regenerateLicense() {
     return this.request('/dashboard/regenerate-license', { method: 'POST' });
   }
 
-  async getUsage(months = 6) {
-    return this.request(`/dashboard/usage?months=${months}`);
+  // GET /dashboard/usage
+  async getUsage() {
+    return this.request('/dashboard/usage');
   }
 
+  // GET /dashboard/sites
   async getSites() {
     return this.request('/dashboard/sites');
   }
 
+  // DELETE /dashboard/sites/:siteId
   async deactivateSite(siteId) {
     return this.request(`/dashboard/sites/${siteId}`, { method: 'DELETE' });
   }
 
+  // PUT /dashboard/settings
   async updateSettings(data) {
+    // Backend expects: { name?, companyName? }
+    const body = {};
+    if (data.name) body.name = data.name;
+    if (data.companyName !== undefined) body.companyName = data.companyName;
+    
     return this.request('/dashboard/settings', {
       method: 'PUT',
-      body: JSON.stringify(data),
+      body: JSON.stringify(body),
     });
   }
 
+  // POST /dashboard/change-password
   async changePassword(currentPassword, newPassword) {
     return this.request('/dashboard/change-password', {
       method: 'POST',
       body: JSON.stringify({ 
-        current_password: currentPassword, 
-        new_password: newPassword 
+        currentPassword,  // camelCase
+        newPassword       // camelCase
       }),
     });
   }
 
-  async deleteAccount(password) {
-    return this.request('/dashboard/account', {
-      method: 'DELETE',
-      body: JSON.stringify({ password, confirm: true }),
-    });
+  // DELETE /dashboard/account
+  async deleteAccount() {
+    return this.request('/dashboard/account', { method: 'DELETE' });
   }
 
   // ============ Billing ============
+  
+  // POST /billing/create-checkout
   async createCheckout(plan, billingCycle) {
     return this.request('/billing/create-checkout', {
       method: 'POST',
-      body: JSON.stringify({ plan, billing_cycle: billingCycle }),
+      body: JSON.stringify({ 
+        plan,           // 'starter' | 'professional'
+        billingCycle    // 'monthly' | 'yearly' (camelCase!)
+      }),
     });
   }
 
+  // GET /billing/checkout/status/:sessionId
   async getCheckoutStatus(sessionId) {
     return this.request(`/billing/checkout/status/${sessionId}`);
   }
 
+  // GET /billing/subscription
   async getSubscription() {
     return this.request('/billing/subscription');
   }
 
-  async cancelSubscription(reason = '', feedback = '') {
-    return this.request('/billing/cancel', {
-      method: 'POST',
-      body: JSON.stringify({ reason, feedback }),
-    });
+  // POST /billing/cancel
+  async cancelSubscription() {
+    return this.request('/billing/cancel', { method: 'POST' });
   }
 
+  // POST /billing/resume
   async resumeSubscription() {
     return this.request('/billing/resume', { method: 'POST' });
   }
 
+  // POST /billing/portal
   async getBillingPortal() {
     return this.request('/billing/portal', { method: 'POST' });
   }
 
-  async getInvoices(limit = 10) {
-    return this.request(`/billing/invoices?limit=${limit}`);
+  // GET /billing/invoices
+  async getInvoices() {
+    return this.request('/billing/invoices');
   }
 
   // ============ Admin ============
+  
+  // POST /admin/login
   async adminLogin(email, password) {
     return this.request('/admin/login', {
       method: 'POST',
@@ -225,19 +268,23 @@ class ApiService {
     });
   }
 
+  // GET /admin/stats
   async getAdminStats() {
     return this.adminRequest('/admin/stats');
   }
 
-  async getAdminUsers(page = 1, limit = 20, filters = {}) {
+  // GET /admin/users
+  async getAdminUsers(page = 1, limit = 50, filters = {}) {
     const params = new URLSearchParams({ page, limit, ...filters });
     return this.adminRequest(`/admin/users?${params}`);
   }
 
+  // GET /admin/users/:id
   async getAdminUser(userId) {
     return this.adminRequest(`/admin/users/${userId}`);
   }
 
+  // POST /admin/users
   async createAdminUser(data) {
     return this.adminRequest('/admin/users', {
       method: 'POST',
@@ -245,6 +292,7 @@ class ApiService {
     });
   }
 
+  // PUT /admin/users/:id
   async updateAdminUser(userId, data) {
     return this.adminRequest(`/admin/users/${userId}`, {
       method: 'PUT',
@@ -252,25 +300,40 @@ class ApiService {
     });
   }
 
+  // GET /admin/subscriptions - Note: Backend might not have this, using /admin/stats
   async getAdminSubscriptions() {
-    return this.adminRequest('/admin/subscriptions');
+    return this.adminRequest('/admin/stats');
   }
 
+  // GET /admin/sites
   async getAdminSites(page = 1, limit = 50) {
     return this.adminRequest(`/admin/sites?page=${page}&limit=${limit}`);
   }
 
-  async getAdminPurchases(limit = 20) {
-    return this.adminRequest(`/admin/purchases?limit=${limit}`);
+  // GET /admin/revenue
+  async getAdminRevenue(period = '30d') {
+    return this.adminRequest(`/admin/revenue?period=${period}`);
   }
 
   // ============ Notifications (Public) ============
+  
+  // GET /notifications/random
   async getRecentNotification() {
     try {
-      const response = await fetch(`${this.baseUrl}/notifications/recent`);
+      const response = await fetch(`${this.baseUrl}/notifications/random`);
       return response.json();
     } catch {
       return { success: false };
+    }
+  }
+
+  // GET /notifications/recent
+  async getRecentPurchases(limit = 10) {
+    try {
+      const response = await fetch(`${this.baseUrl}/notifications/recent?limit=${limit}`);
+      return response.json();
+    } catch {
+      return { success: false, purchases: [] };
     }
   }
 }

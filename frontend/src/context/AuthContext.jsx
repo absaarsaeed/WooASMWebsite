@@ -23,11 +23,12 @@ export const AuthProvider = ({ children }) => {
       if (token) {
         try {
           const response = await api.getCurrentUser();
-          if (response.success) {
-            setUser(response.data);
+          // Backend returns user object directly or in data property
+          const userData = response.data || response;
+          if (userData && userData.id) {
+            setUser(userData);
             setIsAuthenticated(true);
           } else {
-            // Token invalid, clear storage
             clearAuth();
           }
         } catch (error) {
@@ -51,10 +52,12 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await api.login(email, password);
       
+      // Backend response format:
+      // { success: true, accessToken, refreshToken, user, licenseKey }
       if (response.success) {
-        localStorage.setItem('wooasm_access_token', response.data.access_token);
-        localStorage.setItem('wooasm_refresh_token', response.data.refresh_token);
-        setUser(response.data.user);
+        localStorage.setItem('wooasm_access_token', response.accessToken);
+        localStorage.setItem('wooasm_refresh_token', response.refreshToken);
+        setUser(response.user);
         setIsAuthenticated(true);
         return { success: true };
       }
@@ -69,8 +72,15 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await api.register(name, email, password, companyName);
       
+      // Backend response format:
+      // { success: true, message, user, licenseKey, accessToken, refreshToken }
       if (response.success) {
-        return { success: true, user: response.data.user };
+        // Auto-login after registration
+        localStorage.setItem('wooasm_access_token', response.accessToken);
+        localStorage.setItem('wooasm_refresh_token', response.refreshToken);
+        setUser(response.user);
+        setIsAuthenticated(true);
+        return { success: true, user: response.user, licenseKey: response.licenseKey };
       }
       
       return { success: false, error: response.message || 'Registration failed' };
@@ -91,8 +101,9 @@ export const AuthProvider = ({ children }) => {
   const refreshUser = async () => {
     try {
       const response = await api.getCurrentUser();
-      if (response.success) {
-        setUser(response.data);
+      const userData = response.data || response;
+      if (userData && userData.id) {
+        setUser(userData);
         return true;
       }
     } catch {

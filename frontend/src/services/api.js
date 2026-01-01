@@ -120,12 +120,9 @@ class ApiService {
     });
   }
 
-  // POST /auth/verify-email
+  // GET /auth/verify-email?token=xxx
   async verifyEmail(token) {
-    return this.request('/auth/verify-email', {
-      method: 'POST',
-      body: JSON.stringify({ token }),
-    });
+    return this.request(`/auth/verify-email?token=${encodeURIComponent(token)}`);
   }
 
   // POST /auth/forgot-password

@@ -430,3 +430,217 @@ Use any future expiry date and any CVC.
 5. Add proper Stripe webhook handling
 
 Let me know if you need any clarification!
+
+---
+
+## APPENDIX: Complete Stripe Setup Guide
+
+### Step 1: Get Stripe API Keys
+
+1. Go to [Stripe Dashboard](https://dashboard.stripe.com/)
+2. Make sure you're in **TEST MODE** (toggle in top-right)
+3. Go to **Developers** → **API Keys**
+4. Copy:
+   - Publishable key: `pk_test_...` (for frontend, not needed for your backend)
+   - Secret key: `sk_test_...` (for your backend .env)
+
+### Step 2: Create Products & Prices in Stripe
+
+1. Go to **Products** → **Add Product**
+2. Create **Starter** product:
+   - Name: "WooASM Starter"
+   - Add 2 prices:
+     - Monthly: $29/month, recurring
+     - Yearly: $278/year ($23.17/mo), recurring
+3. Create **Professional** product:
+   - Name: "WooASM Professional"
+   - Add 2 prices:
+     - Monthly: $79/month, recurring
+     - Yearly: $758/year ($63.17/mo), recurring
+4. Copy each **Price ID** (looks like `price_1ABC...`)
+
+### Step 3: Set Up Webhook
+
+1. Go to **Developers** → **Webhooks**
+2. Click **Add endpoint**
+3. Enter URL: `https://api.wooasm.com/api/v1/webhooks/stripe`
+4. Select events:
+   - `checkout.session.completed`
+   - `customer.subscription.created`
+   - `customer.subscription.updated`
+   - `customer.subscription.deleted`
+   - `invoice.payment_succeeded`
+   - `invoice.payment_failed`
+5. Click **Add endpoint**
+6. Copy the **Signing secret** (`whsec_...`)
+
+### Step 4: Update Your Backend .env
+
+```env
+# Stripe Configuration
+STRIPE_SECRET_KEY=sk_test_your_secret_key_here
+STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret_here
+
+# Price IDs from Step 2
+STRIPE_PRICE_STARTER_MONTHLY=price_xxxxxxxxxxxxx
+STRIPE_PRICE_STARTER_YEARLY=price_xxxxxxxxxxxxx
+STRIPE_PRICE_PROFESSIONAL_MONTHLY=price_xxxxxxxxxxxxx
+STRIPE_PRICE_PROFESSIONAL_YEARLY=price_xxxxxxxxxxxxx
+
+# Frontend URL (for checkout success/cancel redirects)
+FRONTEND_URL=https://wooasm.com
+```
+
+### Step 5: Install Stripe SDK
+
+```bash
+npm install stripe
+# or
+yarn add stripe
+```
+
+### Step 6: Create Stripe Service
+
+```typescript
+// src/stripe/stripe.service.ts
+import { Injectable } from '@nestjs/common';
+import Stripe from 'stripe';
+
+@Injectable()
+export class StripeService {
+  private stripe: Stripe;
+
+  constructor() {
+    this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: '2023-10-16',
+    });
+  }
+
+  async createCheckoutSession(userId: string, email: string, plan: string, billingCycle: string) {
+    const priceId = this.getPriceId(plan, billingCycle);
+    
+    if (!priceId) {
+      throw new Error('Invalid plan or billing cycle');
+    }
+
+    const session = await this.stripe.checkout.sessions.create({
+      mode: 'subscription',
+      payment_method_types: ['card'],
+      customer_email: email,
+      client_reference_id: userId,
+      line_items: [{ price: priceId, quantity: 1 }],
+      success_url: `${process.env.FRONTEND_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.FRONTEND_URL}/pricing`,
+      metadata: { userId, plan, billingCycle },
+    });
+
+    return session;
+  }
+
+  async createBillingPortalSession(customerId: string) {
+    const session = await this.stripe.billingPortal.sessions.create({
+      customer: customerId,
+      return_url: `${process.env.FRONTEND_URL}/dashboard/billing`,
+    });
+    return session;
+  }
+
+  constructWebhookEvent(payload: Buffer, signature: string) {
+    return this.stripe.webhooks.constructEvent(
+      payload,
+      signature,
+      process.env.STRIPE_WEBHOOK_SECRET
+    );
+  }
+
+  private getPriceId(plan: string, billingCycle: string): string | null {
+    const prices = {
+      starter: {
+        monthly: process.env.STRIPE_PRICE_STARTER_MONTHLY,
+        yearly: process.env.STRIPE_PRICE_STARTER_YEARLY,
+      },
+      professional: {
+        monthly: process.env.STRIPE_PRICE_PROFESSIONAL_MONTHLY,
+        yearly: process.env.STRIPE_PRICE_PROFESSIONAL_YEARLY,
+      },
+    };
+    return prices[plan]?.[billingCycle] || null;
+  }
+}
+```
+
+### Step 7: Verify Integration
+
+Test the complete flow:
+1. Register a new user → Should NOT have license key
+2. Go to Pricing → Click "Start Free Trial" on Starter/Professional
+3. You should be redirected to Stripe Checkout
+4. Use test card: `4242 4242 4242 4242`, any future date, any CVC
+5. After payment → Redirected to success page with license key
+6. Dashboard should now show the license key
+
+### Common Issues
+
+**"MOCK: Stripe not configured"**
+- Stripe environment variables are not set
+- Check your `.env` file has all the Stripe keys
+
+**Webhook not firing**
+- Make sure webhook URL is correct and HTTPS
+- Check webhook signing secret is correct
+- Use Stripe CLI for local testing: `stripe listen --forward-to localhost:3000/api/v1/webhooks/stripe`
+
+**License key not showing after payment**
+- Webhook handler not updating user
+- Check webhook logs in Stripe Dashboard
+
+---
+
+## Frontend API Contract Reference
+
+The frontend makes these API calls. Ensure your responses match exactly:
+
+### POST /billing/create-checkout
+**Request:**
+```json
+{
+  "plan": "starter",        // or "professional"
+  "billingCycle": "monthly" // or "yearly"
+}
+```
+
+**Response (Success):**
+```json
+{
+  "success": true,
+  "data": {
+    "checkoutUrl": "https://checkout.stripe.com/c/pay/cs_test_...",
+    "sessionId": "cs_test_..."
+  }
+}
+```
+
+### GET /billing/checkout/status/:sessionId
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "status": "complete",
+    "plan": "starter",
+    "billingCycle": "monthly",
+    "licenseKey": "WA-XXXX-XXXX-XXXX-XXXX"
+  }
+}
+```
+
+### GET /billing/portal
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "portalUrl": "https://billing.stripe.com/p/session/..."
+  }
+}
+```

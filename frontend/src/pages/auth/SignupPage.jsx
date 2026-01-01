@@ -49,7 +49,8 @@ const SignupPage = () => {
     );
     
     if (result.success) {
-      setSuccess(true);
+      // Backend auto-logs in and returns tokens, redirect to dashboard
+      navigate('/dashboard');
     } else {
       setError(result.error || 'Registration failed');
     }

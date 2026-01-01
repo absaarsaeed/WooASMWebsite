@@ -1,22 +1,27 @@
 # WooASM Backend API Changes Required
 
+## CRITICAL: The Frontend Expects These Exact Response Formats
+
+The frontend (wooasm.com) is built to handle specific response formats from your NestJS backend (api.wooasm.com). If responses don't match, the frontend will show errors or not work correctly.
+
+---
+
 ## Overview
 This document outlines the changes needed in your NestJS backend API (`api.wooasm.com`) to properly handle the subscription and license key workflow.
 
 ---
 
-## Current Issue
-The backend is currently:
-1. Generating license keys on user registration (WRONG)
-2. Returning license keys in login/register responses before user has paid (WRONG)
-3. Showing red success messages instead of proper success responses
+## Current Issues (Based on Screenshots)
+1. Backend showing "MOCK: Stripe not configured" - Stripe is not set up
+2. Backend generating license keys on registration (should be NULL until payment)
+3. Success messages showing in red instead of proper toast/alerts
 
 ## Correct Workflow
 
 ```
 User Signup → Account Created (NO license key, plan='none')
     ↓
-User Logs In → Dashboard shows "No subscription"
+User Logs In → Dashboard shows "No subscription" prompt
     ↓
 User clicks "Subscribe" → Stripe Checkout
     ↓

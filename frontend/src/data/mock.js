@@ -441,7 +441,7 @@ export const pricingPlans = [
       'Competitor Watch',
       'Fraud Detection'
     ],
-    cta: 'Start Free Trial',
+    cta: 'Subscribe Now',
     popular: true
   },
   {
@@ -466,7 +466,7 @@ export const pricingPlans = [
       'Export Everything'
     ],
     notIncluded: [],
-    cta: 'Start Free Trial',
+    cta: 'Subscribe Now',
     popular: false
   }
 ];

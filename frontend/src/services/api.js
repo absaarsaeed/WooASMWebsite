@@ -36,6 +36,17 @@ class ApiService {
 
     try {
       const response = await fetch(url, config);
+      
+      // Handle rate limiting (429 Too Many Requests)
+      if (response.status === 429) {
+        return {
+          success: false,
+          error: 'rate_limited',
+          message: 'Too many requests. Please wait a moment and try again.',
+          statusCode: 429
+        };
+      }
+
       const data = await response.json();
 
       // Handle token refresh if needed

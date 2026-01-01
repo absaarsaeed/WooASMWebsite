@@ -121,11 +121,10 @@ const UsagePage = () => {
 
         <div className="grid sm:grid-cols-2 gap-6">
           {usageItems.map((item, index) => {
-            // Try both camelCase and snake_case keys
-            const used = currentUsage[item.key] ?? currentUsage[item.altKey] ?? 0;
-            const limit = limits[item.key] ?? limits[item.altKey] ?? 100;
-            const pct = percentages[item.key] ?? percentages[item.altKey];
-            const percentage = pct ?? (limit > 0 ? Math.min(100, (used / limit) * 100) : 0);
+            // Backend uses camelCase keys
+            const used = currentUsage[item.key] ?? 0;
+            const limit = limits[item.key] ?? 100;
+            const percentage = percentages[item.key] ?? (limit > 0 ? Math.round((used / limit) * 100) : 0);
             
             return (
               <motion.div
@@ -140,7 +139,7 @@ const UsagePage = () => {
                     {item.label}
                   </span>
                   <span className="text-sm text-gray-500 dark:text-gray-400">
-                    {typeof percentage === 'number' ? percentage.toFixed(0) : 0}%
+                    {percentage}%
                   </span>
                 </div>
                 <div className="mb-2">

@@ -123,6 +123,7 @@ function AppRoutes() {
         {/* Checkout Pages */}
         <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
         <Route path="/checkout/cancel" element={<CheckoutCancelPage />} />
+        <Route path="/checkout/mock" element={<CheckoutMockPage />} />
         
         {/* Admin Routes */}
         <Route path="/admin/login" element={<AdminLoginPage />} />

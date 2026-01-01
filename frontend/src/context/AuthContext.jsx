@@ -53,11 +53,11 @@ export const AuthProvider = ({ children }) => {
       const response = await api.login(email, password);
       
       // Backend response format:
-      // { success: true, accessToken, refreshToken, user, licenseKey }
-      if (response.success) {
-        localStorage.setItem('wooasm_access_token', response.accessToken);
-        localStorage.setItem('wooasm_refresh_token', response.refreshToken);
-        setUser(response.user);
+      // { success: true, data: { accessToken, refreshToken, tokenType, expiresIn, user } }
+      if (response.success && response.data) {
+        localStorage.setItem('wooasm_access_token', response.data.accessToken);
+        localStorage.setItem('wooasm_refresh_token', response.data.refreshToken);
+        setUser(response.data.user);
         setIsAuthenticated(true);
         return { success: true };
       }
@@ -73,14 +73,22 @@ export const AuthProvider = ({ children }) => {
       const response = await api.register(name, email, password, companyName);
       
       // Backend response format:
-      // { success: true, message, user, licenseKey, accessToken, refreshToken }
-      if (response.success) {
-        // Auto-login after registration
-        localStorage.setItem('wooasm_access_token', response.accessToken);
-        localStorage.setItem('wooasm_refresh_token', response.refreshToken);
-        setUser(response.user);
-        setIsAuthenticated(true);
-        return { success: true, user: response.user, licenseKey: response.licenseKey };
+      // { success: true, message, data: { user: { id, email, name, plan, licenseKey, ... } } }
+      if (response.success && response.data?.user) {
+        // Note: Registration may not return tokens - user needs to verify email first
+        // If tokens are provided, auto-login
+        if (response.data.accessToken) {
+          localStorage.setItem('wooasm_access_token', response.data.accessToken);
+          localStorage.setItem('wooasm_refresh_token', response.data.refreshToken);
+          setUser(response.data.user);
+          setIsAuthenticated(true);
+        }
+        return { 
+          success: true, 
+          user: response.data.user, 
+          licenseKey: response.data.user.licenseKey,
+          message: response.message 
+        };
       }
       
       return { success: false, error: response.message || 'Registration failed' };

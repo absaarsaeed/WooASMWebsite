@@ -6,12 +6,11 @@ import {
   CheckCircle, AlertCircle, Clock, Zap
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import api from '../../services/api';
 import SEO from '../../components/SEO';
 
-const API_URL = process.env.REACT_APP_BACKEND_URL;
-
 const DashboardOverview = () => {
-  const { user, getToken } = useAuth();
+  const { user } = useAuth();
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -21,16 +20,8 @@ const DashboardOverview = () => {
 
   const fetchDashboardData = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/dashboard`, {
-        headers: {
-          'Authorization': `Bearer ${getToken()}`
-        }
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        setDashboardData(data);
-      }
+      const data = await api.getDashboard();
+      setDashboardData(data);
     } catch (error) {
       console.error('Failed to fetch dashboard data:', error);
     } finally {
@@ -53,9 +44,14 @@ const DashboardOverview = () => {
     );
   }
 
-  const usage = dashboardData?.usage || {};
-  const limits = dashboardData?.limits || {};
-  const subscription = dashboardData?.subscription || {};
+  // Backend response format:
+  // { user, license, usage: { current, limits, percentages }, features }
+  const userData = dashboardData?.user || user || {};
+  const license = dashboardData?.license || {};
+  const usageData = dashboardData?.usage || {};
+  const currentUsage = usageData.current || {};
+  const limits = usageData.limits || {};
+  const percentages = usageData.percentages || {};
 
   return (
     <div className="p-8">
@@ -68,7 +64,7 @@ const DashboardOverview = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-3xl font-bold text-gray-900 dark:text-white mb-2"
         >
-          {getGreeting()}, {user?.name?.split(' ')[0]}!
+          {getGreeting()}, {userData.name?.split(' ')[0]}!
         </motion.h1>
         <p className="text-gray-600 dark:text-gray-400">
           Here's an overview of your WooASM account
@@ -86,7 +82,7 @@ const DashboardOverview = () => {
             <div className="w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
               <Key className="w-6 h-6 text-purple-600 dark:text-purple-400" />
             </div>
-            {subscription.status === 'active' ? (
+            {userData.subscriptionStatus === 'active' ? (
               <CheckCircle className="w-5 h-5 text-emerald-500" />
             ) : (
               <AlertCircle className="w-5 h-5 text-amber-500" />
@@ -94,7 +90,7 @@ const DashboardOverview = () => {
           </div>
           <p className="text-sm text-gray-600 dark:text-gray-400">Current Plan</p>
           <p className="text-2xl font-bold text-gray-900 dark:text-white capitalize">
-            {user?.plan}
+            {userData.plan || 'Free'}
           </p>
         </motion.div>
 
@@ -111,7 +107,7 @@ const DashboardOverview = () => {
           </div>
           <p className="text-sm text-gray-600 dark:text-gray-400">Active Sites</p>
           <p className="text-2xl font-bold text-gray-900 dark:text-white">
-            {dashboardData?.sites_count || 0} / {limits.max_sites || 1}
+            {license.sitesUsed || 0} / {license.maxSites || 1}
           </p>
         </motion.div>
 
@@ -128,7 +124,7 @@ const DashboardOverview = () => {
           </div>
           <p className="text-sm text-gray-600 dark:text-gray-400">Usage This Month</p>
           <p className="text-2xl font-bold text-gray-900 dark:text-white">
-            {usage.percentage_used || 0}%
+            {percentages.weighted || 0}%
           </p>
         </motion.div>
 
@@ -145,7 +141,7 @@ const DashboardOverview = () => {
           </div>
           <p className="text-sm text-gray-600 dark:text-gray-400">Billing Cycle</p>
           <p className="text-2xl font-bold text-gray-900 dark:text-white capitalize">
-            {subscription.billing_cycle || 'N/A'}
+            {userData.billingCycle || 'N/A'}
           </p>
         </motion.div>
       </div>
@@ -168,9 +164,9 @@ const DashboardOverview = () => {
           </Link>
         </div>
         <div className="bg-gray-900 dark:bg-gray-700 rounded-xl p-4 font-mono text-lg text-emerald-400 flex items-center justify-between">
-          <span>{user?.license_key}</span>
+          <span>{license.licenseKey || userData.licenseKey || user?.licenseKey}</span>
           <button
-            onClick={() => navigator.clipboard.writeText(user?.license_key)}
+            onClick={() => navigator.clipboard.writeText(license.licenseKey || userData.licenseKey || user?.licenseKey)}
             className="text-gray-400 hover:text-white transition-colors"
           >
             Copy
@@ -201,22 +197,21 @@ const DashboardOverview = () => {
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { label: 'AI Assistant', used: usage.assistant_actions || 0, limit: limits.assistant_monthly || 0, color: 'purple' },
-            { label: 'Chatbot Messages', used: usage.chatbot_messages || 0, limit: limits.chatbot_monthly || 0, color: 'emerald' },
-            { label: 'Content Generated', used: usage.content_generations || 0, limit: limits.content_monthly || 0, color: 'blue' },
-            { label: 'Insights Refreshes', used: usage.insights_refreshes || 0, limit: limits.insights_monthly || 0, color: 'amber' }
+            { label: 'AI Assistant', used: currentUsage.assistantActions || 0, limit: limits.assistantMonthly || 0, percentage: percentages.assistant || 0, color: 'purple' },
+            { label: 'Chatbot Messages', used: currentUsage.chatbotMessages || 0, limit: limits.chatbotMonthly || 0, percentage: percentages.chatbot || 0, color: 'emerald' },
+            { label: 'Content Generated', used: currentUsage.contentGenerations || 0, limit: limits.contentMonthly || 0, percentage: percentages.content || 0, color: 'blue' },
+            { label: 'Insights Refreshes', used: currentUsage.insightsRefreshes || 0, limit: limits.insightsMonthly || 0, percentage: percentages.insights || 0, color: 'amber' }
           ].map((item, index) => {
-            const percentage = item.limit > 0 ? Math.min(100, (item.used / item.limit) * 100) : 0;
             return (
               <div key={index} className="bg-gray-50 dark:bg-gray-700 rounded-xl p-4">
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{item.label}</p>
                 <p className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                  {item.used} / {item.limit}
+                  {item.used} / {item.limit === -1 ? '∞' : item.limit}
                 </p>
                 <div className="h-2 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden">
                   <div
                     className={`h-full bg-${item.color}-500 rounded-full transition-all`}
-                    style={{ width: `${percentage}%` }}
+                    style={{ width: `${item.limit === -1 ? 0 : item.percentage}%` }}
                   />
                 </div>
               </div>
@@ -226,7 +221,7 @@ const DashboardOverview = () => {
       </motion.div>
 
       {/* Quick Actions */}
-      {user?.plan === 'free' && (
+      {userData.plan === 'free' && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

@@ -126,10 +126,10 @@ class ApiService {
   }
 
   // POST /auth/reset-password
-  async resetPassword(token, password) {
+  async resetPassword(token, newPassword) {
     return this.request('/auth/reset-password', {
       method: 'POST',
-      body: JSON.stringify({ token, password }), // camelCase: password not new_password
+      body: JSON.stringify({ token, newPassword }), // camelCase per API spec
     });
   }
 

@@ -45,9 +45,10 @@ const DashboardOverview = () => {
   }
 
   // Backend response format:
-  // { user, license, usage: { current, limits, percentages }, features }
+  // { user, license, hasSubscription, usage: { current, limits, percentages }, features }
   const userData = dashboardData?.user || user || {};
   const license = dashboardData?.license || {};
+  const hasSubscription = dashboardData?.hasSubscription || false;
   const usageData = dashboardData?.usage || {};
   const currentUsage = usageData.current || {};
   const limits = usageData.limits || {};

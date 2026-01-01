@@ -62,8 +62,39 @@ const SitesPage = () => {
     );
   }
 
+  // Check if user has subscription
+  const hasSubscription = sitesData?.hasSubscription !== false;
+  
+  // If no subscription, show subscribe prompt
+  if (!hasSubscription || sitesData?.message) {
+    return (
+      <div className="p-8 max-w-4xl">
+        <SEO title="Sites - WooASM Dashboard" />
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-gradient-to-br from-purple-600 to-purple-700 rounded-2xl p-8 text-center"
+        >
+          <Globe className="w-12 h-12 text-white mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-white mb-4">No Sites Yet</h2>
+          <p className="text-purple-100 mb-6">
+            {sitesData?.message || 'Subscribe to a plan to activate your WordPress sites.'}
+          </p>
+          <a
+            href="/dashboard/billing"
+            className="inline-flex items-center gap-2 bg-white text-purple-600 font-semibold px-6 py-3 rounded-xl hover:bg-purple-50 transition-colors"
+          >
+            Choose a Plan
+          </a>
+        </motion.div>
+      </div>
+    );
+  }
+
   const sites = sitesData?.sites || [];
-  const activeSites = sites.filter(s => s.isActive);
+  const sitesUsed = sitesData?.sitesUsed ?? sites.filter(s => s.isActive).length;
+  const sitesAllowed = sitesData?.sitesAllowed ?? 1;
+  const sitesRemaining = sitesAllowed - sitesUsed;
 
   return (
     <div className="p-8 max-w-4xl">

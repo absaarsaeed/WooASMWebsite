@@ -77,7 +77,7 @@ const TermsPage = () => {
                   </p>
                   <ul className="list-disc pl-6 space-y-2 text-gray-700 dark:text-gray-300 mt-4">
                     <li>Have a valid WooCommerce store running WordPress 5.8+</li>
-                    <li>Provide an OpenAI API key for AI features</li>
+                    <li>Have a valid WooASM license key</li>
                     <li>Maintain accurate account information</li>
                     <li>Be at least 18 years old or have parental consent</li>
                   </ul>
@@ -93,9 +93,9 @@ const TermsPage = () => {
                   <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
                     Paid subscriptions are billed monthly or annually. All prices are in USD. Subscriptions auto-renew unless cancelled.
                   </p>
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">4.3 API Costs</h3>
+                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">4.3 Usage Limits</h3>
                   <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                    You are responsible for OpenAI API costs incurred through WooASM usage. These are billed directly by OpenAI.
+                    Each plan has usage limits for AI features. Usage beyond your plan limits may result in temporary service restrictions until the next billing cycle.
                   </p>
                 </section>
 

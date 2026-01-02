@@ -98,7 +98,7 @@ const PrivacyPage = () => {
                   <ul className="list-disc pl-6 space-y-2 text-gray-700 dark:text-gray-300 mt-4">
                     <li>All data transmissions are encrypted using SSL/TLS</li>
                     <li>Your store data is processed locally within your WordPress installation</li>
-                    <li>API calls to OpenAI are encrypted and not stored by OpenAI</li>
+                    <li>AI processing requests are encrypted and handled securely through our servers</li>
                     <li>We never share your store data with third parties for marketing</li>
                   </ul>
                 </section>
@@ -106,7 +106,7 @@ const PrivacyPage = () => {
                 <section>
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">5. Third-Party Services</h2>
                   <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                    WooASM uses OpenAI's API for AI features. When you use AI features, relevant store data is sent to OpenAI for processing. OpenAI does not use this data to train their models. Please review OpenAI's privacy policy for more information.
+                    WooASM uses AI services for intelligent features. When you use AI features, relevant store data is processed through our secure servers. Your data is encrypted in transit and is not stored or used for AI training purposes.
                   </p>
                 </section>
 

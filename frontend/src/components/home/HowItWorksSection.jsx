@@ -20,8 +20,8 @@ const HowItWorksSection = () => {
     {
       icon: Key,
       number: '02',
-      title: 'Connect Your API Key',
-      description: "Add your OpenAI API key. That's the only setup needed."
+      title: 'Activate Your License',
+      description: "Enter your license key and you're ready to go. No API setup needed."
     },
     {
       icon: MessageSquareText,

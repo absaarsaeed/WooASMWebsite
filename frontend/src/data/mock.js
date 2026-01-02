@@ -513,11 +513,7 @@ export const faqs = [
   },
   {
     question: 'Is my store data secure?',
-    answer: 'Absolutely. WooASM runs entirely within your WordPress installation. Your data never leaves your server except for API calls to OpenAI, which are encrypted and not stored.'
-  },
-  {
-    question: 'What is the cost of using OpenAI API?',
-    answer: 'Most stores spend $5-20/month on API costs depending on usage. The time savings far outweigh this minimal expense.'
+    answer: 'Absolutely. WooASM runs entirely within your WordPress installation. All AI processing is handled securely through our servers, and your data is encrypted in transit and never stored or used for training.'
   },
   {
     question: 'Can I try before I buy?',
@@ -642,7 +638,7 @@ export const integrations = [
   { name: 'WooCommerce', logo: '🛒' },
   { name: 'WordPress', logo: '📝' },
   { name: 'Google Analytics', logo: '📊' },
-  { name: 'OpenAI', logo: '🤖' },
+  { name: 'AI Engine', logo: '🤖' },
   { name: 'Stripe', logo: '💳' },
   { name: 'PayPal', logo: '💰' },
   { name: 'ShipStation', logo: '📦' },
@@ -670,10 +666,10 @@ export const docsCategories = [
     icon: 'Rocket',
     articles: [
       'Installing WooASM',
-      'Adding Your API Key',
       'Activating Your License',
       'Your First Conversation',
-      'Understanding the Dashboard'
+      'Understanding the Dashboard',
+      'Getting Help & Support'
     ]
   },
   {

@@ -13,10 +13,10 @@ const docsData = [
     description: 'Quick setup guide to get WooASM running on your store',
     articles: [
       { title: 'Installing WooASM', slug: 'installing-wooasm', readTime: '3 min' },
-      { title: 'Adding Your API Key', slug: 'adding-api-key', readTime: '2 min' },
       { title: 'Activating Your License', slug: 'activating-license', readTime: '2 min' },
       { title: 'Your First Conversation', slug: 'first-conversation', readTime: '5 min' },
-      { title: 'Understanding the Dashboard', slug: 'dashboard-overview', readTime: '4 min' }
+      { title: 'Understanding the Dashboard', slug: 'dashboard-overview', readTime: '4 min' },
+      { title: 'Getting Help & Support', slug: 'getting-help', readTime: '3 min' }
     ]
   },
   {

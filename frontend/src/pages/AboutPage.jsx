@@ -41,7 +41,7 @@ const AboutPage = () => {
       name: 'Sarah Johnson',
       role: 'Head of AI',
       image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=face',
-      bio: 'Machine learning expert previously at OpenAI and Google.'
+      bio: 'Machine learning expert with 10+ years in AI and automation.'
     },
     {
       name: 'Michael Park',

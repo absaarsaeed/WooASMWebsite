@@ -235,10 +235,10 @@ const DashboardOverview = () => {
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { label: 'AI Assistant', used: currentUsage.assistantActions || 0, limit: limits.assistantMonthly || 0, percentage: percentages.assistant || 0, color: 'purple' },
-            { label: 'Chatbot Messages', used: currentUsage.chatbotMessages || 0, limit: limits.chatbotMonthly || 0, percentage: percentages.chatbot || 0, color: 'emerald' },
-            { label: 'Content Generated', used: currentUsage.contentGenerations || 0, limit: limits.contentMonthly || 0, percentage: percentages.content || 0, color: 'blue' },
-            { label: 'Insights Refreshes', used: currentUsage.insightsRefreshes || 0, limit: limits.insightsMonthly || 0, percentage: percentages.insights || 0, color: 'amber' }
+            { label: 'AI Assistant', used: currentUsage.assistantActions || 0, limit: limits.assistantMonthly || limits.assistantActions || 0, percentage: percentages.assistant || percentages.assistantActions || 0, color: 'purple' },
+            { label: 'Chatbot Messages', used: currentUsage.chatbotMessages || 0, limit: limits.chatbotMonthly || limits.chatbotMessages || 0, percentage: percentages.chatbot || percentages.chatbotMessages || 0, color: 'emerald' },
+            { label: 'Content Generated', used: currentUsage.contentGenerations || 0, limit: limits.contentMonthly || limits.contentGenerations || 0, percentage: percentages.content || percentages.contentGenerations || 0, color: 'blue' },
+            { label: 'Insights Refreshes', used: currentUsage.insightsRefreshes || 0, limit: limits.insightsMonthly || limits.insightsRefreshes || 0, percentage: percentages.insights || percentages.insightsRefreshes || 0, color: 'amber' }
           ].map((item, index) => {
             return (
               <div key={index} className="bg-gray-50 dark:bg-gray-700 rounded-xl p-4">

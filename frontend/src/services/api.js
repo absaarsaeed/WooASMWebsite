@@ -353,6 +353,33 @@ class ApiService {
     return this.adminRequest(`/admin/revenue?period=${period}`);
   }
 
+  // ============ Admin Emails ============
+  
+  // GET /admin/emails - Get email logs
+  async getAdminEmails(params = {}) {
+    const queryParams = new URLSearchParams();
+    if (params.status) queryParams.append('status', params.status);
+    if (params.template) queryParams.append('template', params.template);
+    if (params.limit) queryParams.append('limit', params.limit);
+    if (params.page) queryParams.append('page', params.page);
+    if (params.email) queryParams.append('email', params.email);
+    
+    const queryString = queryParams.toString();
+    return this.adminRequest(`/admin/emails${queryString ? `?${queryString}` : ''}`);
+  }
+
+  // GET /admin/emails/:id - Get single email details
+  async getAdminEmail(emailId) {
+    return this.adminRequest(`/admin/emails/${emailId}`);
+  }
+
+  // POST /admin/emails/resend/:id - Resend an email
+  async resendAdminEmail(emailId) {
+    return this.adminRequest(`/admin/emails/resend/${emailId}`, {
+      method: 'POST',
+    });
+  }
+
   // ============ Admin Plans ============
   
   // GET /admin/plans - Get all plan configurations

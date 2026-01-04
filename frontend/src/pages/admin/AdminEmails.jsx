@@ -98,21 +98,35 @@ const AdminEmails = () => {
       
       const response = await api.getAdminEmails(params);
       
-      if (response.success && response.data) {
-        setEmails(response.data);
-        // Calculate stats
-        const allEmails = response.data;
-        setStats({
-          total: allEmails.length,
-          sent: allEmails.filter(e => e.status === 'sent').length,
-          failed: allEmails.filter(e => e.status === 'failed').length,
-          pending: allEmails.filter(e => e.status === 'pending' || e.status === 'queued').length
-        });
+      if (response.success) {
+        // Backend returns: { success: true, data: { logs: [...], stats: {...} } }
+        const emailLogs = response.data?.logs || response.data || [];
+        const emailStats = response.data?.stats || {};
+        
+        setEmails(emailLogs);
+        
+        // Use stats from backend if available, otherwise calculate
+        if (emailStats.sent !== undefined) {
+          setStats({
+            total: emailLogs.length,
+            sent: emailStats.sent || 0,
+            failed: emailStats.failed || 0,
+            pending: emailStats.pending || 0
+          });
+        } else {
+          setStats({
+            total: emailLogs.length,
+            sent: emailLogs.filter(e => e.status === 'sent').length,
+            failed: emailLogs.filter(e => e.status === 'failed').length,
+            pending: emailLogs.filter(e => e.status === 'pending' || e.status === 'queued').length
+          });
+        }
       } else {
-        // Use empty array if no data
+        setError(response.message || 'Failed to load emails');
         setEmails([]);
       }
     } catch (err) {
+      console.error('Error fetching emails:', err);
       setError('Failed to load emails');
       setEmails([]);
     } finally {

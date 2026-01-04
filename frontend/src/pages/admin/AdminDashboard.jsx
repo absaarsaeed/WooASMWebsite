@@ -140,11 +140,11 @@ const AdminDashboard = () => {
           <h2 className="text-lg font-semibold text-white mb-6">Plan Distribution</h2>
           <div className="space-y-4">
             {[
-              { label: 'Free', count: stats?.plans?.free || 0, color: 'bg-gray-500' },
-              { label: 'Starter', count: stats?.plans?.starter || 0, color: 'bg-purple-500' },
-              { label: 'Professional', count: stats?.plans?.professional || 0, color: 'bg-amber-500' }
+              { label: 'Free', count: planBreakdown?.free || 0, color: 'bg-gray-500' },
+              { label: 'Starter', count: planBreakdown?.starter || 0, color: 'bg-purple-500' },
+              { label: 'Professional', count: planBreakdown?.professional || 0, color: 'bg-amber-500' }
             ].map((plan) => {
-              const total = (stats?.plans?.free || 0) + (stats?.plans?.starter || 0) + (stats?.plans?.professional || 0);
+              const total = (planBreakdown?.free || 0) + (planBreakdown?.starter || 0) + (planBreakdown?.professional || 0);
               const percentage = total > 0 ? (plan.count / total) * 100 : 0;
               
               return (

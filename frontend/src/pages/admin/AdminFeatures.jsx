@@ -396,13 +396,12 @@ const AdminFeatures = () => {
                     onChange={(e) => setEditingFeature(prev => ({ ...prev, category: e.target.value }))}
                     className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   >
-                    <option value="core">Core</option>
+                    <option value="ai">AI</option>
                     <option value="analytics">Analytics</option>
-                    <option value="operations">Operations</option>
-                    <option value="customer">Customer</option>
+                    <option value="automation">Automation</option>
                     <option value="security">Security</option>
-                    <option value="content">Content</option>
-                    <option value="chatbot">Chatbot</option>
+                    <option value="support">Support</option>
+                    <option value="advanced">Advanced</option>
                   </select>
                 </div>
 

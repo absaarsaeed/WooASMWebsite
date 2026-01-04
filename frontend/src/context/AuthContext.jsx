@@ -87,12 +87,12 @@ export const AuthProvider = ({ children }) => {
       const response = await api.login(email, password);
       console.log('Login response:', response); // Debug log
       
-      // Handle multiple possible response formats from backend:
-      // Format 1: { success: true, data: { accessToken, refreshToken, user } }
-      // Format 2: { success: true, accessToken, refreshToken, user }
-      const accessToken = response.data?.accessToken || response.accessToken;
-      const refreshToken = response.data?.refreshToken || response.refreshToken;
-      const userData = response.data?.user || response.user;
+      // Backend returns tokens at root level OR nested in data
+      // Format 1: { success: true, accessToken, refreshToken, user }
+      // Format 2: { success: true, data: { accessToken, refreshToken, user } }
+      const accessToken = response.accessToken || response.data?.accessToken;
+      const refreshToken = response.refreshToken || response.data?.refreshToken;
+      const userData = response.user || response.data?.user;
       
       if (response.success && accessToken) {
         localStorage.setItem('wooasm_access_token', accessToken);

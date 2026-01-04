@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { 
-  LayoutDashboard, Users, CreditCard, Globe, LogOut, Zap, Shield, Package
+  LayoutDashboard, Users, CreditCard, Globe, LogOut, Zap, Shield, Package, Puzzle, Wand2
 } from 'lucide-react';
 
 const AdminLayout = () => {
@@ -37,6 +37,8 @@ const AdminLayout = () => {
     { to: '/admin/subscriptions', icon: CreditCard, label: 'Subscriptions' },
     { to: '/admin/sites', icon: Globe, label: 'Sites' },
     { to: '/admin/plans', icon: Package, label: 'Plans' },
+    { to: '/admin/features', icon: Puzzle, label: 'Features' },
+    { to: '/admin/abilities', icon: Wand2, label: 'Abilities' },
   ];
 
   return (

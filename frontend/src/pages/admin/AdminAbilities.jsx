@@ -19,7 +19,9 @@ import {
   ShoppingCart,
   FileText,
   Tag,
-  AlertTriangle
+  AlertTriangle,
+  Plus,
+  Database
 } from 'lucide-react';
 import api from '../../services/api';
 

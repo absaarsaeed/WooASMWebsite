@@ -20,7 +20,9 @@ import {
   Shield,
   Eye,
   FileText,
-  Bot
+  Bot,
+  Plus,
+  Database
 } from 'lucide-react';
 import api from '../../services/api';
 

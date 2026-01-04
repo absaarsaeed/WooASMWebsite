@@ -72,17 +72,19 @@ const UsagePage = () => {
   }
 
   // Handle backend response format: data.usage.current, data.usage.limits, data.usage.percentages
-  const currentUsage = usageData?.usage?.current || {};
-  const limits = usageData?.usage?.limits || {};
-  const percentages = usageData?.usage?.percentages || {};
+  // New backend may also have assistantDaily limit
+  const currentUsage = usageData?.usage?.current || usageData?.current || {};
+  const limits = usageData?.usage?.limits || usageData?.limits || {};
+  const percentages = usageData?.usage?.percentages || usageData?.percentages || {};
   const history = usageData?.history || [];
-  const currentMonth = usageData?.currentMonth || new Date().toISOString().slice(0, 7);
+  const currentMonth = usageData?.currentMonth || usageData?.month || new Date().toISOString().slice(0, 7);
 
+  // Map limit keys - backend may use assistantMonthly or assistantDaily
   const usageItems = [
-    { label: 'AI Assistant Actions', key: 'assistantActions', color: 'purple' },
-    { label: 'Chatbot Messages', key: 'chatbotMessages', color: 'emerald' },
-    { label: 'Content Generations', key: 'contentGenerations', color: 'blue' },
-    { label: 'Insights Refreshes', key: 'insightsRefreshes', color: 'amber' }
+    { label: 'AI Assistant Actions', key: 'assistantActions', limitKey: 'assistantMonthly', color: 'purple' },
+    { label: 'Chatbot Messages', key: 'chatbotMessages', limitKey: 'chatbotMonthly', color: 'emerald' },
+    { label: 'Content Generations', key: 'contentGenerations', limitKey: 'contentMonthly', color: 'blue' },
+    { label: 'Insights Refreshes', key: 'insightsRefreshes', limitKey: 'insightsMonthly', color: 'amber' }
   ];
 
   return (

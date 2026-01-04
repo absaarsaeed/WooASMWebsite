@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { 
-  LayoutDashboard, Users, CreditCard, Globe, LogOut, Zap, Shield
+  LayoutDashboard, Users, CreditCard, Globe, LogOut, Zap, Shield, Package
 } from 'lucide-react';
 
 const AdminLayout = () => {
@@ -9,7 +9,7 @@ const AdminLayout = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem('wooasm_admin_token');
+    const token = localStorage.getItem('wooasm_admin_token') || localStorage.getItem('adminToken');
     if (!token) {
       navigate('/admin/login');
     } else {
@@ -19,6 +19,7 @@ const AdminLayout = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('wooasm_admin_token');
+    localStorage.removeItem('adminToken');
     navigate('/admin/login');
   };
 
@@ -35,6 +36,7 @@ const AdminLayout = () => {
     { to: '/admin/users', icon: Users, label: 'Users' },
     { to: '/admin/subscriptions', icon: CreditCard, label: 'Subscriptions' },
     { to: '/admin/sites', icon: Globe, label: 'Sites' },
+    { to: '/admin/plans', icon: Package, label: 'Plans' },
   ];
 
   return (

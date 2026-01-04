@@ -159,14 +159,20 @@ All responses from backend follow this structure:
 ```
 /app/frontend/
 ├── src/
-│   ├── services/api.js          # Central API service
+│   ├── services/api.js          # Central API service (38+ methods)
 │   ├── context/AuthContext.jsx  # Auth state management
 │   ├── pages/
 │   │   ├── auth/               # Login, Signup, Forgot/Reset Password
 │   │   ├── dashboard/          # User dashboard pages
-│   │   └── admin/              # Admin dashboard pages
+│   │   ├── admin/              # Admin dashboard pages
+│   │   │   ├── AdminPlans.jsx  # Plan management
+│   │   │   ├── AdminFeatures.jsx # Features management
+│   │   │   ├── AdminAbilities.jsx # Abilities management
+│   │   │   └── AdminEmails.jsx # Email logs viewer
+│   │   └── PricingPage.jsx     # Dynamic pricing (API + fallback)
 │   └── components/             # Reusable UI components
-├── .env                         # REACT_APP_BACKEND_URL
+├── public/index.html           # Badge removal script
+├── .env                        # REACT_APP_BACKEND_URL
 └── package.json
 ```
 

@@ -55,6 +55,8 @@ import AdminUsers from "./pages/admin/AdminUsers";
 import AdminSubscriptions from "./pages/admin/AdminSubscriptions";
 import AdminSites from "./pages/admin/AdminSites";
 import AdminPlans from "./pages/admin/AdminPlans";
+import AdminFeatures from "./pages/admin/AdminFeatures";
+import AdminAbilities from "./pages/admin/AdminAbilities";
 
 // Components
 import TrustNotifications from "./components/TrustNotifications";

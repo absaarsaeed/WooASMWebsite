@@ -26,13 +26,12 @@ import api from '../../services/api';
 
 // Feature category icons
 const categoryIcons = {
-  core: Zap,
+  ai: Zap,
   analytics: BarChart3,
-  operations: Package,
-  customer: Users,
+  automation: Package,
   security: Shield,
-  content: FileText,
-  chatbot: Bot,
+  support: Users,
+  advanced: Puzzle,
   default: Puzzle
 };
 
@@ -41,7 +40,7 @@ const planColors = {
   free: 'bg-gray-500',
   starter: 'bg-blue-500',
   professional: 'bg-purple-500',
-  enterprise: 'bg-amber-500'
+  developer: 'bg-amber-500'
 };
 
 const AdminFeatures = () => {

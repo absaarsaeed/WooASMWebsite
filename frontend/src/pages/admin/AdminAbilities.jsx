@@ -125,42 +125,104 @@ const AdminAbilities = () => {
 
   const handleEditClick = (ability) => {
     setEditingAbility({ ...ability });
+    setIsCreating(false);
     setSuccessMessage('');
   };
 
-  const handleCancelEdit = () => {
-    setEditingAbility(null);
+  // Handle create new ability
+  const handleCreateClick = () => {
+    setEditingAbility({
+      abilityKey: '',
+      name: '',
+      category: 'products',
+      riskLevel: 'low',
+      requiresConfirmation: false,
+      allowedPlans: ['free', 'starter', 'professional', 'developer'],
+      dailyLimit: null,
+      monthlyLimit: null,
+      enabled: true
+    });
+    setIsCreating(true);
+    setSuccessMessage('');
   };
 
-  const handleSaveAbility = async () => {
+  const handleCancelEditModal = () => {
+    setEditingAbility(null);
+    setIsCreating(false);
+  };
+
+  const handleSaveAbilityModal = async () => {
     if (!editingAbility) return;
     
     setSaving(true);
     setError('');
 
     try {
-      const response = await api.updateAdminAbility(editingAbility.abilityKey, {
-        name: editingAbility.name,
-        category: editingAbility.category,
-        riskLevel: editingAbility.riskLevel,
-        requiresConfirmation: editingAbility.requiresConfirmation,
-        allowedPlans: editingAbility.allowedPlans,
-        dailyLimit: editingAbility.dailyLimit,
-        monthlyLimit: editingAbility.monthlyLimit,
-        enabled: editingAbility.enabled
-      });
+      let response;
+      if (isCreating) {
+        // Create new ability
+        response = await api.createAdminAbility({
+          abilityKey: editingAbility.abilityKey,
+          name: editingAbility.name,
+          category: editingAbility.category,
+          riskLevel: editingAbility.riskLevel,
+          requiresConfirmation: editingAbility.requiresConfirmation,
+          allowedPlans: editingAbility.allowedPlans,
+          dailyLimit: editingAbility.dailyLimit,
+          monthlyLimit: editingAbility.monthlyLimit,
+          enabled: editingAbility.enabled
+        });
+      } else {
+        // Update existing ability
+        response = await api.updateAdminAbility(editingAbility.abilityKey, {
+          name: editingAbility.name,
+          category: editingAbility.category,
+          riskLevel: editingAbility.riskLevel,
+          requiresConfirmation: editingAbility.requiresConfirmation,
+          allowedPlans: editingAbility.allowedPlans,
+          dailyLimit: editingAbility.dailyLimit,
+          monthlyLimit: editingAbility.monthlyLimit,
+          enabled: editingAbility.enabled
+        });
+      }
       
       if (response.success) {
-        setSuccessMessage('Ability updated successfully!');
+        setSuccessMessage(isCreating ? 'Ability created successfully!' : 'Ability updated successfully!');
         setEditingAbility(null);
+        setIsCreating(false);
         fetchAbilities();
       } else {
-        setError(response.message || 'Failed to update ability');
+        setError(response.message || `Failed to ${isCreating ? 'create' : 'update'} ability`);
       }
     } catch (err) {
       setError('Failed to save changes');
     } finally {
       setSaving(false);
+    }
+  };
+
+  // Handle seed defaults
+  const handleSeedDefaults = async () => {
+    if (!window.confirm('This will seed default abilities. Existing abilities with the same keys will be updated. Continue?')) {
+      return;
+    }
+    
+    setSeeding(true);
+    setError('');
+
+    try {
+      const response = await api.seedAbilities();
+      
+      if (response.success) {
+        setSuccessMessage('Default abilities seeded successfully!');
+        fetchAbilities();
+      } else {
+        setError(response.message || 'Failed to seed abilities');
+      }
+    } catch (err) {
+      setError('Failed to seed abilities');
+    } finally {
+      setSeeding(false);
     }
   };
 

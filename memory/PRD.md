@@ -103,7 +103,7 @@ All responses from backend follow this structure:
   - `/app/frontend/src/pages/admin/AdminLoginPage.jsx`
   - `/app/frontend/src/pages/admin/AdminDashboard.jsx`
 
-### January 2026 - Backend Integration Updates
+### January 2025 - Backend Integration Updates
 - Added 429 rate limiting handler in API service
 - Fixed email verification endpoint (GET with query param)
 - Fixed reset password endpoint (uses `password` not `newPassword`)
@@ -112,12 +112,22 @@ All responses from backend follow this structure:
 - Pricing page buttons now work - trigger Stripe checkout or redirect
 - All pages have proper SEO meta tags
 
+### January 2025 - Admin Dashboard Expansion
+- Created Dynamic Plan Management page (`/admin/plans`)
+- Made Pricing page dynamic with API fallback to mock data
+- Created Admin Features page (`/admin/features`) with Create & Seed Defaults
+- Created Admin Abilities page (`/admin/abilities`) with Create & Seed Defaults
+- Created Admin Email Logs page (`/admin/emails`) with filtering and resend capability
+- Permanently removed "Made with Emergent" badge (multi-layer solution)
+- Fixed admin login success message styling (green instead of red)
+- Fixed auth flow token handling and redirects
+
 ### Testing Status
 - All frontend pages load correctly without JavaScript errors
 - Forms are functional
 - Navigation works
 - API service properly structured with all required methods
-- 100% frontend test pass rate
+- Note: API calls fail in preview environment due to CORS (production backend doesn't allow preview domain)
 
 ## Roadmap
 

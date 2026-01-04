@@ -66,6 +66,7 @@ WooASM.ai is a frontend-only React application for a SaaS platform that provides
 ### API Base URL
 ```
 Production: https://api.wooasm.com/api/v1
+Frontend .env: REACT_APP_BACKEND_URL=https://api.wooasm.com
 ```
 
 ### Key API Endpoints

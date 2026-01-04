@@ -10,11 +10,13 @@ const AdminLoginPage = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setSuccess('');
     setLoading(true);
 
     try {
@@ -22,7 +24,11 @@ const AdminLoginPage = () => {
       // Backend returns: { success: true, data: { token, admin: { id, email, name } } }
       if (response.success && response.data?.token) {
         localStorage.setItem('wooasm_admin_token', response.data.token);
-        navigate('/admin');
+        setSuccess('Login successful! Redirecting...');
+        // Redirect after a short delay to show success message
+        setTimeout(() => {
+          navigate('/admin');
+        }, 1000);
       } else {
         setError(response.message || 'Invalid credentials');
       }

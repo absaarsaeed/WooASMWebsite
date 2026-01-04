@@ -36,31 +36,51 @@ const AdminDashboard = () => {
     );
   }
 
+  // Handle both old nested format and new flatter format from backend
+  // New format: { totalUsers, activeSubscriptions, totalRevenue, newUsersToday, newUsersThisWeek, newUsersThisMonth, planBreakdown }
+  // Old format: { overview: {...}, plans: {...}, revenue: {...}, usage: {...}, sites: {...} }
+  const totalUsers = stats?.totalUsers ?? stats?.overview?.totalUsers ?? 0;
+  const usersToday = stats?.newUsersToday ?? stats?.overview?.usersToday ?? 0;
+  const usersThisWeek = stats?.newUsersThisWeek ?? stats?.overview?.usersThisWeek ?? 0;
+  const usersThisMonth = stats?.newUsersThisMonth ?? stats?.overview?.usersThisMonth ?? 0;
+  const activeSubscriptions = stats?.activeSubscriptions ?? 0;
+  const totalRevenue = stats?.totalRevenue ?? stats?.revenue?.mrr ?? 0;
+  
+  // Plan breakdown - handle both formats
+  const planBreakdown = stats?.planBreakdown ?? stats?.plans ?? { free: 0, starter: 0, professional: 0 };
+  
+  // Usage stats - handle both formats
+  const usageStats = stats?.usage ?? {};
+  
+  // Sites stats
+  const sitesActivated = stats?.sites?.totalActivated ?? stats?.totalSites ?? 0;
+  const sitesActiveThisWeek = stats?.sites?.activeLast7Days ?? 0;
+
   const statCards = [
     {
       label: 'Total Users',
-      value: stats?.overview?.totalUsers || 0,
-      change: `+${stats?.overview?.usersToday || 0} today`,
+      value: totalUsers,
+      change: `+${usersToday} today`,
       icon: Users,
       color: 'purple'
     },
     {
-      label: 'MRR',
-      value: `$${stats?.revenue?.mrr?.toLocaleString() || 0}`,
-      change: `ARR: $${stats?.revenue?.arr?.toLocaleString() || 0}`,
+      label: 'Active Subscriptions',
+      value: activeSubscriptions,
+      change: `MRR: $${totalRevenue.toLocaleString()}`,
       icon: DollarSign,
       color: 'emerald'
     },
     {
       label: 'Active Sites',
-      value: stats?.sites?.totalActivated || 0,
-      change: `${stats?.sites?.activeLast7Days || 0} active this week`,
+      value: sitesActivated,
+      change: `${sitesActiveThisWeek} active this week`,
       icon: Globe,
       color: 'blue'
     },
     {
       label: 'AI Queries',
-      value: stats?.usage?.totalAiQueriesThisMonth?.toLocaleString() || 0,
+      value: (usageStats?.totalAiQueriesThisMonth ?? usageStats?.assistantActions ?? 0).toLocaleString(),
       change: 'This month',
       icon: BarChart3,
       color: 'amber'

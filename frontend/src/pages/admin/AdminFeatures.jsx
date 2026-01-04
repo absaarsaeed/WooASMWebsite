@@ -172,14 +172,14 @@ const AdminFeatures = () => {
   };
 
   const handlePlanToggle = (plan) => {
-    const currentPlans = editingFeature.plans || [];
+    const currentPlans = editingFeature.allowedPlans || [];
     const newPlans = currentPlans.includes(plan)
       ? currentPlans.filter(p => p !== plan)
       : [...currentPlans, plan];
     
     setEditingFeature(prev => ({
       ...prev,
-      plans: newPlans
+      allowedPlans: newPlans
     }));
   };
 

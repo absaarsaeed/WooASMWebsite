@@ -452,12 +452,12 @@ const AdminAbilities = () => {
                 <div>
                   <label className="block text-sm text-gray-400 mb-2">Available in Plans</label>
                   <div className="flex flex-wrap gap-2">
-                    {['free', 'starter', 'professional', 'enterprise'].map(plan => (
+                    {['free', 'starter', 'professional', 'developer'].map(plan => (
                       <button
                         key={plan}
                         onClick={() => handlePlanToggle(plan)}
                         className={`px-4 py-2 rounded-lg border transition-colors capitalize ${
-                          (editingAbility.plans || []).includes(plan)
+                          (editingAbility.allowedPlans || []).includes(plan)
                             ? `${planColors[plan]} border-transparent text-white`
                             : 'bg-gray-700 border-gray-600 text-gray-400'
                         }`}

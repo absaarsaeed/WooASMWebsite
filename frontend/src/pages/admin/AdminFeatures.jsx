@@ -188,6 +188,98 @@ const AdminFeatures = () => {
     }));
   };
 
+  // Handle create new feature
+  const handleCreateClick = () => {
+    setEditingFeature({
+      featureKey: '',
+      name: '',
+      description: '',
+      category: 'ai',
+      allowedPlans: ['free', 'starter', 'professional', 'developer'],
+      enabled: true,
+      sortOrder: features.length
+    });
+    setIsCreating(true);
+    setSuccessMessage('');
+  };
+
+  // Handle save (create or update)
+  const handleSaveFeatureModal = async () => {
+    if (!editingFeature) return;
+    
+    setSaving(true);
+    setError('');
+
+    try {
+      let response;
+      if (isCreating) {
+        // Create new feature
+        response = await api.createAdminFeature({
+          featureKey: editingFeature.featureKey,
+          name: editingFeature.name,
+          description: editingFeature.description,
+          category: editingFeature.category,
+          allowedPlans: editingFeature.allowedPlans,
+          enabled: editingFeature.enabled,
+          sortOrder: editingFeature.sortOrder
+        });
+      } else {
+        // Update existing feature
+        response = await api.updateAdminFeature(editingFeature.featureKey, {
+          name: editingFeature.name,
+          description: editingFeature.description,
+          category: editingFeature.category,
+          allowedPlans: editingFeature.allowedPlans,
+          enabled: editingFeature.enabled,
+          sortOrder: editingFeature.sortOrder
+        });
+      }
+      
+      if (response.success) {
+        setSuccessMessage(isCreating ? 'Feature created successfully!' : 'Feature updated successfully!');
+        setEditingFeature(null);
+        setIsCreating(false);
+        fetchFeatures();
+      } else {
+        setError(response.message || `Failed to ${isCreating ? 'create' : 'update'} feature`);
+      }
+    } catch (err) {
+      setError('Failed to save changes');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // Handle seed defaults
+  const handleSeedDefaults = async () => {
+    if (!window.confirm('This will seed default features. Existing features with the same keys will be updated. Continue?')) {
+      return;
+    }
+    
+    setSeeding(true);
+    setError('');
+
+    try {
+      const response = await api.seedFeatures();
+      
+      if (response.success) {
+        setSuccessMessage('Default features seeded successfully!');
+        fetchFeatures();
+      } else {
+        setError(response.message || 'Failed to seed features');
+      }
+    } catch (err) {
+      setError('Failed to seed features');
+    } finally {
+      setSeeding(false);
+    }
+  };
+
+  const handleCancelEditModal = () => {
+    setEditingFeature(null);
+    setIsCreating(false);
+  };
+
   // Get unique categories
   const categories = ['all', ...new Set(features.map(f => f.category))];
 

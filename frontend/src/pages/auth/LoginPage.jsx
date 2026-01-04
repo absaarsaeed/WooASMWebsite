@@ -11,6 +11,7 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -18,12 +19,16 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setSuccess('');
     setLoading(true);
 
     const result = await login(email, password);
     
     if (result.success) {
-      navigate('/dashboard');
+      setSuccess('Login successful! Redirecting...');
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 1000);
     } else {
       setError(result.error || 'Login failed');
     }

@@ -135,12 +135,12 @@ const AdminAbilities = () => {
     setError('');
 
     try {
-      const response = await api.updateAdminAbility(editingAbility.abilityId, {
+      const response = await api.updateAdminAbility(editingAbility.abilityKey, {
         name: editingAbility.name,
         category: editingAbility.category,
         riskLevel: editingAbility.riskLevel,
         requiresConfirmation: editingAbility.requiresConfirmation,
-        plans: editingAbility.plans,
+        allowedPlans: editingAbility.allowedPlans,
         dailyLimit: editingAbility.dailyLimit,
         monthlyLimit: editingAbility.monthlyLimit,
         enabled: editingAbility.enabled
@@ -161,14 +161,14 @@ const AdminAbilities = () => {
   };
 
   const handlePlanToggle = (plan) => {
-    const currentPlans = editingAbility.plans || [];
+    const currentPlans = editingAbility.allowedPlans || [];
     const newPlans = currentPlans.includes(plan)
       ? currentPlans.filter(p => p !== plan)
       : [...currentPlans, plan];
     
     setEditingAbility(prev => ({
       ...prev,
-      plans: newPlans
+      allowedPlans: newPlans
     }));
   };
 

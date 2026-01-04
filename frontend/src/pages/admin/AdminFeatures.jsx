@@ -50,7 +50,9 @@ const AdminFeatures = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [editingFeature, setEditingFeature] = useState(null);
+  const [isCreating, setIsCreating] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [seeding, setSeeding] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');

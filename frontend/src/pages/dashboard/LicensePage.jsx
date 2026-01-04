@@ -80,9 +80,9 @@ const LicensePage = () => {
     );
   }
 
-  // Backend returns hasLicense flag, or check licenseKey directly
-  const hasLicense = licenseData?.hasLicense || !!licenseData?.licenseKey || !!user?.licenseKey;
-  const licenseKey = licenseData?.licenseKey || user?.licenseKey;
+  // Backend returns hasLicense flag, or check license key directly (handle both key and licenseKey)
+  const hasLicense = licenseData?.hasLicense || !!licenseData?.key || !!licenseData?.licenseKey || !!user?.licenseKey;
+  const licenseKey = licenseData?.key || licenseData?.licenseKey || user?.licenseKey;
   
   // Get sites data from license response or user
   const sitesUsed = licenseData?.sitesUsed ?? user?.sitesUsed ?? 0;

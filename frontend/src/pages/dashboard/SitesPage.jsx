@@ -93,7 +93,8 @@ const SitesPage = () => {
 
   const sites = sitesData?.sites || [];
   const sitesUsed = sitesData?.sitesUsed ?? sites.filter(s => s.isActive).length;
-  const sitesAllowed = sitesData?.sitesAllowed ?? 1;
+  // Backend returns maxSites, but also handle sitesAllowed for backwards compatibility
+  const sitesAllowed = sitesData?.maxSites ?? sitesData?.sitesAllowed ?? 1;
   const sitesRemaining = sitesAllowed - sitesUsed;
 
   return (

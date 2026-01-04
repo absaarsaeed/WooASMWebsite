@@ -21,18 +21,29 @@ const AdminLoginPage = () => {
 
     try {
       const response = await api.adminLogin(email, password);
-      // Backend returns: { success: true, data: { token, admin: { id, email, name } } }
-      if (response.success && response.data?.token) {
-        localStorage.setItem('wooasm_admin_token', response.data.token);
+      console.log('Admin login response:', response); // Debug log
+      
+      // Handle multiple possible response formats from backend:
+      // Format 1: { success: true, data: { token, admin } }
+      // Format 2: { success: true, token, admin }
+      // Format 3: { success: true, accessToken, admin }
+      const token = response.data?.token || response.token || response.data?.accessToken || response.accessToken;
+      
+      if (response.success && token) {
+        localStorage.setItem('wooasm_admin_token', token);
         setSuccess('Login successful! Redirecting...');
         // Redirect after a short delay to show success message
         setTimeout(() => {
           navigate('/admin');
         }, 1000);
+      } else if (response.success) {
+        // Backend returned success but no token - might be a response format issue
+        setError('Login succeeded but no token received. Please contact support.');
       } else {
         setError(response.message || 'Invalid credentials');
       }
     } catch (err) {
+      console.error('Admin login error:', err);
       setError('Failed to connect to server');
     } finally {
       setLoading(false);

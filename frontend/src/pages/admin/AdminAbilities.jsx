@@ -178,7 +178,7 @@ const AdminAbilities = () => {
   // Filter abilities
   const filteredAbilities = abilities.filter(ability => {
     const matchesSearch = ability.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          ability.abilityId.toLowerCase().includes(searchTerm.toLowerCase());
+                          ability.abilityKey.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = categoryFilter === 'all' || ability.category === categoryFilter;
     const matchesRisk = riskFilter === 'all' || ability.riskLevel === riskFilter;
     return matchesSearch && matchesCategory && matchesRisk;

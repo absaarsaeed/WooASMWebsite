@@ -378,110 +378,117 @@ const PricingPage = () => {
         {/* Pricing Cards */}
         <section className="py-16 bg-white dark:bg-gray-900">
           <div className="container-wide">
-            <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-              {pricingPlans.map((plan, index) => (
-                <motion.div
-                  key={plan.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className={`relative rounded-2xl p-8 ${
-                    plan.popular
-                      ? 'bg-purple-600 text-white ring-4 ring-purple-300 dark:ring-purple-700'
-                      : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700'
-                  }`}
-                >
-                  {plan.popular && (
-                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-amber-400 text-amber-900 text-sm font-semibold">
-                      Most Popular
-                    </div>
-                  )}
-
-                  <div className="mb-6">
-                    <h3 className={`text-xl font-bold mb-2 ${
-                      plan.popular ? 'text-white' : 'text-gray-900 dark:text-white'
-                    }`}>
-                      {plan.name}
-                    </h3>
-                    <p className={`text-sm ${
-                      plan.popular ? 'text-purple-200' : 'text-gray-600 dark:text-gray-400'
-                    }`}>
-                      {plan.description}
-                    </p>
-                  </div>
-
-                  <div className="mb-6">
-                    <div className="flex items-baseline gap-1">
-                      <span className={`text-4xl font-bold ${
-                        plan.popular ? 'text-white' : 'text-gray-900 dark:text-white'
-                      }`}>
-                        ${isYearly && plan.yearlyPrice ? plan.yearlyPrice : plan.price}
-                      </span>
-                      {plan.price > 0 && (
-                        <span className={`text-sm ${
-                          plan.popular ? 'text-purple-200' : 'text-gray-500 dark:text-gray-400'
-                        }`}>
-                          /month
-                        </span>
-                      )}
-                    </div>
-                    {isYearly && plan.yearlyPrice && (
-                      <p className={`text-sm mt-1 ${
-                        plan.popular ? 'text-purple-200' : 'text-gray-500 dark:text-gray-400'
-                      }`}>
-                        Billed annually (${plan.yearlyPrice * 12}/year)
-                      </p>
-                    )}
-                  </div>
-
-                  <button
-                    onClick={() => handleSelectPlan(plan)}
-                    disabled={loadingPlan === plan.id}
-                    data-testid={`pricing-btn-${plan.id}`}
-                    className={`w-full py-3 rounded-xl font-semibold transition-all mb-8 flex items-center justify-center gap-2 disabled:opacity-70 ${
+            {loadingPlans ? (
+              <div className="flex justify-center py-12">
+                <Loader2 className="w-8 h-8 text-purple-500 animate-spin" />
+              </div>
+            ) : (
+              <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                {pricingPlans.map((plan, index) => (
+                  <motion.div
+                    key={plan.id}
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className={`relative rounded-2xl p-8 ${
                       plan.popular
-                        ? 'bg-white text-purple-700 hover:bg-purple-50'
-                        : 'bg-purple-600 text-white hover:bg-purple-700'
+                        ? 'bg-purple-600 text-white ring-4 ring-purple-300 dark:ring-purple-700'
+                        : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700'
                     }`}
                   >
-                    {loadingPlan === plan.id ? (
-                      <>
-                        <Loader2 className="w-5 h-5 animate-spin" />
-                        Processing...
-                      </>
-                    ) : (
-                      plan.cta
+                    {plan.popular && (
+                      <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-amber-400 text-amber-900 text-sm font-semibold">
+                        Most Popular
+                      </div>
                     )}
-                  </button>
 
-                  <div className="space-y-3">
-                    {plan.features.map((feature, i) => (
-                      <div key={i} className="flex items-start gap-3">
-                        <Check className={`w-5 h-5 flex-shrink-0 ${
-                          plan.popular ? 'text-purple-200' : 'text-emerald-500'
-                        }`} />
-                        <span className={`text-sm ${
-                          plan.popular ? 'text-purple-100' : 'text-gray-700 dark:text-gray-300'
+                    <div className="mb-6">
+                      <h3 className={`text-xl font-bold mb-2 ${
+                        plan.popular ? 'text-white' : 'text-gray-900 dark:text-white'
+                      }`}>
+                        {plan.name}
+                      </h3>
+                      <p className={`text-sm ${
+                        plan.popular ? 'text-purple-200' : 'text-gray-600 dark:text-gray-400'
+                      }`}>
+                        {plan.description}
+                      </p>
+                    </div>
+
+                    <div className="mb-6">
+                      <div className="flex items-baseline gap-1">
+                        <span className={`text-4xl font-bold ${
+                          plan.popular ? 'text-white' : 'text-gray-900 dark:text-white'
                         }`}>
-                          {feature}
+                          ${getDisplayPrice(plan)}
                         </span>
+                        {plan.priceMonthly > 0 && (
+                          <span className={`text-sm ${
+                            plan.popular ? 'text-purple-200' : 'text-gray-500 dark:text-gray-400'
+                          }`}>
+                            /month
+                          </span>
+                        )}
                       </div>
-                    ))}
-                    {plan.notIncluded.map((feature, i) => (
-                      <div key={i} className="flex items-start gap-3 opacity-50">
-                        <X className={`w-5 h-5 flex-shrink-0 ${
-                          plan.popular ? 'text-purple-300' : 'text-gray-400'
-                        }`} />
-                        <span className={`text-sm ${
-                          plan.popular ? 'text-purple-200' : 'text-gray-500 dark:text-gray-500'
+                      {isYearly && plan.priceYearly > 0 && (
+                        <p className={`text-sm mt-1 ${
+                          plan.popular ? 'text-purple-200' : 'text-gray-500 dark:text-gray-400'
                         }`}>
-                          {feature}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
-              ))}
+                          Billed annually (${formatPrice(plan.priceYearly)}/year)
+                        </p>
+                      )}
+                    </div>
+
+                    <button
+                      onClick={() => handleSelectPlan(plan)}
+                      disabled={loadingPlan === plan.id}
+                      data-testid={`pricing-btn-${plan.id}`}
+                      className={`w-full py-3 rounded-xl font-semibold transition-all mb-8 flex items-center justify-center gap-2 disabled:opacity-70 ${
+                        plan.popular
+                          ? 'bg-white text-purple-700 hover:bg-purple-50'
+                          : 'bg-purple-600 text-white hover:bg-purple-700'
+                      }`}
+                    >
+                      {loadingPlan === plan.id ? (
+                        <>
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                          Processing...
+                        </>
+                      ) : (
+                        plan.cta
+                      )}
+                    </button>
+
+                    <div className="space-y-3">
+                      {plan.features.map((feature, i) => (
+                        <div key={i} className="flex items-start gap-3">
+                          <Check className={`w-5 h-5 flex-shrink-0 ${
+                            plan.popular ? 'text-purple-200' : 'text-emerald-500'
+                          }`} />
+                          <span className={`text-sm ${
+                            plan.popular ? 'text-purple-100' : 'text-gray-700 dark:text-gray-300'
+                          }`}>
+                            {feature}
+                          </span>
+                        </div>
+                      ))}
+                      {plan.notIncluded.map((feature, i) => (
+                        <div key={i} className="flex items-start gap-3 opacity-50">
+                          <X className={`w-5 h-5 flex-shrink-0 ${
+                            plan.popular ? 'text-purple-300' : 'text-gray-400'
+                          }`} />
+                          <span className={`text-sm ${
+                            plan.popular ? 'text-purple-200' : 'text-gray-500 dark:text-gray-500'
+                          }`}>
+                            {feature}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
             </div>
 
             {/* Enterprise Card */}

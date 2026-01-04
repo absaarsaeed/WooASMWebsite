@@ -121,22 +121,30 @@ export const AuthProvider = ({ children }) => {
   const register = async (name, email, password, companyName = '') => {
     try {
       const response = await api.register(name, email, password, companyName);
+      console.log('Register response:', response); // Debug log
       
-      // Backend response format:
-      // { success: true, message, data: { accessToken, refreshToken, user: { ... } } }
-      if (response.success && response.data) {
+      // Handle multiple possible response formats from backend:
+      // Format 1: { success: true, data: { accessToken, refreshToken, user } }
+      // Format 2: { success: true, accessToken, refreshToken, user }
+      const accessToken = response.data?.accessToken || response.accessToken;
+      const refreshToken = response.data?.refreshToken || response.refreshToken;
+      const userData = response.data?.user || response.user;
+      
+      if (response.success) {
         // Auto-login after registration if tokens provided
-        if (response.data.accessToken) {
-          localStorage.setItem('wooasm_access_token', response.data.accessToken);
-          if (response.data.refreshToken) {
-            localStorage.setItem('wooasm_refresh_token', response.data.refreshToken);
+        if (accessToken) {
+          localStorage.setItem('wooasm_access_token', accessToken);
+          if (refreshToken) {
+            localStorage.setItem('wooasm_refresh_token', refreshToken);
           }
-          setUser(response.data.user);
+          if (userData) {
+            setUser(userData);
+          }
           setIsAuthenticated(true);
         }
         return { 
           success: true, 
-          user: response.data.user,
+          user: userData,
           message: response.message 
         };
       }

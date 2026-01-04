@@ -199,19 +199,19 @@ const AdminDashboard = () => {
         <h2 className="text-lg font-semibold text-white mb-6">Growth Metrics</h2>
         <div className="grid sm:grid-cols-4 gap-6">
           <div className="text-center">
-            <p className="text-3xl font-bold text-purple-400">{stats?.overview?.usersToday || 0}</p>
+            <p className="text-3xl font-bold text-purple-400">{usersToday}</p>
             <p className="text-sm text-gray-400">New Today</p>
           </div>
           <div className="text-center">
-            <p className="text-3xl font-bold text-emerald-400">{stats?.overview?.usersThisWeek || 0}</p>
+            <p className="text-3xl font-bold text-emerald-400">{usersThisWeek}</p>
             <p className="text-sm text-gray-400">This Week</p>
           </div>
           <div className="text-center">
-            <p className="text-3xl font-bold text-blue-400">{stats?.overview?.usersThisMonth || 0}</p>
+            <p className="text-3xl font-bold text-blue-400">{usersThisMonth}</p>
             <p className="text-sm text-gray-400">This Month</p>
           </div>
           <div className="text-center">
-            <p className="text-3xl font-bold text-amber-400">${stats?.revenue?.mrr || 0}</p>
+            <p className="text-3xl font-bold text-amber-400">${totalRevenue}</p>
             <p className="text-sm text-gray-400">Monthly Revenue</p>
           </div>
         </div>

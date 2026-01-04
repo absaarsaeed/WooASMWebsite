@@ -49,9 +49,11 @@ const SignupPage = () => {
     );
     
     if (result.success) {
-      // After successful registration, redirect to pricing page to choose a plan
-      // User doesn't have a license key yet - they need to subscribe first
-      navigate('/pricing');
+      // Show success message and redirect to pricing page to choose a plan
+      setSuccess('Account created successfully! Redirecting...');
+      setTimeout(() => {
+        navigate('/pricing');
+      }, 1500);
     } else {
       setError(result.error || 'Registration failed');
     }
@@ -59,7 +61,7 @@ const SignupPage = () => {
     setLoading(false);
   };
 
-  if (success) {
+  if (success === 'email_verification') {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-8">
         <motion.div

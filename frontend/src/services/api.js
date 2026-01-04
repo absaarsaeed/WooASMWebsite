@@ -410,6 +410,11 @@ class ApiService {
     return this.adminRequest('/admin/features');
   }
 
+  // GET /admin/features/:featureKey - Get single feature
+  async getAdminFeature(featureKey) {
+    return this.adminRequest(`/admin/features/${featureKey}`);
+  }
+
   // POST /admin/features - Create a new feature
   async createAdminFeature(data) {
     return this.adminRequest('/admin/features', {
@@ -426,12 +431,34 @@ class ApiService {
     });
   }
 
+  // DELETE /admin/features/:featureKey - Delete feature
+  async deleteAdminFeature(featureKey) {
+    return this.adminRequest(`/admin/features/${featureKey}`, {
+      method: 'DELETE',
+    });
+  }
+
   // POST /admin/features/:featureKey/toggle - Toggle feature on/off
   async toggleAdminFeature(featureKey, enabled) {
     return this.adminRequest(`/admin/features/${featureKey}/toggle`, {
       method: 'POST',
       body: JSON.stringify({ enabled }),
     });
+  }
+
+  // GET /admin/features/category/:category - Get features by category
+  async getFeaturesByCategory(category) {
+    return this.adminRequest(`/admin/features/category/${category}`);
+  }
+
+  // GET /admin/features/plan/:planKey - Get features for a plan
+  async getFeaturesByPlan(planKey) {
+    return this.adminRequest(`/admin/features/plan/${planKey}`);
+  }
+
+  // GET /admin/features/seed - Seed default features
+  async seedFeatures() {
+    return this.adminRequest('/admin/features/seed');
   }
 
   // ============ Admin Abilities ============
@@ -441,9 +468,9 @@ class ApiService {
     return this.adminRequest('/admin/abilities');
   }
 
-  // GET /admin/abilities/by-plan/:planKey - Get abilities by plan
-  async getAbilitiesByPlan(planKey) {
-    return this.adminRequest(`/admin/abilities/by-plan/${planKey}`);
+  // GET /admin/abilities/:abilityKey - Get single ability
+  async getAdminAbility(abilityKey) {
+    return this.adminRequest(`/admin/abilities/${abilityKey}`);
   }
 
   // POST /admin/abilities - Create a new ability
@@ -454,12 +481,51 @@ class ApiService {
     });
   }
 
-  // PUT /admin/abilities/:abilityId - Update ability
-  async updateAdminAbility(abilityId, updates) {
-    return this.adminRequest(`/admin/abilities/${abilityId}`, {
+  // PUT /admin/abilities/:abilityKey - Update ability
+  async updateAdminAbility(abilityKey, updates) {
+    return this.adminRequest(`/admin/abilities/${abilityKey}`, {
       method: 'PUT',
       body: JSON.stringify(updates),
     });
+  }
+
+  // DELETE /admin/abilities/:abilityKey - Delete ability
+  async deleteAdminAbility(abilityKey) {
+    return this.adminRequest(`/admin/abilities/${abilityKey}`, {
+      method: 'DELETE',
+    });
+  }
+
+  // GET /admin/abilities/category/:category - Get abilities by category
+  async getAbilitiesByCategory(category) {
+    return this.adminRequest(`/admin/abilities/category/${category}`);
+  }
+
+  // GET /admin/abilities/plan/:planKey - Get abilities by plan
+  async getAbilitiesByPlan(planKey) {
+    return this.adminRequest(`/admin/abilities/plan/${planKey}`);
+  }
+
+  // POST /admin/abilities/limits - Set plan-specific ability limits
+  async setAbilityLimits(planKey, abilityKey, limits) {
+    return this.adminRequest('/admin/abilities/limits', {
+      method: 'POST',
+      body: JSON.stringify({
+        planKey,
+        abilityKey,
+        ...limits
+      }),
+    });
+  }
+
+  // GET /admin/abilities/limits/:planKey - Get plan ability limits
+  async getAbilityLimits(planKey) {
+    return this.adminRequest(`/admin/abilities/limits/${planKey}`);
+  }
+
+  // GET /admin/abilities/seed - Seed default abilities
+  async seedAbilities() {
+    return this.adminRequest('/admin/abilities/seed');
   }
 
   // ============ Admin Usage ============

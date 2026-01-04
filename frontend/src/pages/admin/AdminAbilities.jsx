@@ -273,19 +273,40 @@ const AdminAbilities = () => {
           <h1 className="text-2xl font-bold text-white">AI Abilities Management</h1>
           <p className="text-gray-400 mt-1">Configure AI assistant capabilities per plan</p>
         </div>
-        <div className="flex items-center gap-4 text-sm">
-          <div className="flex items-center gap-2 text-gray-400">
-            <span className="w-3 h-3 rounded-full bg-emerald-500"></span>
-            Low Risk: {abilities.filter(a => a.riskLevel === 'low').length}
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 text-sm">
+            <div className="flex items-center gap-2 text-gray-400">
+              <span className="w-3 h-3 rounded-full bg-emerald-500"></span>
+              Low: {abilities.filter(a => a.riskLevel === 'low').length}
+            </div>
+            <div className="flex items-center gap-2 text-gray-400">
+              <span className="w-3 h-3 rounded-full bg-amber-500"></span>
+              Med: {abilities.filter(a => a.riskLevel === 'medium').length}
+            </div>
+            <div className="flex items-center gap-2 text-gray-400">
+              <span className="w-3 h-3 rounded-full bg-red-500"></span>
+              High: {abilities.filter(a => a.riskLevel === 'high').length}
+            </div>
           </div>
-          <div className="flex items-center gap-2 text-gray-400">
-            <span className="w-3 h-3 rounded-full bg-amber-500"></span>
-            Medium: {abilities.filter(a => a.riskLevel === 'medium').length}
-          </div>
-          <div className="flex items-center gap-2 text-gray-400">
-            <span className="w-3 h-3 rounded-full bg-red-500"></span>
-            High: {abilities.filter(a => a.riskLevel === 'high').length}
-          </div>
+          <button
+            onClick={handleSeedDefaults}
+            disabled={seeding}
+            className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors disabled:opacity-50"
+          >
+            {seeding ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <Database className="w-4 h-4" />
+            )}
+            Seed Defaults
+          </button>
+          <button
+            onClick={handleCreateClick}
+            className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            Create Ability
+          </button>
         </div>
       </div>
 

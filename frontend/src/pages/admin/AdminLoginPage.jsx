@@ -19,9 +19,9 @@ const AdminLoginPage = () => {
 
     try {
       const response = await api.adminLogin(email, password);
-      // Backend returns: { success: true, data: { adminToken, role, expiresIn } }
-      if (response.success && response.data?.adminToken) {
-        localStorage.setItem('wooasm_admin_token', response.data.adminToken);
+      // Backend returns: { success: true, data: { token, admin: { id, email, name } } }
+      if (response.success && response.data?.token) {
+        localStorage.setItem('wooasm_admin_token', response.data.token);
         navigate('/admin');
       } else {
         setError(response.message || 'Invalid credentials');

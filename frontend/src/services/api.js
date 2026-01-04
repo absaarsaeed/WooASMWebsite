@@ -386,7 +386,7 @@ class ApiService {
   // Get all plans for pricing page (PUBLIC)
   async getAllPlansForPricing() {
     try {
-      const planKeys = ['free', 'starter', 'professional'];
+      const planKeys = ['free', 'starter', 'professional', 'enterprise'];
       const results = {};
       
       for (const key of planKeys) {
@@ -401,6 +401,79 @@ class ApiService {
     } catch {
       return { success: false, data: {} };
     }
+  }
+
+  // ============ Admin Features ============
+  
+  // GET /admin/features - Get all features
+  async getAdminFeatures() {
+    return this.adminRequest('/admin/features');
+  }
+
+  // POST /admin/features - Create a new feature
+  async createAdminFeature(data) {
+    return this.adminRequest('/admin/features', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  // PUT /admin/features/:featureKey - Update feature
+  async updateAdminFeature(featureKey, updates) {
+    return this.adminRequest(`/admin/features/${featureKey}`, {
+      method: 'PUT',
+      body: JSON.stringify(updates),
+    });
+  }
+
+  // POST /admin/features/:featureKey/toggle - Toggle feature on/off
+  async toggleAdminFeature(featureKey, enabled) {
+    return this.adminRequest(`/admin/features/${featureKey}/toggle`, {
+      method: 'POST',
+      body: JSON.stringify({ enabled }),
+    });
+  }
+
+  // ============ Admin Abilities ============
+  
+  // GET /admin/abilities - Get all abilities
+  async getAdminAbilities() {
+    return this.adminRequest('/admin/abilities');
+  }
+
+  // GET /admin/abilities/by-plan/:planKey - Get abilities by plan
+  async getAbilitiesByPlan(planKey) {
+    return this.adminRequest(`/admin/abilities/by-plan/${planKey}`);
+  }
+
+  // POST /admin/abilities - Create a new ability
+  async createAdminAbility(data) {
+    return this.adminRequest('/admin/abilities', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  // PUT /admin/abilities/:abilityId - Update ability
+  async updateAdminAbility(abilityId, updates) {
+    return this.adminRequest(`/admin/abilities/${abilityId}`, {
+      method: 'PUT',
+      body: JSON.stringify(updates),
+    });
+  }
+
+  // ============ Admin Usage ============
+  
+  // GET /admin/usage/:licenseKey - Get usage for a license
+  async getAdminUsage(licenseKey) {
+    return this.adminRequest(`/admin/usage/${licenseKey}`);
+  }
+
+  // POST /admin/usage/:licenseKey/reset - Reset usage counters
+  async resetAdminUsage(licenseKey) {
+    return this.adminRequest(`/admin/usage/${licenseKey}/reset`, {
+      method: 'POST',
+    });
   }
 
   // ============ Notifications (Public) ============

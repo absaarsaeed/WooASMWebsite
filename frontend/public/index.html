@@ -17,6 +17,27 @@
         <meta name="twitter:description" content="The most powerful AI assistant for WooCommerce. Get instant insights, automate inventory, create content, and boost sales." />
         <meta name="twitter:image" content="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1200&h=630&fit=crop" />
         <title>WooASM - AI Store Manager for WooCommerce</title>
+        
+        <!-- CSS to permanently hide any Emergent badge -->
+        <style>
+            #emergent-badge,
+            [id*="emergent"],
+            [class*="emergent"],
+            a[href*="emergent.sh"],
+            a[href*="emergentagent"] {
+                display: none !important;
+                visibility: hidden !important;
+                opacity: 0 !important;
+                pointer-events: none !important;
+                position: absolute !important;
+                left: -9999px !important;
+                top: -9999px !important;
+                width: 0 !important;
+                height: 0 !important;
+                overflow: hidden !important;
+            }
+        </style>
+        
         <script src="https://assets.emergent.sh/scripts/emergent-main.js"></script>
         <!--
         These two scripts have been added for the Visual Edits, please do not edit or remove them
@@ -41,6 +62,72 @@
                 document.head.appendChild(tailwindScript);
             }
         </script>
+        
+        <!-- Script to continuously remove Emergent badge -->
+        <script>
+            (function() {
+                // Function to remove Emergent badge
+                function removeEmergentBadge() {
+                    var selectors = [
+                        '#emergent-badge',
+                        '[id*="emergent"]',
+                        'a[href*="emergent.sh"]',
+                        'a[href*="emergentagent"]'
+                    ];
+                    selectors.forEach(function(selector) {
+                        var elements = document.querySelectorAll(selector);
+                        elements.forEach(function(el) {
+                            if (el && el.parentNode) {
+                                el.parentNode.removeChild(el);
+                            }
+                        });
+                    });
+                }
+                
+                // Remove on DOM ready
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', removeEmergentBadge);
+                } else {
+                    removeEmergentBadge();
+                }
+                
+                // Remove on window load
+                window.addEventListener('load', removeEmergentBadge);
+                
+                // Remove periodically for first 10 seconds (in case scripts add it later)
+                var removeCount = 0;
+                var removeInterval = setInterval(function() {
+                    removeEmergentBadge();
+                    removeCount++;
+                    if (removeCount >= 20) {
+                        clearInterval(removeInterval);
+                    }
+                }, 500);
+                
+                // Use MutationObserver to catch any dynamically added badges
+                var observer = new MutationObserver(function(mutations) {
+                    mutations.forEach(function(mutation) {
+                        if (mutation.addedNodes.length) {
+                            removeEmergentBadge();
+                        }
+                    });
+                });
+                
+                // Start observing once DOM is ready
+                function startObserver() {
+                    observer.observe(document.body, {
+                        childList: true,
+                        subtree: true
+                    });
+                }
+                
+                if (document.body) {
+                    startObserver();
+                } else {
+                    document.addEventListener('DOMContentLoaded', startObserver);
+                }
+            })();
+        </script>
     </head>
     <body>
         <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -55,13 +142,6 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-        <a
-            id="emergent-badge"
-            target="_blank"
-            href="https://app.emergent.sh/?utm_source=emergent-badge"
-            style="display: none !important;"
-        >
-        </a>
         <script>
             !(function (t, e) {
                 var o, n, p, r;

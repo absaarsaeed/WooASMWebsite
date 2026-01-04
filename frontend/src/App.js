@@ -57,6 +57,7 @@ import AdminSites from "./pages/admin/AdminSites";
 import AdminPlans from "./pages/admin/AdminPlans";
 import AdminFeatures from "./pages/admin/AdminFeatures";
 import AdminAbilities from "./pages/admin/AdminAbilities";
+import AdminEmails from "./pages/admin/AdminEmails";
 
 // Components
 import TrustNotifications from "./components/TrustNotifications";

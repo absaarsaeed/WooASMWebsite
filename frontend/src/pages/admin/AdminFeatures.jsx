@@ -306,8 +306,29 @@ const AdminFeatures = () => {
           <h1 className="text-2xl font-bold text-white">Feature Management</h1>
           <p className="text-gray-400 mt-1">Control feature availability across plans</p>
         </div>
-        <div className="text-sm text-gray-400">
-          {features.length} features · {features.filter(f => f.enabled).length} enabled
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-gray-400">
+            {features.length} features · {features.filter(f => f.enabled).length} enabled
+          </span>
+          <button
+            onClick={handleSeedDefaults}
+            disabled={seeding}
+            className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors disabled:opacity-50"
+          >
+            {seeding ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <Database className="w-4 h-4" />
+            )}
+            Seed Defaults
+          </button>
+          <button
+            onClick={handleCreateClick}
+            className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            Create Feature
+          </button>
         </div>
       </div>
 

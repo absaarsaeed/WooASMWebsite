@@ -44,7 +44,7 @@ const planColors = {
   free: 'bg-gray-500',
   starter: 'bg-blue-500',
   professional: 'bg-purple-500',
-  enterprise: 'bg-amber-500'
+  developer: 'bg-amber-500'
 };
 
 const AdminAbilities = () => {

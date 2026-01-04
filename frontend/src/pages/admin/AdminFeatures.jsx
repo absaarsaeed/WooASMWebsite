@@ -291,7 +291,7 @@ const AdminFeatures = () => {
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex flex-wrap gap-1">
-                      {(feature.plans || []).map(plan => (
+                      {(feature.allowedPlans || []).map(plan => (
                         <span
                           key={plan}
                           className={`px-2 py-0.5 rounded text-xs text-white ${planColors[plan] || 'bg-gray-600'}`}

@@ -169,7 +169,7 @@ const UsagePage = () => {
         </div>
 
         {/* Weighted Total */}
-        {usageData?.usage?.weightedTotal !== undefined && (
+        {(usageData?.usage?.weightedTotal !== undefined || usageData?.weightedTotal !== undefined) && (
           <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
             <div className="flex items-center justify-between">
               <div>
@@ -178,10 +178,10 @@ const UsagePage = () => {
               </div>
               <div className="text-right">
                 <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                  {(usageData.usage.weightedTotal || 0).toLocaleString()}
+                  {(usageData?.usage?.weightedTotal ?? usageData?.weightedTotal ?? 0).toLocaleString()}
                 </p>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  / {(limits.weightedCap || 0).toLocaleString()}
+                  / {(limits.weightedCap ?? 0).toLocaleString()}
                 </p>
               </div>
             </div>

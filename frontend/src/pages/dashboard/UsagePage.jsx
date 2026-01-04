@@ -123,9 +123,9 @@ const UsagePage = () => {
 
         <div className="grid sm:grid-cols-2 gap-6">
           {usageItems.map((item, index) => {
-            // Backend uses camelCase keys
+            // Backend uses camelCase keys - handle both direct key and limitKey
             const used = currentUsage[item.key] ?? 0;
-            const limit = limits[item.key] ?? 100;
+            const limit = limits[item.limitKey] ?? limits[item.key] ?? 100;
             const percentage = percentages[item.key] ?? (limit > 0 ? Math.round((used / limit) * 100) : 0);
             
             return (

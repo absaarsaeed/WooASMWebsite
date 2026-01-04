@@ -379,10 +379,10 @@ const AdminAbilities = () => {
               {/* Modal Body */}
               <div className="p-6 space-y-4">
                 <div>
-                  <label className="block text-sm text-gray-400 mb-2">Ability ID</label>
+                  <label className="block text-sm text-gray-400 mb-2">Ability Key</label>
                   <input
                     type="text"
-                    value={editingAbility.abilityId}
+                    value={editingAbility.abilityKey}
                     disabled
                     className="w-full px-4 py-2 bg-gray-900 border border-gray-700 rounded-lg text-gray-500 font-mono"
                   />

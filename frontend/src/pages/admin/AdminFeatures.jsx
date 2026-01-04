@@ -454,7 +454,7 @@ const AdminFeatures = () => {
         )}
       </div>
 
-      {/* Edit Modal */}
+      {/* Edit/Create Modal */}
       <AnimatePresence>
         {editingFeature && (
           <motion.div
@@ -462,7 +462,7 @@ const AdminFeatures = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4"
-            onClick={handleCancelEdit}
+            onClick={handleCancelEditModal}
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
@@ -474,10 +474,10 @@ const AdminFeatures = () => {
               {/* Modal Header */}
               <div className="flex items-center justify-between p-6 border-b border-gray-700">
                 <h2 className="text-xl font-semibold text-white">
-                  Edit Feature
+                  {isCreating ? 'Create Feature' : 'Edit Feature'}
                 </h2>
                 <button
-                  onClick={handleCancelEdit}
+                  onClick={handleCancelEditModal}
                   className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
                 >
                   <X className="w-5 h-5 text-gray-400" />
@@ -486,12 +486,27 @@ const AdminFeatures = () => {
 
               {/* Modal Body */}
               <div className="p-6 space-y-4">
+                {isCreating && (
+                  <div>
+                    <label className="block text-sm text-gray-400 mb-2">Feature Key <span className="text-red-400">*</span></label>
+                    <input
+                      type="text"
+                      value={editingFeature.featureKey}
+                      onChange={(e) => setEditingFeature(prev => ({ ...prev, featureKey: e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '_') }))}
+                      placeholder="e.g., my_new_feature"
+                      className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white font-mono focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">Unique identifier (lowercase, underscores only)</p>
+                  </div>
+                )}
+
                 <div>
-                  <label className="block text-sm text-gray-400 mb-2">Feature Name</label>
+                  <label className="block text-sm text-gray-400 mb-2">Feature Name <span className="text-red-400">*</span></label>
                   <input
                     type="text"
                     value={editingFeature.name}
                     onChange={(e) => setEditingFeature(prev => ({ ...prev, name: e.target.value }))}
+                    placeholder="e.g., My New Feature"
                     className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   />
                 </div>
@@ -502,6 +517,7 @@ const AdminFeatures = () => {
                     value={editingFeature.description || ''}
                     onChange={(e) => setEditingFeature(prev => ({ ...prev, description: e.target.value }))}
                     rows={2}
+                    placeholder="Brief description of what this feature does"
                     className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   />
                 </div>
@@ -561,14 +577,14 @@ const AdminFeatures = () => {
               {/* Modal Footer */}
               <div className="flex items-center justify-end gap-4 p-6 border-t border-gray-700">
                 <button
-                  onClick={handleCancelEdit}
+                  onClick={handleCancelEditModal}
                   className="px-4 py-2 text-gray-400 hover:text-white transition-colors"
                 >
                   Cancel
                 </button>
                 <button
-                  onClick={handleSaveFeature}
-                  disabled={saving}
+                  onClick={handleSaveFeatureModal}
+                  disabled={saving || (isCreating && (!editingFeature.featureKey || !editingFeature.name))}
                   className="flex items-center gap-2 px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg disabled:opacity-50 transition-colors"
                 >
                   {saving ? (
@@ -576,7 +592,7 @@ const AdminFeatures = () => {
                   ) : (
                     <Save className="w-4 h-4" />
                   )}
-                  {saving ? 'Saving...' : 'Save Changes'}
+                  {saving ? 'Saving...' : isCreating ? 'Create Feature' : 'Save Changes'}
                 </button>
               </div>
             </motion.div>

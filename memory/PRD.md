@@ -50,6 +50,10 @@ WooASM.ai is a frontend-only React application for a SaaS platform that provides
 - [x] Users management with search/filter
 - [x] Subscriptions analytics
 - [x] Sites overview
+- [x] Plans management (`/admin/plans`) - View and update subscription plans
+- [x] Features management (`/admin/features`) - Create, seed, and manage features
+- [x] Abilities management (`/admin/abilities`) - Create, seed, and manage abilities
+- [x] Email logs (`/admin/emails`) - View sent email logs and delivery status
 
 ### API Integration
 - [x] Central API service (`/app/frontend/src/services/api.js`)

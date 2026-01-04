@@ -153,8 +153,9 @@ const AdminFeatures = () => {
         name: editingFeature.name,
         description: editingFeature.description,
         category: editingFeature.category,
-        plans: editingFeature.plans,
-        enabled: editingFeature.enabled
+        allowedPlans: editingFeature.allowedPlans,
+        enabled: editingFeature.enabled,
+        sortOrder: editingFeature.sortOrder
       });
       
       if (response.success) {

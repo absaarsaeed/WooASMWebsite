@@ -136,9 +136,12 @@ class ApiService {
     });
   }
 
-  // GET /auth/verify-email?token=xxx
+  // POST /auth/verify-email
   async verifyEmail(token) {
-    return this.request(`/auth/verify-email?token=${encodeURIComponent(token)}`);
+    return this.request('/auth/verify-email', {
+      method: 'POST',
+      body: JSON.stringify({ token }),
+    });
   }
 
   // POST /auth/forgot-password

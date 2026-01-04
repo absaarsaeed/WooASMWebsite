@@ -353,6 +353,56 @@ class ApiService {
     return this.adminRequest(`/admin/revenue?period=${period}`);
   }
 
+  // ============ Admin Plans ============
+  
+  // GET /admin/plans - Get all plan configurations
+  async getAdminPlans() {
+    return this.adminRequest('/admin/plans');
+  }
+
+  // GET /admin/plans/:id - Get single plan by ID
+  async getAdminPlan(planId) {
+    return this.adminRequest(`/admin/plans/${planId}`);
+  }
+
+  // PUT /admin/plans/:id - Update plan configuration
+  async updateAdminPlan(planId, updates) {
+    return this.adminRequest(`/admin/plans/${planId}`, {
+      method: 'PUT',
+      body: JSON.stringify(updates),
+    });
+  }
+
+  // GET /admin/plans/key/:planKey - Get plan by key (PUBLIC - no auth needed)
+  async getPlanByKey(planKey) {
+    try {
+      const response = await fetch(`${this.baseUrl}/admin/plans/key/${planKey}`);
+      return response.json();
+    } catch {
+      return { success: false };
+    }
+  }
+
+  // Get all plans for pricing page (PUBLIC)
+  async getAllPlansForPricing() {
+    try {
+      const planKeys = ['free', 'starter', 'professional'];
+      const results = {};
+      
+      for (const key of planKeys) {
+        const response = await fetch(`${this.baseUrl}/admin/plans/key/${key}`);
+        const data = await response.json();
+        if (data.success) {
+          results[key] = data.data;
+        }
+      }
+      
+      return { success: true, data: results };
+    } catch {
+      return { success: false, data: {} };
+    }
+  }
+
   // ============ Notifications (Public) ============
   
   // GET /notifications/random

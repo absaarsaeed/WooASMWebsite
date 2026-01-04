@@ -289,13 +289,13 @@ const AdminAbilities = () => {
                 const riskConfig = riskLevelConfig[ability.riskLevel] || riskLevelConfig.low;
                 const RiskIcon = riskConfig.icon;
                 return (
-                  <div key={ability.abilityId} className="px-6 py-4 flex items-center justify-between hover:bg-gray-700/50 transition-colors">
+                  <div key={ability.abilityKey} className="px-6 py-4 flex items-center justify-between hover:bg-gray-700/50 transition-colors">
                     <div className="flex items-center gap-4">
                       <div className="flex items-center gap-2">
                         <RiskIcon className={`w-5 h-5 ${riskConfig.textColor}`} />
                         <div>
                           <p className="text-white font-medium">{ability.name}</p>
-                          <p className="text-sm text-gray-500 font-mono">{ability.abilityId}</p>
+                          <p className="text-sm text-gray-500 font-mono">{ability.abilityKey}</p>
                         </div>
                       </div>
                     </div>
@@ -315,7 +315,7 @@ const AdminAbilities = () => {
                       )}
                       
                       <div className="flex gap-1">
-                        {(ability.plans || []).map(plan => (
+                        {(ability.allowedPlans || []).map(plan => (
                           <span
                             key={plan}
                             className={`px-2 py-0.5 rounded text-xs text-white ${planColors[plan] || 'bg-gray-600'}`}

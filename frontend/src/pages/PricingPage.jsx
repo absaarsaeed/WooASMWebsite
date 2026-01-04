@@ -489,7 +489,6 @@ const PricingPage = () => {
                 ))}
               </div>
             )}
-            </div>
 
             {/* Enterprise Card */}
             <motion.div

@@ -45,7 +45,7 @@ const DashboardOverview = () => {
   }
 
   // Backend response format:
-  // { user, license, hasSubscription, usage: { current, limits, percentages }, features }
+  // { user, license: { key, status, maxSites, sitesUsed, expiresAt }, usage: { current, limits }, features }
   // OR direct data without wrapper
   const responseData = dashboardData?.data || dashboardData || {};
   const userData = responseData?.user || user || {};
@@ -54,15 +54,17 @@ const DashboardOverview = () => {
   const currentUsage = usageData.current || {};
   const limits = usageData.limits || {};
   const percentages = usageData.percentages || {};
+  const features = responseData?.features || {};
   
   // Determine if user has subscription - check multiple sources
   const hasSubscription = responseData?.hasSubscription || 
     userData?.subscriptionStatus === 'active' || 
     (userData?.plan && userData.plan !== 'none' && userData.plan !== 'free') ||
+    !!license?.key ||
     !!license?.licenseKey;
   
-  // Get license key from multiple possible locations
-  const licenseKey = license?.licenseKey || userData?.licenseKey;
+  // Get license key from multiple possible locations (handle both key and licenseKey)
+  const licenseKey = license?.key || license?.licenseKey || userData?.licenseKey;
 
   return (
     <div className="p-8">

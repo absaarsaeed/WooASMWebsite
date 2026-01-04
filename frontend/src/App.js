@@ -129,6 +129,7 @@ function AppRoutes() {
         <Route path="/admin/login" element={<AdminLoginPage />} />
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
+          <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="users" element={<AdminUsers />} />
           <Route path="subscriptions" element={<AdminSubscriptions />} />
           <Route path="sites" element={<AdminSites />} />

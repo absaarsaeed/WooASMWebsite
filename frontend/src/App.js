@@ -134,6 +134,7 @@ function AppRoutes() {
           <Route path="users" element={<AdminUsers />} />
           <Route path="subscriptions" element={<AdminSubscriptions />} />
           <Route path="sites" element={<AdminSites />} />
+          <Route path="plans" element={<AdminPlans />} />
         </Route>
         
         {/* Fallback to home */}

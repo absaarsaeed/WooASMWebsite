@@ -93,9 +93,12 @@ class ApiService {
       
       const result = await response.json();
       
-      // Backend returns: { success: true, data: { accessToken, tokenType, expiresIn } }
-      if (result.success && result.data?.accessToken) {
-        localStorage.setItem('wooasm_access_token', result.data.accessToken);
+      // Backend returns: { success: true, accessToken, refreshToken } (tokens at root level)
+      if (result.success && result.accessToken) {
+        localStorage.setItem('wooasm_access_token', result.accessToken);
+        if (result.refreshToken) {
+          localStorage.setItem('wooasm_refresh_token', result.refreshToken);
+        }
         return true;
       }
       return false;

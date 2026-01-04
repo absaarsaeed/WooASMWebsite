@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { Check, X, Loader2 } from 'lucide-react';
@@ -7,7 +7,7 @@ import Footer from '../components/layout/Footer';
 import SEO from '../components/SEO';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
-import { pricingPlans, faqs } from '../data/mock';
+import { faqs } from '../data/mock';
 import {
   Accordion,
   AccordionContent,
@@ -15,11 +15,259 @@ import {
   AccordionTrigger,
 } from '../components/ui/accordion';
 
+// Default pricing plans (fallback if API fails)
+const defaultPricingPlans = [
+  {
+    id: 'free',
+    name: 'Free',
+    priceMonthly: 0,
+    priceYearly: 0,
+    description: 'Perfect for trying WooASM',
+    features: [
+      'AI Assistant (300 queries/month)',
+      'Basic Health Score',
+      'Basic Store Insights',
+      'Customer Chatbot (50 msg/month)',
+      'Activity Logs (7 days)',
+      'Content Studio (10/month)',
+      '1 site'
+    ],
+    notIncluded: [
+      'Inventory Autopilot',
+      'Customer Intelligence',
+      'Growth Experiments',
+      'Advanced Analytics',
+      'Competitor Watch',
+      'Fraud Detection'
+    ],
+    cta: 'Get Started Free',
+    popular: false
+  },
+  {
+    id: 'starter',
+    name: 'Starter',
+    priceMonthly: 2900,
+    priceYearly: 29000,
+    description: 'For growing stores',
+    features: [
+      'AI Assistant (5,000 queries/month)',
+      'Full Health Score',
+      'Full Store Insights',
+      'Customer Chatbot (2,000 msg/month)',
+      'Activity Logs (30 days)',
+      'AI Memory (10 items)',
+      'Content Studio (100/month)',
+      'Review Monitor',
+      'Support Aggregator',
+      'Customer Intelligence (basic)',
+      '1 site'
+    ],
+    notIncluded: [
+      'Inventory Autopilot',
+      'Growth Experiments',
+      'Advanced Analytics',
+      'Competitor Watch',
+      'Fraud Detection'
+    ],
+    cta: 'Subscribe Now',
+    popular: true
+  },
+  {
+    id: 'professional',
+    name: 'Professional',
+    priceMonthly: 7900,
+    priceYearly: 79000,
+    description: 'For serious store owners',
+    features: [
+      'AI Assistant (20,000 queries/month)',
+      'Customer Chatbot (10,000 msg/month)',
+      'Activity Logs (unlimited + restore)',
+      'AI Memory (unlimited)',
+      'Content Studio (1,000/month)',
+      'Inventory Autopilot',
+      'Full Customer Intelligence',
+      'Growth Experiments',
+      'Google Analytics Integration',
+      'Competitor Price Watch',
+      'Fraud Detection',
+      'Priority Support',
+      'Export Everything',
+      '5 sites'
+    ],
+    notIncluded: [],
+    cta: 'Subscribe Now',
+    popular: false
+  }
+];
+
+// Helper function to format limit for display
+const formatLimit = (value) => {
+  if (value === null || value === -1) return 'Unlimited';
+  return value.toLocaleString();
+};
+
+// Helper to generate feature list from API data
+const generateFeatures = (planData, planKey) => {
+  if (!planData) return [];
+  
+  const features = [];
+  
+  // AI Assistant
+  if (planData.assistantMonthly === null || planData.assistantMonthly === -1) {
+    features.push('AI Assistant (Unlimited)');
+  } else if (planData.assistantMonthly) {
+    features.push(`AI Assistant (${formatLimit(planData.assistantMonthly)}/month)`);
+  }
+  
+  // Content Studio
+  if (planData.contentMonthly === null || planData.contentMonthly === -1) {
+    features.push('Content Studio (Unlimited)');
+  } else if (planData.contentMonthly) {
+    features.push(`Content Studio (${formatLimit(planData.contentMonthly)}/month)`);
+  }
+  
+  // Chatbot
+  if (planData.chatbotMonthly === null || planData.chatbotMonthly === -1) {
+    features.push('Customer Chatbot (Unlimited)');
+  } else if (planData.chatbotMonthly) {
+    features.push(`Customer Chatbot (${formatLimit(planData.chatbotMonthly)} msg/month)`);
+  }
+  
+  // Insights
+  if (planData.insightsMonthly === null || planData.insightsMonthly === -1) {
+    features.push('Insights (Unlimited refreshes)');
+  } else if (planData.insightsMonthly) {
+    features.push(`Insights (${formatLimit(planData.insightsMonthly)} refreshes/month)`);
+  }
+  
+  // Sites
+  if (planData.maxSites) {
+    features.push(`${planData.maxSites} ${planData.maxSites === 1 ? 'site' : 'sites'}`);
+  }
+  
+  // Feature flags
+  if (planData.features) {
+    if (planData.features.inventoryAutopilot) features.push('Inventory Autopilot');
+    if (planData.features.customerInsights) features.push('Customer Intelligence');
+    if (planData.features.growthExperiments) features.push('Growth Experiments');
+    if (planData.features.fraudDetection) features.push('Fraud Detection');
+    if (planData.features.competitorWatch) features.push('Competitor Price Watch');
+    if (planData.features.reviewMonitor) features.push('Review Monitor');
+    if (planData.features.supportAggregator) features.push('Support Aggregator');
+  }
+  
+  return features;
+};
+
+// Helper to generate not-included features
+const generateNotIncluded = (planData) => {
+  if (!planData || !planData.features) return [];
+  
+  const notIncluded = [];
+  
+  if (!planData.features.inventoryAutopilot) notIncluded.push('Inventory Autopilot');
+  if (!planData.features.customerInsights) notIncluded.push('Customer Intelligence');
+  if (!planData.features.growthExperiments) notIncluded.push('Growth Experiments');
+  if (!planData.features.fraudDetection) notIncluded.push('Fraud Detection');
+  if (!planData.features.competitorWatch) notIncluded.push('Competitor Watch');
+  
+  return notIncluded;
+};
+
 const PricingPage = () => {
   const [isYearly, setIsYearly] = useState(false);
   const [loadingPlan, setLoadingPlan] = useState(null);
+  const [pricingPlans, setPricingPlans] = useState(defaultPricingPlans);
+  const [loadingPlans, setLoadingPlans] = useState(true);
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
+
+  // Fetch dynamic pricing from API
+  useEffect(() => {
+    const fetchPricing = async () => {
+      try {
+        const response = await api.getAllPlansForPricing();
+        
+        if (response.success && response.data) {
+          const apiPlans = response.data;
+          
+          // Transform API data to display format
+          const transformedPlans = [];
+          
+          // Free plan
+          if (apiPlans.free) {
+            transformedPlans.push({
+              id: 'free',
+              name: apiPlans.free.name || 'Free',
+              priceMonthly: apiPlans.free.priceMonthly || 0,
+              priceYearly: apiPlans.free.priceYearly || 0,
+              description: 'Perfect for trying WooASM',
+              features: generateFeatures(apiPlans.free, 'free'),
+              notIncluded: generateNotIncluded(apiPlans.free),
+              cta: 'Get Started Free',
+              popular: false
+            });
+          }
+          
+          // Starter plan
+          if (apiPlans.starter) {
+            transformedPlans.push({
+              id: 'starter',
+              name: apiPlans.starter.name || 'Starter',
+              priceMonthly: apiPlans.starter.priceMonthly || 2900,
+              priceYearly: apiPlans.starter.priceYearly || 29000,
+              description: 'For growing stores',
+              features: generateFeatures(apiPlans.starter, 'starter'),
+              notIncluded: generateNotIncluded(apiPlans.starter),
+              cta: 'Subscribe Now',
+              popular: true
+            });
+          }
+          
+          // Professional plan
+          if (apiPlans.professional) {
+            transformedPlans.push({
+              id: 'professional',
+              name: apiPlans.professional.name || 'Professional',
+              priceMonthly: apiPlans.professional.priceMonthly || 7900,
+              priceYearly: apiPlans.professional.priceYearly || 79000,
+              description: 'For serious store owners',
+              features: generateFeatures(apiPlans.professional, 'professional'),
+              notIncluded: generateNotIncluded(apiPlans.professional),
+              cta: 'Subscribe Now',
+              popular: false
+            });
+          }
+          
+          if (transformedPlans.length > 0) {
+            setPricingPlans(transformedPlans);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch pricing:', error);
+        // Keep default plans on error
+      } finally {
+        setLoadingPlans(false);
+      }
+    };
+
+    fetchPricing();
+  }, []);
+
+  // Format price from cents to dollars
+  const formatPrice = (cents) => {
+    if (cents === 0) return '0';
+    return (cents / 100).toFixed(0);
+  };
+
+  // Get display price (monthly or yearly equivalent)
+  const getDisplayPrice = (plan) => {
+    if (isYearly && plan.priceYearly > 0) {
+      // Show monthly equivalent for yearly billing
+      return formatPrice(Math.round(plan.priceYearly / 12));
+    }
+    return formatPrice(plan.priceMonthly);
+  };
 
   const handleSelectPlan = async (plan) => {
     // Free plan - redirect to signup

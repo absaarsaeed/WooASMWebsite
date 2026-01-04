@@ -85,17 +85,30 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       const response = await api.login(email, password);
+      console.log('Login response:', response); // Debug log
       
-      // Backend response format:
-      // { success: true, data: { accessToken, refreshToken, tokenType, expiresIn, user } }
-      if (response.success && response.data) {
-        localStorage.setItem('wooasm_access_token', response.data.accessToken);
-        if (response.data.refreshToken) {
-          localStorage.setItem('wooasm_refresh_token', response.data.refreshToken);
+      // Handle multiple possible response formats from backend:
+      // Format 1: { success: true, data: { accessToken, refreshToken, user } }
+      // Format 2: { success: true, accessToken, refreshToken, user }
+      const accessToken = response.data?.accessToken || response.accessToken;
+      const refreshToken = response.data?.refreshToken || response.refreshToken;
+      const userData = response.data?.user || response.user;
+      
+      if (response.success && accessToken) {
+        localStorage.setItem('wooasm_access_token', accessToken);
+        if (refreshToken) {
+          localStorage.setItem('wooasm_refresh_token', refreshToken);
         }
-        setUser(response.data.user);
+        if (userData) {
+          setUser(userData);
+        }
         setIsAuthenticated(true);
         return { success: true };
+      }
+      
+      if (response.success && !accessToken) {
+        // Backend returned success but no token
+        return { success: false, error: 'Login succeeded but no token received.' };
       }
       
       return { success: false, error: response.message || 'Login failed' };

@@ -73,6 +73,10 @@ Production: https://api.wooasm.com/api/v1
 - Dashboard: `/dashboard`, `/dashboard/license`, `/dashboard/usage`, `/dashboard/sites`, `/dashboard/settings`
 - Billing: `/billing/create-checkout`, `/billing/subscription`, `/billing/cancel`, `/billing/portal`
 - Admin: `/admin/login`, `/admin/stats`, `/admin/users`, `/admin/sites`
+- Admin Plans: `/admin/plans`, `/admin/plans/:planKey`
+- Admin Features: `/admin/features`, `/admin/features/seed`
+- Admin Abilities: `/admin/abilities`, `/admin/abilities/seed`
+- Admin Emails: `/admin/emails`, `/admin/emails/:id`, `/admin/emails/resend/:id`
 
 ### Response Format
 All responses from backend follow this structure:

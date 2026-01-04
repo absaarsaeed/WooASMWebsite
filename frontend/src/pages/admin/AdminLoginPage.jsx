@@ -63,6 +63,12 @@ const AdminLoginPage = () => {
             </div>
           )}
 
+          {success && (
+            <div className="mb-6 p-4 bg-emerald-900/20 border border-emerald-800 rounded-xl text-emerald-400 text-sm">
+              {success}
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">

@@ -34,7 +34,7 @@ const LicensePage = () => {
   };
 
   const handleCopy = () => {
-    const key = licenseData?.licenseKey || user?.licenseKey;
+    const key = licenseData?.key || licenseData?.licenseKey || user?.licenseKey;
     if (key) {
       navigator.clipboard.writeText(key);
       setCopied(true);

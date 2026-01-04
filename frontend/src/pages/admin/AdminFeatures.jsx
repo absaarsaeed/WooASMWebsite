@@ -139,41 +139,8 @@ const AdminFeatures = () => {
 
   const handleEditClick = (feature) => {
     setEditingFeature({ ...feature });
+    setIsCreating(false);
     setSuccessMessage('');
-  };
-
-  const handleCancelEdit = () => {
-    setEditingFeature(null);
-  };
-
-  const handleSaveFeature = async () => {
-    if (!editingFeature) return;
-    
-    setSaving(true);
-    setError('');
-
-    try {
-      const response = await api.updateAdminFeature(editingFeature.featureKey, {
-        name: editingFeature.name,
-        description: editingFeature.description,
-        category: editingFeature.category,
-        allowedPlans: editingFeature.allowedPlans,
-        enabled: editingFeature.enabled,
-        sortOrder: editingFeature.sortOrder
-      });
-      
-      if (response.success) {
-        setSuccessMessage('Feature updated successfully!');
-        setEditingFeature(null);
-        fetchFeatures();
-      } else {
-        setError(response.message || 'Failed to update feature');
-      }
-    } catch (err) {
-      setError('Failed to save changes');
-    } finally {
-      setSaving(false);
-    }
   };
 
   const handlePlanToggle = (plan) => {

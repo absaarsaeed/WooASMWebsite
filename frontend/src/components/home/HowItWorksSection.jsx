@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Link } from 'react-router-dom';
-import { Download, Key, MessageSquareText, Rocket, ArrowRight } from 'lucide-react';
+import { Download, MessageSquareText, Rocket, ArrowRight } from 'lucide-react';
 
 const HowItWorksSection = () => {
   const [ref, inView] = useInView({
@@ -18,20 +18,14 @@ const HowItWorksSection = () => {
       description: 'One-click install from WordPress. No coding required.'
     },
     {
-      icon: Key,
-      number: '02',
-      title: 'Connect Your API Key',
-      description: "Add your OpenAI API key. That's the only setup needed."
-    },
-    {
       icon: MessageSquareText,
-      number: '03',
+      number: '02',
       title: 'Start Asking',
       description: 'Chat with your AI assistant. "Show me today\'s sales"'
     },
     {
       icon: Rocket,
-      number: '04',
+      number: '03',
       title: 'Watch It Work',
       description: 'Get insights, take actions, and grow your store.'
     }

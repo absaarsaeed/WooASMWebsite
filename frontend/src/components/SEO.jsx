@@ -29,7 +29,7 @@ const SEO = ({
     "name": "WooASM",
     "url": "https://wooasm.com",
     "logo": "https://wooasm.com/logo.png",
-    "description": "AI-powered store management for WooCommerce",
+    "description": "The smart way to manage your WooCommerce store - just ask for what you need",
     "sameAs": [
       "https://twitter.com/wooasm",
       "https://www.linkedin.com/company/wooasm"
@@ -58,22 +58,22 @@ const SEO = ({
   const softwareSchema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "WooASM - AI Store Manager",
+    "name": "WooASM - Smart Store Manager",
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "WordPress",
     "offers": {
       "@type": "AggregateOffer",
       "lowPrice": "0",
-      "highPrice": "99",
+      "highPrice": "199",
       "priceCurrency": "USD",
       "offerCount": "4"
     },
     "aggregateRating": {
       "@type": "AggregateRating",
-      "ratingValue": "4.8",
-      "ratingCount": "156"
+      "ratingValue": "4.9",
+      "ratingCount": "5000"
     },
-    "description": "The most powerful AI assistant for WooCommerce stores. Manage inventory, analyze sales, create content, and automate your store operations."
+    "description": "Run your WooCommerce store just by asking. Manage inventory, analyze sales, create content, and automate operations - all in plain English."
   };
 
   // Breadcrumb Schema

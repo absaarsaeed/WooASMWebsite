@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Wand2, 
@@ -49,6 +49,46 @@ const planColors = {
   developer: 'bg-amber-500'
 };
 
+// Default abilities based on the integration guide specification
+const defaultAbilities = [
+  // Products - READ (Low Risk)
+  { abilityKey: 'get_products', name: 'Get Products', category: 'products', riskLevel: 'low', requiresConfirmation: false, allowedPlans: ['free', 'starter', 'professional', 'developer'], enabled: true },
+  { abilityKey: 'search_products', name: 'Search Products', category: 'products', riskLevel: 'low', requiresConfirmation: false, allowedPlans: ['free', 'starter', 'professional', 'developer'], enabled: true },
+  { abilityKey: 'get_product_details', name: 'Get Product Details', category: 'products', riskLevel: 'low', requiresConfirmation: false, allowedPlans: ['free', 'starter', 'professional', 'developer'], enabled: true },
+  { abilityKey: 'get_low_stock', name: 'Get Low Stock Products', category: 'products', riskLevel: 'low', requiresConfirmation: false, allowedPlans: ['free', 'starter', 'professional', 'developer'], enabled: true },
+  { abilityKey: 'get_top_products', name: 'Get Top Products', category: 'products', riskLevel: 'low', requiresConfirmation: false, allowedPlans: ['free', 'starter', 'professional', 'developer'], enabled: true },
+  
+  // Products - WRITE (Medium/High Risk)
+  { abilityKey: 'update_price', name: 'Update Product Price', category: 'products', riskLevel: 'medium', requiresConfirmation: true, allowedPlans: ['starter', 'professional', 'developer'], dailyLimit: 50, enabled: true },
+  { abilityKey: 'update_stock', name: 'Update Product Stock', category: 'products', riskLevel: 'medium', requiresConfirmation: true, allowedPlans: ['starter', 'professional', 'developer'], dailyLimit: 50, enabled: true },
+  { abilityKey: 'bulk_update_prices', name: 'Bulk Update Prices', category: 'products', riskLevel: 'high', requiresConfirmation: true, allowedPlans: ['professional', 'developer'], dailyLimit: 10, enabled: true },
+  { abilityKey: 'set_sale', name: 'Set Product Sale', category: 'products', riskLevel: 'medium', requiresConfirmation: true, allowedPlans: ['starter', 'professional', 'developer'], dailyLimit: 20, enabled: true },
+  { abilityKey: 'duplicate_product', name: 'Duplicate Product', category: 'products', riskLevel: 'medium', requiresConfirmation: true, allowedPlans: ['professional', 'developer'], dailyLimit: 10, enabled: true },
+  
+  // Orders - READ
+  { abilityKey: 'get_orders', name: 'Get Orders', category: 'orders', riskLevel: 'low', requiresConfirmation: false, allowedPlans: ['free', 'starter', 'professional', 'developer'], enabled: true },
+  { abilityKey: 'get_order_details', name: 'Get Order Details', category: 'orders', riskLevel: 'low', requiresConfirmation: false, allowedPlans: ['free', 'starter', 'professional', 'developer'], enabled: true },
+  { abilityKey: 'search_orders', name: 'Search Orders', category: 'orders', riskLevel: 'low', requiresConfirmation: false, allowedPlans: ['free', 'starter', 'professional', 'developer'], enabled: true },
+  
+  // Orders - WRITE
+  { abilityKey: 'update_order_status', name: 'Update Order Status', category: 'orders', riskLevel: 'medium', requiresConfirmation: true, allowedPlans: ['starter', 'professional', 'developer'], dailyLimit: 100, enabled: true },
+  { abilityKey: 'cancel_order', name: 'Cancel Order', category: 'orders', riskLevel: 'high', requiresConfirmation: true, allowedPlans: ['professional', 'developer'], dailyLimit: 20, enabled: true },
+  { abilityKey: 'process_refund', name: 'Process Refund', category: 'orders', riskLevel: 'high', requiresConfirmation: true, allowedPlans: ['professional', 'developer'], dailyLimit: 10, enabled: true },
+  { abilityKey: 'add_order_note', name: 'Add Order Note', category: 'orders', riskLevel: 'low', requiresConfirmation: false, allowedPlans: ['starter', 'professional', 'developer'], enabled: true },
+  
+  // Reports
+  { abilityKey: 'get_sales_report', name: 'Get Sales Report', category: 'reports', riskLevel: 'low', requiresConfirmation: false, allowedPlans: ['free', 'starter', 'professional', 'developer'], enabled: true },
+  { abilityKey: 'get_revenue_comparison', name: 'Get Revenue Comparison', category: 'reports', riskLevel: 'low', requiresConfirmation: false, allowedPlans: ['starter', 'professional', 'developer'], enabled: true },
+  { abilityKey: 'get_customer_insights', name: 'Get Customer Insights', category: 'reports', riskLevel: 'low', requiresConfirmation: false, allowedPlans: ['starter', 'professional', 'developer'], enabled: true },
+  { abilityKey: 'get_refund_summary', name: 'Get Refund Summary', category: 'reports', riskLevel: 'low', requiresConfirmation: false, allowedPlans: ['professional', 'developer'], enabled: true },
+  
+  // Coupons
+  { abilityKey: 'get_coupons', name: 'Get Coupons', category: 'coupons', riskLevel: 'low', requiresConfirmation: false, allowedPlans: ['free', 'starter', 'professional', 'developer'], enabled: true },
+  { abilityKey: 'create_coupon', name: 'Create Coupon', category: 'coupons', riskLevel: 'medium', requiresConfirmation: true, allowedPlans: ['starter', 'professional', 'developer'], dailyLimit: 10, enabled: true },
+  { abilityKey: 'update_coupon', name: 'Update Coupon', category: 'coupons', riskLevel: 'medium', requiresConfirmation: true, allowedPlans: ['starter', 'professional', 'developer'], dailyLimit: 20, enabled: true },
+  { abilityKey: 'delete_coupon', name: 'Delete Coupon', category: 'coupons', riskLevel: 'high', requiresConfirmation: true, allowedPlans: ['professional', 'developer'], dailyLimit: 5, enabled: true },
+];
+
 const AdminAbilities = () => {
   const [abilities, setAbilities] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -62,51 +102,7 @@ const AdminAbilities = () => {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [riskFilter, setRiskFilter] = useState('all');
 
-  // Default abilities based on the integration guide specification
-  const defaultAbilities = [
-    // Products - READ (Low Risk)
-    { abilityKey: 'get_products', name: 'Get Products', category: 'products', riskLevel: 'low', requiresConfirmation: false, allowedPlans: ['free', 'starter', 'professional', 'developer'], enabled: true },
-    { abilityKey: 'search_products', name: 'Search Products', category: 'products', riskLevel: 'low', requiresConfirmation: false, allowedPlans: ['free', 'starter', 'professional', 'developer'], enabled: true },
-    { abilityKey: 'get_product_details', name: 'Get Product Details', category: 'products', riskLevel: 'low', requiresConfirmation: false, allowedPlans: ['free', 'starter', 'professional', 'developer'], enabled: true },
-    { abilityKey: 'get_low_stock', name: 'Get Low Stock Products', category: 'products', riskLevel: 'low', requiresConfirmation: false, allowedPlans: ['free', 'starter', 'professional', 'developer'], enabled: true },
-    { abilityKey: 'get_top_products', name: 'Get Top Products', category: 'products', riskLevel: 'low', requiresConfirmation: false, allowedPlans: ['free', 'starter', 'professional', 'developer'], enabled: true },
-    
-    // Products - WRITE (Medium/High Risk)
-    { abilityKey: 'update_price', name: 'Update Product Price', category: 'products', riskLevel: 'medium', requiresConfirmation: true, allowedPlans: ['starter', 'professional', 'developer'], dailyLimit: 50, enabled: true },
-    { abilityKey: 'update_stock', name: 'Update Product Stock', category: 'products', riskLevel: 'medium', requiresConfirmation: true, allowedPlans: ['starter', 'professional', 'developer'], dailyLimit: 50, enabled: true },
-    { abilityKey: 'bulk_update_prices', name: 'Bulk Update Prices', category: 'products', riskLevel: 'high', requiresConfirmation: true, allowedPlans: ['professional', 'developer'], dailyLimit: 10, enabled: true },
-    { abilityKey: 'set_sale', name: 'Set Product Sale', category: 'products', riskLevel: 'medium', requiresConfirmation: true, allowedPlans: ['starter', 'professional', 'developer'], dailyLimit: 20, enabled: true },
-    { abilityKey: 'duplicate_product', name: 'Duplicate Product', category: 'products', riskLevel: 'medium', requiresConfirmation: true, allowedPlans: ['professional', 'developer'], dailyLimit: 10, enabled: true },
-    
-    // Orders - READ
-    { abilityKey: 'get_orders', name: 'Get Orders', category: 'orders', riskLevel: 'low', requiresConfirmation: false, allowedPlans: ['free', 'starter', 'professional', 'developer'], enabled: true },
-    { abilityKey: 'get_order_details', name: 'Get Order Details', category: 'orders', riskLevel: 'low', requiresConfirmation: false, allowedPlans: ['free', 'starter', 'professional', 'developer'], enabled: true },
-    { abilityKey: 'search_orders', name: 'Search Orders', category: 'orders', riskLevel: 'low', requiresConfirmation: false, allowedPlans: ['free', 'starter', 'professional', 'developer'], enabled: true },
-    
-    // Orders - WRITE
-    { abilityKey: 'update_order_status', name: 'Update Order Status', category: 'orders', riskLevel: 'medium', requiresConfirmation: true, allowedPlans: ['starter', 'professional', 'developer'], dailyLimit: 100, enabled: true },
-    { abilityKey: 'cancel_order', name: 'Cancel Order', category: 'orders', riskLevel: 'high', requiresConfirmation: true, allowedPlans: ['professional', 'developer'], dailyLimit: 20, enabled: true },
-    { abilityKey: 'process_refund', name: 'Process Refund', category: 'orders', riskLevel: 'high', requiresConfirmation: true, allowedPlans: ['professional', 'developer'], dailyLimit: 10, enabled: true },
-    { abilityKey: 'add_order_note', name: 'Add Order Note', category: 'orders', riskLevel: 'low', requiresConfirmation: false, allowedPlans: ['starter', 'professional', 'developer'], enabled: true },
-    
-    // Reports
-    { abilityKey: 'get_sales_report', name: 'Get Sales Report', category: 'reports', riskLevel: 'low', requiresConfirmation: false, allowedPlans: ['free', 'starter', 'professional', 'developer'], enabled: true },
-    { abilityKey: 'get_revenue_comparison', name: 'Get Revenue Comparison', category: 'reports', riskLevel: 'low', requiresConfirmation: false, allowedPlans: ['starter', 'professional', 'developer'], enabled: true },
-    { abilityKey: 'get_customer_insights', name: 'Get Customer Insights', category: 'reports', riskLevel: 'low', requiresConfirmation: false, allowedPlans: ['starter', 'professional', 'developer'], enabled: true },
-    { abilityKey: 'get_refund_summary', name: 'Get Refund Summary', category: 'reports', riskLevel: 'low', requiresConfirmation: false, allowedPlans: ['professional', 'developer'], enabled: true },
-    
-    // Coupons
-    { abilityKey: 'get_coupons', name: 'Get Coupons', category: 'coupons', riskLevel: 'low', requiresConfirmation: false, allowedPlans: ['free', 'starter', 'professional', 'developer'], enabled: true },
-    { abilityKey: 'create_coupon', name: 'Create Coupon', category: 'coupons', riskLevel: 'medium', requiresConfirmation: true, allowedPlans: ['starter', 'professional', 'developer'], dailyLimit: 10, enabled: true },
-    { abilityKey: 'update_coupon', name: 'Update Coupon', category: 'coupons', riskLevel: 'medium', requiresConfirmation: true, allowedPlans: ['starter', 'professional', 'developer'], dailyLimit: 20, enabled: true },
-    { abilityKey: 'delete_coupon', name: 'Delete Coupon', category: 'coupons', riskLevel: 'high', requiresConfirmation: true, allowedPlans: ['professional', 'developer'], dailyLimit: 5, enabled: true },
-  ];
-
-  useEffect(() => {
-    fetchAbilities();
-  }, []);
-
-  const fetchAbilities = async () => {
+  const fetchAbilities = useCallback(async () => {
     setLoading(true);
     setError('');
     try {
@@ -121,7 +117,11 @@ const AdminAbilities = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchAbilities();
+  }, [fetchAbilities]);
 
   const handleEditClick = (ability) => {
     setEditingAbility({ ...ability });

@@ -348,15 +348,17 @@ const HomePage = () => {
                 <Link
                   to="/signup"
                   className="px-8 py-4 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-xl transition-all transform hover:scale-105 flex items-center gap-2"
+                  data-testid="hero-cta-start-trial"
                 >
-                  Start Free Trial
+                  Start Free - No Card Needed
                   <ArrowRight className="w-5 h-5" />
                 </Link>
                 <Link
                   to="/features"
                   className="px-8 py-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-semibold rounded-xl border border-gray-200 dark:border-gray-700 hover:border-purple-500 transition-all"
+                  data-testid="hero-cta-see-features"
                 >
-                  Watch Demo
+                  See What It Can Do
                 </Link>
               </motion.div>
 
@@ -367,7 +369,7 @@ const HomePage = () => {
                 transition={{ delay: 0.5 }}
                 className="text-sm text-gray-500 dark:text-gray-400"
               >
-                No credit card required • 14-day free trial • Cancel anytime
+                Works in 2 minutes • No coding needed • Cancel anytime
               </motion.p>
             </div>
 
@@ -381,7 +383,7 @@ const HomePage = () => {
               <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden">
                 <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center gap-2">
                   <Bot className="w-5 h-5 text-purple-600" />
-                  <span className="font-medium text-gray-900 dark:text-white">WooASM Assistant</span>
+                  <span className="font-medium text-gray-900 dark:text-white">Your Store Assistant</span>
                 </div>
                 <div className="p-4 space-y-4">
                   {/* Typo Example */}
@@ -395,7 +397,7 @@ const HomePage = () => {
                   </div>
                   <div className="flex gap-3 justify-end">
                     <div className="bg-purple-100 dark:bg-purple-900/40 rounded-2xl rounded-tr-none px-4 py-2 max-w-md">
-                      <div className="text-xs text-purple-600 dark:text-purple-400 mb-1">AI understands: "Show me products under $50"</div>
+                      <div className="text-xs text-purple-600 dark:text-purple-400 mb-1">Got it! "Show me products under $50"</div>
                       <span className="text-gray-800 dark:text-gray-200">Found <strong>24 products</strong> under $50. Here are your top sellers:</span>
                     </div>
                     <div className="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center flex-shrink-0">

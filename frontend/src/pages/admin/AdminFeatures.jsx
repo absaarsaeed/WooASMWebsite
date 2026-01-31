@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Puzzle, 
@@ -45,6 +45,35 @@ const planColors = {
   developer: 'bg-amber-500'
 };
 
+// Default features based on the integration guide specification
+const defaultFeatures = [
+  // AI Features
+  { featureKey: 'ai_assistant', name: 'AI Store Assistant', description: 'Chat with your store in natural language', category: 'ai', allowedPlans: ['free', 'starter', 'professional', 'developer'], enabled: true, sortOrder: 0 },
+  { featureKey: 'content_studio', name: 'Content Studio', description: 'AI-powered content generation', category: 'ai', allowedPlans: ['starter', 'professional', 'developer'], enabled: true, sortOrder: 1 },
+  { featureKey: 'customer_chatbot', name: 'Customer Chatbot', description: '24/7 AI-powered customer support', category: 'ai', allowedPlans: ['starter', 'professional', 'developer'], enabled: true, sortOrder: 2 },
+  
+  // Analytics Features
+  { featureKey: 'ga4_integration', name: 'GA4 Integration', description: 'Google Analytics 4 connection', category: 'analytics', allowedPlans: ['professional', 'developer'], enabled: true, sortOrder: 3 },
+  { featureKey: 'store_health_score', name: 'Store Health Score', description: 'Overall store performance metrics', category: 'analytics', allowedPlans: ['starter', 'professional', 'developer'], enabled: true, sortOrder: 4 },
+  { featureKey: 'magic_insights', name: 'MAGIC Insights', description: 'AI-powered store analytics', category: 'analytics', allowedPlans: ['free', 'starter', 'professional', 'developer'], enabled: true, sortOrder: 5 },
+  
+  // Automation Features
+  { featureKey: 'inventory_autopilot', name: 'Inventory Autopilot', description: 'Automated inventory management', category: 'automation', allowedPlans: ['professional', 'developer'], enabled: true, sortOrder: 6 },
+  { featureKey: 'competitor_monitor', name: 'Competitor Monitor', description: 'Monitor competitor pricing', category: 'automation', allowedPlans: ['starter', 'professional', 'developer'], enabled: true, sortOrder: 7 },
+  { featureKey: 'review_monitor', name: 'Review Monitor', description: 'Track and respond to reviews', category: 'automation', allowedPlans: ['starter', 'professional', 'developer'], enabled: true, sortOrder: 8 },
+  
+  // Security Features
+  { featureKey: 'fraud_detection', name: 'Fraud Detection', description: 'AI-powered fraud prevention', category: 'security', allowedPlans: ['professional', 'developer'], enabled: true, sortOrder: 9 },
+  
+  // Support Features
+  { featureKey: 'priority_support', name: 'Priority Support', description: 'Priority email and chat support', category: 'support', allowedPlans: ['professional', 'developer'], enabled: true, sortOrder: 10 },
+  
+  // Advanced Features
+  { featureKey: 'api_access', name: 'API Access', description: 'Full API access for custom integrations', category: 'advanced', allowedPlans: ['developer'], enabled: true, sortOrder: 11 },
+  { featureKey: 'export_import', name: 'Export/Import', description: 'Export and import data', category: 'advanced', allowedPlans: ['starter', 'professional', 'developer'], enabled: true, sortOrder: 12 },
+  { featureKey: 'scheduled_exports', name: 'Scheduled Exports', description: 'Automated scheduled exports', category: 'advanced', allowedPlans: ['professional', 'developer'], enabled: true, sortOrder: 13 },
+];
+
 const AdminFeatures = () => {
   const [features, setFeatures] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -57,40 +86,7 @@ const AdminFeatures = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
 
-  // Default features based on the integration guide specification
-  const defaultFeatures = [
-    // AI Features
-    { featureKey: 'ai_assistant', name: 'AI Store Assistant', description: 'Chat with your store in natural language', category: 'ai', allowedPlans: ['free', 'starter', 'professional', 'developer'], enabled: true, sortOrder: 0 },
-    { featureKey: 'content_studio', name: 'Content Studio', description: 'AI-powered content generation', category: 'ai', allowedPlans: ['starter', 'professional', 'developer'], enabled: true, sortOrder: 1 },
-    { featureKey: 'customer_chatbot', name: 'Customer Chatbot', description: '24/7 AI-powered customer support', category: 'ai', allowedPlans: ['starter', 'professional', 'developer'], enabled: true, sortOrder: 2 },
-    
-    // Analytics Features
-    { featureKey: 'ga4_integration', name: 'GA4 Integration', description: 'Google Analytics 4 connection', category: 'analytics', allowedPlans: ['professional', 'developer'], enabled: true, sortOrder: 3 },
-    { featureKey: 'store_health_score', name: 'Store Health Score', description: 'Overall store performance metrics', category: 'analytics', allowedPlans: ['starter', 'professional', 'developer'], enabled: true, sortOrder: 4 },
-    { featureKey: 'magic_insights', name: 'MAGIC Insights', description: 'AI-powered store analytics', category: 'analytics', allowedPlans: ['free', 'starter', 'professional', 'developer'], enabled: true, sortOrder: 5 },
-    
-    // Automation Features
-    { featureKey: 'inventory_autopilot', name: 'Inventory Autopilot', description: 'Automated inventory management', category: 'automation', allowedPlans: ['professional', 'developer'], enabled: true, sortOrder: 6 },
-    { featureKey: 'competitor_monitor', name: 'Competitor Monitor', description: 'Monitor competitor pricing', category: 'automation', allowedPlans: ['starter', 'professional', 'developer'], enabled: true, sortOrder: 7 },
-    { featureKey: 'review_monitor', name: 'Review Monitor', description: 'Track and respond to reviews', category: 'automation', allowedPlans: ['starter', 'professional', 'developer'], enabled: true, sortOrder: 8 },
-    
-    // Security Features
-    { featureKey: 'fraud_detection', name: 'Fraud Detection', description: 'AI-powered fraud prevention', category: 'security', allowedPlans: ['professional', 'developer'], enabled: true, sortOrder: 9 },
-    
-    // Support Features
-    { featureKey: 'priority_support', name: 'Priority Support', description: 'Priority email and chat support', category: 'support', allowedPlans: ['professional', 'developer'], enabled: true, sortOrder: 10 },
-    
-    // Advanced Features
-    { featureKey: 'api_access', name: 'API Access', description: 'Full API access for custom integrations', category: 'advanced', allowedPlans: ['developer'], enabled: true, sortOrder: 11 },
-    { featureKey: 'export_import', name: 'Export/Import', description: 'Export and import data', category: 'advanced', allowedPlans: ['starter', 'professional', 'developer'], enabled: true, sortOrder: 12 },
-    { featureKey: 'scheduled_exports', name: 'Scheduled Exports', description: 'Automated scheduled exports', category: 'advanced', allowedPlans: ['professional', 'developer'], enabled: true, sortOrder: 13 },
-  ];
-
-  useEffect(() => {
-    fetchFeatures();
-  }, []);
-
-  const fetchFeatures = async () => {
+  const fetchFeatures = useCallback(async () => {
     setLoading(true);
     setError('');
     try {
@@ -107,7 +103,11 @@ const AdminFeatures = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchFeatures();
+  }, [fetchFeatures]);
 
   const handleToggleFeature = async (feature) => {
     const newEnabled = !feature.enabled;

@@ -24,7 +24,7 @@ Updated frontend to align with the new backend API specification:
    - `AdminDashboard.jsx` - updated to handle both flatter response structure (new API) and nested structure (old API)
 
 5. **Backend URL:**
-   - Updated from `https://api-alignment-1.preview.emergentagent.com` to `https://api.wooasm.com`
+   - Updated from `https://launch-prep-38.preview.emergentagent.com` to `https://api.wooasm.com`
 
 ## Testing Protocol
 When testing, please verify:

@@ -35,7 +35,7 @@
   },
   "localhost_audit": {
     "frontend_code": "CLEAN - No localhost references found in any .js/.jsx files",
-    "env_file": "CORRECT - REACT_APP_BACKEND_URL=https://api-alignment-1.preview.emergentagent.com",
+    "env_file": "CORRECT - REACT_APP_BACKEND_URL=https://launch-prep-38.preview.emergentagent.com",
     "api_service": "CORRECT - Uses process.env.REACT_APP_BACKEND_URL",
     "billing_page": "CORRECT - Uses window.location.href = response.data.checkoutUrl (URL from backend)",
     "pricing_page": "CORRECT - Uses window.location.href = response.data.checkoutUrl (URL from backend)",

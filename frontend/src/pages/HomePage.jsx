@@ -645,10 +645,10 @@ const HomePage = () => {
           <div className="container-wide">
             <div className="text-center mb-16">
               <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-                See WooASM <span className="text-purple-600">in Action</span>
+                Real Questions, <span className="text-purple-600">Instant Answers</span>
               </h2>
               <p className="text-lg text-gray-600 dark:text-gray-400">
-                Real queries from real store owners
+                Here's what store owners are asking every day
               </p>
             </div>
 
@@ -667,7 +667,7 @@ const HomePage = () => {
                     <p className="text-gray-900 dark:text-white font-medium mt-1">"{useCase.query}"</p>
                   </div>
                   <div className="mb-4">
-                    <span className="text-xs font-medium text-purple-600 uppercase tracking-wide">WooASM responds:</span>
+                    <span className="text-xs font-medium text-purple-600 uppercase tracking-wide">And gets:</span>
                     <p className="text-gray-600 dark:text-gray-400 mt-1">{useCase.result}</p>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-purple-600 font-medium">

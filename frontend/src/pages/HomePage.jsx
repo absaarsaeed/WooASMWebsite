@@ -70,44 +70,44 @@ const homeFaq = [
 const features = [
   {
     icon: MessageSquare,
-    title: "AI Store Assistant",
-    description: "Talk to your store like you'd talk to a colleague. Ask questions, get instant answers, take action.",
-    highlights: ["Understands typos & messy input", "Handles multiple requests at once", "Remembers conversation context", "101 built-in abilities"],
+    title: "Your Store, Your Way",
+    description: "Just type what you need. 'Show me last week's sales' or 'Create a 20% off coupon' - done in seconds.",
+    highlights: ["Works even with typos", "Handle multiple tasks at once", "Remembers what you asked", "101 things it can do"],
     link: "/features/ai-store-assistant"
   },
   {
     icon: BarChart3,
-    title: "Store Insights",
-    description: "Know exactly how your store is performing with real-time comparisons and smart alerts.",
-    highlights: ["Today vs Yesterday", "Week over Week trends", "Smart alerts & warnings", "Next best actions"],
+    title: "Know Your Numbers",
+    description: "Stop wondering how your store is doing. See everything at a glance and spot problems before they grow.",
+    highlights: ["Today vs Yesterday", "Week over Week trends", "Alerts when things go wrong", "What to do next"],
     link: "/features/store-insights-dashboard"
   },
   {
     icon: Package,
-    title: "Inventory Intelligence",
-    description: "Never miss a stockout or waste money on dead inventory again.",
-    highlights: ["Stockout risk predictions", "Dead stock detection", "AI restock recommendations", "Overstock alerts"],
+    title: "Never Run Out of Stock",
+    description: "Imagine knowing exactly what to reorder and when. No more 'out of stock' emails from angry customers.",
+    highlights: ["Predict stockouts in advance", "Find products that aren't selling", "Smart restock suggestions", "Alert before you run low"],
     link: "/features/inventory-autopilot"
   },
   {
     icon: Users,
-    title: "Customer Intelligence",
-    description: "Identify your VIPs, at-risk customers, and growth opportunities.",
-    highlights: ["VIP customer detection", "At-risk customer alerts", "Churn prediction", "Customer lifetime value"],
+    title: "Know Your Customers",
+    description: "Find out who your best buyers are, who's about to leave, and how to keep them coming back.",
+    highlights: ["Spot your VIP shoppers", "Catch customers before they leave", "Predict who's likely to buy again", "See what each customer is worth"],
     link: "/features/customer-insights"
   },
   {
     icon: Activity,
-    title: "Store Health Score",
-    description: "Get a clear health score (0-100) with actionable recommendations.",
-    highlights: ["Revenue health", "Inventory health", "Customer health", "Operations health"],
+    title: "Store Health at a Glance",
+    description: "One number tells you if your store is thriving or needs attention. Like a fitness tracker, but for your business.",
+    highlights: ["Revenue check", "Inventory check", "Customer check", "Operations check"],
     link: "/features/store-health-score"
   },
   {
     icon: FileText,
-    title: "AI Content Studio",
-    description: "Generate product descriptions, SEO content, and marketing copy in seconds.",
-    highlights: ["Product descriptions", "SEO meta content", "Email campaigns", "Social media posts"],
+    title: "Content That Writes Itself",
+    description: "Need product descriptions, emails, or social posts? Just describe what you're selling and let the magic happen.",
+    highlights: ["Product descriptions", "SEO-friendly content", "Email campaigns", "Social media posts"],
     link: "/features/content-studio"
   }
 ];

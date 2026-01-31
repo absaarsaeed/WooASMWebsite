@@ -1,0 +1,89 @@
+{
+  "summary": "Frontend QA testing completed for WooASM.ai. All pages load correctly, navigation works, no localhost references found in frontend code. The reported localhost:3000 redirect issue is confirmed to be a BACKEND issue - the checkoutUrl returned by the API contains localhost.",
+  "backend_issues": {
+    "critical": [
+      {
+        "endpoint": "/api/v1/billing/create-checkout",
+        "issue": "Backend returns localhost:3000 in checkoutUrl field instead of production URL. This is the root cause of the reported billing redirect issue.",
+        "priority": "CRITICAL"
+      }
+    ],
+    "minor": [
+      {
+        "endpoint": "/api/v1/admin/plans/key/*",
+        "issue": "Returns 520 error (Cloudflare/backend issue) - pricing page falls back to default plans"
+      }
+    ],
+    "note": "Backend is external at api.wooasm.com - localhost issue is in backend Stripe configuration"
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {
+        "component": "Mobile Menu (Header.jsx)",
+        "issue": "Mobile menu items overlap with page content when menu is open. Menu items appear on top of hero section instead of in a proper dropdown/overlay.",
+        "selector": "button[aria-label='Toggle menu']",
+        "priority": "MEDIUM"
+      }
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {
+        "screen": "Mobile Homepage",
+        "issues": ["Mobile menu overlay needs z-index fix or background to prevent content overlap"]
+      }
+    ]
+  },
+  "localhost_audit": {
+    "frontend_code": "CLEAN - No localhost references found in any .js/.jsx files",
+    "env_file": "CORRECT - REACT_APP_BACKEND_URL=https://api-alignment-1.preview.emergentagent.com",
+    "api_service": "CORRECT - Uses process.env.REACT_APP_BACKEND_URL",
+    "billing_page": "CORRECT - Uses window.location.href = response.data.checkoutUrl (URL from backend)",
+    "pricing_page": "CORRECT - Uses window.location.href = response.data.checkoutUrl (URL from backend)",
+    "root_cause": "BACKEND - The checkoutUrl returned by /api/v1/billing/create-checkout contains localhost:3000"
+  },
+  "tests_executed": [
+    {"test": "Homepage loads", "status": "PASSED", "details": "WooASM branding visible, all sections render"},
+    {"test": "Header navigation links", "status": "PASSED", "details": "Features, Pricing, Docs, Blog, Login, Signup all visible"},
+    {"test": "Pricing page loads", "status": "PASSED", "details": "3 plans displayed, billing toggle works, CTAs visible"},
+    {"test": "Free plan button redirect", "status": "PASSED", "details": "Correctly redirects to /signup"},
+    {"test": "Login page loads", "status": "PASSED", "details": "Form elements visible, forgot password link present"},
+    {"test": "Signup page loads", "status": "PASSED", "details": "Name, email, password, company fields visible"},
+    {"test": "Forgot password page loads", "status": "PASSED", "details": "Email input and submit button visible"},
+    {"test": "Footer links", "status": "PASSED", "details": "All 13 footer links present and correct"},
+    {"test": "All internal routes", "status": "PASSED", "details": "Features, Docs, Blog, About, Contact, Changelog, Roadmap, Privacy, Terms, Cookies, GDPR all load"},
+    {"test": "Mobile responsiveness", "status": "PARTIAL", "details": "Mobile menu button works but menu overlay has z-index issue"},
+    {"test": "Localhost audit", "status": "PASSED", "details": "No localhost references in frontend code"}
+  ],
+  "test_report_links": ["/app/frontend/src/services/api.js", "/app/frontend/src/pages/dashboard/BillingPage.jsx", "/app/frontend/src/pages/PricingPage.jsx"],
+  "action_items": [
+    "CRITICAL: Fix backend /api/v1/billing/create-checkout to return production URL instead of localhost:3000 in checkoutUrl",
+    "MEDIUM: Fix mobile menu z-index/overlay in Header.jsx to prevent content overlap"
+  ],
+  "critical_code_review_comments": [
+    "Frontend code is clean - no localhost references anywhere",
+    "API service correctly uses environment variable for backend URL",
+    "BillingPage and PricingPage correctly use checkoutUrl from API response",
+    "The localhost:3000 issue is 100% a backend configuration issue (likely Stripe success/cancel URL config)"
+  ],
+  "updated_files": [],
+  "success_rate": {
+    "backend": "N/A - external backend",
+    "frontend": "95%"
+  },
+  "seed_data_creation": "None required",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Frontend is clean. The localhost:3000 redirect issue is a BACKEND problem - the Stripe checkout URL returned by the API contains localhost. Backend team needs to update Stripe configuration to use production URLs.",
+  "rca_of_issue": {
+    "reported_issue": "Clicking billing buttons redirects to localhost:3000",
+    "root_cause": "Backend API (/api/v1/billing/create-checkout) returns checkoutUrl containing localhost:3000 instead of production URL",
+    "evidence": [
+      "Frontend code uses window.location.href = response.data.checkoutUrl",
+      "No localhost references in frontend codebase",
+      "REACT_APP_BACKEND_URL correctly set to production URL",
+      "API calls go to correct production endpoint"
+    ],
+    "fix_location": "Backend - Stripe configuration for success_url and cancel_url",
+    "mitigation": "Update backend Stripe checkout session creation to use production URLs (wooasm.com) instead of localhost:3000"
+  }
+}

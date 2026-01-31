@@ -540,7 +540,7 @@ const HomePage = () => {
             {/* Abilities Counter */}
             <div className="bg-gradient-to-r from-purple-600 to-purple-800 rounded-3xl p-8 lg:p-12">
               <h3 className="text-2xl lg:text-3xl font-bold text-white text-center mb-8">
-                101 Built-in Abilities
+                101 Ways to Make Your Life Easier
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                 {abilities.map((ability, index) => (

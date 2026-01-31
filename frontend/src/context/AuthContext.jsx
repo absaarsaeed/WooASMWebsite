@@ -111,11 +111,52 @@ export const AuthProvider = ({ children }) => {
         return { success: false, error: 'Login succeeded but no token received.' };
       }
       
-      return { success: false, error: response.message || 'Login failed' };
+      // Map backend error messages to user-friendly messages
+      const errorMessage = mapLoginError(response);
+      return { success: false, error: errorMessage };
     } catch (error) {
       console.error('Login error:', error);
       return { success: false, error: 'Connection error. Please try again.' };
     }
+  };
+
+  // Helper function to map login errors to user-friendly messages
+  const mapLoginError = (response) => {
+    const message = response.message?.toLowerCase() || '';
+    const error = response.error?.toLowerCase() || '';
+    
+    // Check for common error patterns
+    if (message.includes('not found') || message.includes('not registered') || 
+        message.includes('no user') || message.includes('user not found') ||
+        error.includes('not_found')) {
+      return 'This email is not registered. Please sign up for an account.';
+    }
+    
+    if (message.includes('invalid password') || message.includes('wrong password') ||
+        message.includes('incorrect password') || error.includes('invalid_password')) {
+      return 'Incorrect password. Please try again.';
+    }
+    
+    if (message.includes('invalid credentials') || error.includes('invalid_credentials')) {
+      return 'Invalid email or password. Please check your credentials.';
+    }
+    
+    if (message.includes('not verified') || message.includes('email not verified') ||
+        error.includes('not_verified')) {
+      return 'Please verify your email before logging in. Check your inbox for the verification link.';
+    }
+    
+    if (message.includes('account disabled') || message.includes('account suspended') ||
+        error.includes('disabled') || error.includes('suspended')) {
+      return 'Your account has been disabled. Please contact support.';
+    }
+    
+    if (message.includes('too many') || error.includes('rate_limit')) {
+      return 'Too many login attempts. Please try again in a few minutes.';
+    }
+    
+    // Return the original message if it's meaningful, otherwise a generic error
+    return response.message || 'Login failed. Please check your credentials.';
   };
 
   const register = async (name, email, password, companyName = '') => {

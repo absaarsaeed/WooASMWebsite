@@ -48,25 +48,25 @@ const FeaturesHubPage = () => {
       <Header />
 
       {/* Hero Section */}
-      <section className="py-16 lg:py-24 bg-gradient-to-b from-purple-50 to-white dark:from-gray-900 dark:to-gray-800">
+      <section className="pt-24 py-16 lg:py-24 bg-gradient-to-b from-purple-50 to-white dark:from-gray-900 dark:to-gray-800">
         <div className="container-wide text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
             <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-              Powerful Features for <span className="gradient-text">Smarter Stores</span>
+              101 Ways to Make <span className="bg-gradient-to-r from-purple-600 to-purple-400 bg-clip-text text-transparent">Your Life Easier</span>
             </h1>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8">
-              Everything you need to manage your WooCommerce store with AI. From inventory automation to fraud protection, we have got you covered.
+              From managing inventory to understanding your customers - everything you need to run your store smarter, not harder.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
-              <Link to="/signup" className="btn-primary">
-                Get Started Free
+              <Link to="/signup" className="btn-primary" data-testid="features-hero-cta">
+                Try It Free
                 <ArrowRight className="w-5 h-5" />
               </Link>
               <Link to="/pricing" className="btn-secondary">
-                View Pricing
+                See Pricing
               </Link>
             </div>
           </motion.div>

@@ -155,6 +155,12 @@ All responses from backend follow this structure:
   - Consistent styling whether scrolled or at top
   - Gradient CTA button in header
   - Fully responsive mobile menu
+- **Animated typing chat demo** with multiple conversation examples
+  - Real-time character-by-character typing animation
+  - Cycles through 4 different queries (products, customers, coupons, revenue)
+  - Shows AI "thinking" dots before response
+  - Smooth transitions between conversations
+  - Clickable conversation dots to manually switch
 
 ### Testing Status
 - All frontend pages load correctly without JavaScript errors

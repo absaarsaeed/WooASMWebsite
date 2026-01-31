@@ -1,0 +1,32 @@
+# WooASM Robots.txt
+# Allow search engines to crawl important pages
+
+User-agent: *
+Allow: /
+Allow: /features/
+Allow: /pricing
+Allow: /blog/
+Allow: /compare/
+Allow: /use-cases/
+Allow: /docs/
+Allow: /about
+Allow: /contact
+
+# Block admin and internal pages
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /api/
+Disallow: /checkout/
+Disallow: /login
+Disallow: /signup
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /verify-email
+Disallow: /*.json$
+Disallow: /static/js/*.map
+
+# Block query parameters
+Disallow: /*?*
+
+# Sitemap location
+Sitemap: https://wooasm.com/sitemap.xml

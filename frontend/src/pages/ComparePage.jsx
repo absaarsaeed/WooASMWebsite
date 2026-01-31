@@ -270,7 +270,7 @@ const ComparePage = () => {
             Ready to try WooASM?
           </h2>
           <p className="text-xl text-purple-100 mb-8">
-            Start free and see the difference AI makes.
+            Start free and see the difference for yourself.
           </p>
           <Link to="/signup" className="inline-flex items-center gap-2 px-8 py-4 bg-white text-purple-600 font-semibold rounded-xl hover:bg-gray-100 transition-colors">
             Get Started Free
@@ -278,6 +278,8 @@ const ComparePage = () => {
           </Link>
         </div>
       </section>
+      
+      <Footer />
     </div>
   );
 };

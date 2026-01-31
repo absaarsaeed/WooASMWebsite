@@ -15,6 +15,9 @@ const Header = () => {
   const { user, isAuthenticated, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  
+  // Check if we're on the homepage (which has dark hero)
+  const isHomepage = location.pathname === '/';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -24,7 +27,7 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close menus on route change - using a timeout to avoid sync setState in effect
+  // Close menus on route change
   const closeMenus = useCallback(() => {
     setIsMobileMenuOpen(false);
     setIsFeatureDropdownOpen(false);
@@ -32,7 +35,6 @@ const Header = () => {
   }, []);
   
   useEffect(() => {
-    // Using requestAnimationFrame to batch state updates outside the effect
     const frameId = requestAnimationFrame(() => {
       closeMenus();
     });
@@ -52,25 +54,30 @@ const Header = () => {
     { id: 'content', label: 'Content & Analytics' }
   ];
 
+  // Determine text colors based on page and scroll state
+  const isOnDarkBg = isHomepage && !isScrolled;
+  const textColor = isOnDarkBg ? 'text-white' : 'text-gray-700 dark:text-gray-300';
+  const textColorHover = isOnDarkBg ? 'hover:text-purple-200' : 'hover:text-purple-600 dark:hover:text-purple-400';
+  const logoTextColor = isOnDarkBg ? 'text-white' : 'text-gray-900 dark:text-white';
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? 'bg-slate-950/95 backdrop-blur-xl shadow-lg shadow-purple-900/10 border-b border-white/5'
-          : 'bg-slate-950/80 backdrop-blur-md'
+          ? 'bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg shadow-lg shadow-gray-100/20 dark:shadow-none'
+          : isHomepage 
+            ? 'bg-transparent' 
+            : 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm'
       }`}
     >
-      {/* Subtle gradient line at top */}
-      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-purple-500/50 to-transparent" />
-      
       <div className="container-wide">
-        <nav className="flex items-center justify-between h-16 lg:h-20">
+        <nav className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group">
-            <div className="w-9 h-9 lg:w-10 lg:h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-lg shadow-purple-500/30 group-hover:shadow-purple-500/50 transition-shadow">
-              <Zap className="w-5 h-5 lg:w-6 lg:h-6 text-white" />
+          <Link to="/" className="flex items-center gap-2">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-purple-700 flex items-center justify-center">
+              <Zap className="w-6 h-6 text-white" />
             </div>
-            <span className="text-lg lg:text-xl font-bold text-white">WooASM</span>
+            <span className={`text-xl font-bold ${logoTextColor}`}>WooASM</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -81,7 +88,7 @@ const Header = () => {
               onMouseEnter={() => setIsFeatureDropdownOpen(true)}
               onMouseLeave={() => setIsFeatureDropdownOpen(false)}
             >
-              <button className="text-gray-300 hover:text-white font-medium transition-colors flex items-center gap-1">
+              <button className={`nav-link flex items-center gap-1 font-medium ${textColor} ${textColorHover} transition-colors`}>
                 Features
                 <ChevronDown className={`w-4 h-4 transition-transform ${isFeatureDropdownOpen ? 'rotate-180' : ''}`} />
               </button>
@@ -95,11 +102,11 @@ const Header = () => {
                     transition={{ duration: 0.2 }}
                     className="absolute top-full left-1/2 -translate-x-1/2 pt-4"
                   >
-                    <div className="w-[700px] bg-slate-900/95 backdrop-blur-xl rounded-2xl shadow-2xl shadow-purple-900/20 border border-white/10 p-6">
+                    <div className="w-[700px] bg-white dark:bg-gray-800 rounded-2xl shadow-2xl shadow-gray-200/50 dark:shadow-none border border-gray-100 dark:border-gray-700 p-6">
                       <div className="grid grid-cols-2 gap-6">
                         {categories.map(category => (
                           <div key={category.id}>
-                            <h4 className="text-sm font-semibold text-purple-400 uppercase tracking-wider mb-3">
+                            <h4 className="text-sm font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-3">
                               {category.label}
                             </h4>
                             <div className="space-y-1">
@@ -110,9 +117,9 @@ const Header = () => {
                                   <Link
                                     key={feature.id}
                                     to={`/features/${feature.id}`}
-                                    className="block px-3 py-2 rounded-lg hover:bg-purple-500/10 transition-colors"
+                                    className="block px-3 py-2 rounded-lg hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors"
                                   >
-                                    <span className="text-white font-medium text-sm">
+                                    <span className="text-gray-900 dark:text-white font-medium text-sm">
                                       {feature.title}
                                     </span>
                                   </Link>
@@ -121,10 +128,10 @@ const Header = () => {
                           </div>
                         ))}
                       </div>
-                      <div className="mt-6 pt-4 border-t border-white/10">
+                      <div className="mt-6 pt-4 border-t border-gray-100 dark:border-gray-700">
                         <Link
                           to="/features"
-                          className="text-purple-400 font-medium hover:text-purple-300 transition-colors"
+                          className="text-purple-600 dark:text-purple-400 font-medium hover:text-purple-700 dark:hover:text-purple-300 transition-colors"
                         >
                           View all 16 features →
                         </Link>
@@ -135,23 +142,23 @@ const Header = () => {
               </AnimatePresence>
             </div>
 
-            <Link to="/pricing" className="text-gray-300 hover:text-white font-medium transition-colors">Pricing</Link>
-            <Link to="/docs" className="text-gray-300 hover:text-white font-medium transition-colors">Docs</Link>
-            <Link to="/blog" className="text-gray-300 hover:text-white font-medium transition-colors">Blog</Link>
+            <Link to="/pricing" className={`nav-link font-medium ${textColor} ${textColorHover} transition-colors`}>Pricing</Link>
+            <Link to="/docs" className={`nav-link font-medium ${textColor} ${textColorHover} transition-colors`}>Docs</Link>
+            <Link to="/blog" className={`nav-link font-medium ${textColor} ${textColorHover} transition-colors`}>Blog</Link>
           </div>
 
           {/* Right Side */}
-          <div className="flex items-center gap-3 lg:gap-4">
+          <div className="flex items-center gap-4">
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+              className={`p-2 rounded-lg transition-colors ${isOnDarkBg ? 'hover:bg-white/10' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}`}
               aria-label="Toggle theme"
             >
               {theme === 'dark' ? (
-                <Sun className="w-5 h-5 text-gray-300 hover:text-white" />
+                <Sun className={`w-5 h-5 ${isOnDarkBg ? 'text-gray-200' : 'text-gray-600 dark:text-gray-300'}`} />
               ) : (
-                <Moon className="w-5 h-5 text-gray-300 hover:text-white" />
+                <Moon className={`w-5 h-5 ${isOnDarkBg ? 'text-gray-200' : 'text-gray-600'}`} />
               )}
             </button>
 
@@ -162,16 +169,16 @@ const Header = () => {
                 onMouseEnter={() => setIsUserDropdownOpen(true)}
                 onMouseLeave={() => setIsUserDropdownOpen(false)}
               >
-                <button className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-                    <span className="text-white text-sm font-semibold">
+                <button className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${isOnDarkBg ? 'hover:bg-white/10' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}`}>
+                  <div className="w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+                    <span className="text-purple-600 dark:text-purple-400 text-sm font-semibold">
                       {user?.name?.charAt(0).toUpperCase()}
                     </span>
                   </div>
-                  <span className="text-gray-200 font-medium hidden md:block">
+                  <span className={`font-medium hidden md:block ${textColor}`}>
                     {user?.name?.split(' ')[0]}
                   </span>
-                  <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${isUserDropdownOpen ? 'rotate-180' : ''}`} />
+                  <ChevronDown className={`w-4 h-4 ${isOnDarkBg ? 'text-gray-300' : 'text-gray-500'} transition-transform ${isUserDropdownOpen ? 'rotate-180' : ''}`} />
                 </button>
 
                 <AnimatePresence>
@@ -183,25 +190,25 @@ const Header = () => {
                       transition={{ duration: 0.2 }}
                       className="absolute top-full right-0 pt-2"
                     >
-                      <div className="w-48 bg-slate-900/95 backdrop-blur-xl rounded-xl shadow-lg border border-white/10 py-2">
+                      <div className="w-48 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 py-2">
                         <Link
                           to="/dashboard"
-                          className="flex items-center gap-3 px-4 py-2 text-gray-300 hover:bg-white/10 hover:text-white"
+                          className="flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                         >
                           <LayoutDashboard className="w-4 h-4" />
                           Dashboard
                         </Link>
                         <Link
                           to="/dashboard/settings"
-                          className="flex items-center gap-3 px-4 py-2 text-gray-300 hover:bg-white/10 hover:text-white"
+                          className="flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                         >
                           <User className="w-4 h-4" />
                           Account
                         </Link>
-                        <hr className="my-2 border-white/10" />
+                        <hr className="my-2 border-gray-100 dark:border-gray-700" />
                         <button
                           onClick={handleLogout}
-                          className="flex items-center gap-3 px-4 py-2 text-gray-300 hover:bg-white/10 hover:text-white w-full"
+                          className="flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 w-full"
                         >
                           <LogOut className="w-4 h-4" />
                           Logout
@@ -214,11 +221,11 @@ const Header = () => {
             ) : (
               <>
                 {/* Login Link */}
-                <Link to="/login" className="hidden sm:block text-gray-300 font-medium hover:text-white transition-colors">
+                <Link to="/login" className={`hidden sm:block font-medium ${textColor} ${textColorHover} transition-colors`}>
                   Login
                 </Link>
                 {/* CTA Button */}
-                <Link to="/signup" className="hidden sm:flex px-4 lg:px-5 py-2 lg:py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl hover:from-purple-500 hover:to-pink-500 transition-all shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 text-sm lg:text-base">
+                <Link to="/signup" className="hidden sm:flex btn-primary">
                   Get Started Free
                 </Link>
               </>
@@ -227,13 +234,13 @@ const Header = () => {
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 rounded-lg hover:bg-white/10 transition-colors"
+              className={`lg:hidden p-2 rounded-lg transition-colors ${isOnDarkBg ? 'hover:bg-white/10' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}`}
               aria-label="Toggle menu"
             >
               {isMobileMenuOpen ? (
-                <X className="w-6 h-6 text-white" />
+                <X className={`w-6 h-6 ${isOnDarkBg ? 'text-white' : 'text-gray-900 dark:text-white'}`} />
               ) : (
-                <Menu className="w-6 h-6 text-white" />
+                <Menu className={`w-6 h-6 ${isOnDarkBg ? 'text-white' : 'text-gray-900 dark:text-white'}`} />
               )}
             </button>
           </div>
@@ -248,7 +255,7 @@ const Header = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
+                className="fixed inset-0 bg-black/50 z-40 lg:hidden"
                 onClick={() => setIsMobileMenuOpen(false)}
               />
               <motion.div
@@ -256,52 +263,52 @@ const Header = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.2 }}
-                className="lg:hidden absolute top-full left-0 right-0 z-50 bg-slate-950/98 backdrop-blur-xl border-t border-white/10 shadow-xl"
+                className="lg:hidden absolute top-full left-0 right-0 z-50 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 shadow-xl"
               >
                 <div className="container-wide py-4 space-y-2">
                   <Link
                     to="/features"
-                    className="block px-4 py-3 rounded-lg text-white font-medium hover:bg-white/10"
+                    className="block px-4 py-3 rounded-lg text-gray-900 dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800"
                   >
                     Features
                   </Link>
                   <Link
                     to="/pricing"
-                    className="block px-4 py-3 rounded-lg text-white font-medium hover:bg-white/10"
+                    className="block px-4 py-3 rounded-lg text-gray-900 dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800"
                   >
                     Pricing
                   </Link>
                   <Link
                     to="/docs"
-                    className="block px-4 py-3 rounded-lg text-white font-medium hover:bg-white/10"
+                    className="block px-4 py-3 rounded-lg text-gray-900 dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800"
                   >
                     Docs
                   </Link>
                   <Link
                     to="/blog"
-                    className="block px-4 py-3 rounded-lg text-white font-medium hover:bg-white/10"
+                    className="block px-4 py-3 rounded-lg text-gray-900 dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800"
                   >
                     Blog
                   </Link>
                   <div className="pt-4 space-y-2">
                     {isAuthenticated ? (
                       <>
-                        <Link to="/dashboard" className="block w-full text-center px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl">
+                        <Link to="/dashboard" className="btn-primary w-full justify-center">
                           Dashboard
                         </Link>
                         <button 
                           onClick={handleLogout}
-                          className="w-full px-4 py-3 rounded-lg text-gray-400 font-medium hover:bg-white/10 hover:text-white"
+                          className="w-full px-4 py-3 rounded-lg text-gray-600 dark:text-gray-400 font-medium hover:bg-gray-100 dark:hover:bg-gray-800"
                         >
                           Logout
                         </button>
                       </>
                     ) : (
                       <>
-                        <Link to="/login" className="block px-4 py-3 rounded-lg text-white font-medium hover:bg-white/10 text-center">
+                        <Link to="/login" className="block px-4 py-3 rounded-lg text-gray-900 dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800 text-center">
                           Login
                         </Link>
-                        <Link to="/signup" className="block w-full text-center px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl">
+                        <Link to="/signup" className="btn-primary w-full justify-center">
                           Get Started Free
                         </Link>
                       </>

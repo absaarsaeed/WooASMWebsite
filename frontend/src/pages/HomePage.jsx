@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -20,11 +20,58 @@ import {
   TrendingUp,
   AlertTriangle,
   Clock,
-  Star
+  Star,
+  DollarSign,
+  Percent,
+  UserCheck
 } from 'lucide-react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import SEO from '../components/SEO';
+
+// Chat demo conversation data
+const chatConversations = [
+  {
+    query: "shwo me prodcts under 50 dolars",
+    corrected: "Show me products under $50",
+    response: "Found 24 products under $50. Here are your top sellers:",
+    items: [
+      { name: "Organic Coffee Blend", price: "$29", icon: Package },
+      { name: "Wireless Earbuds", price: "$37", icon: Package },
+      { name: "Canvas Tote Bag", price: "$45", icon: Package }
+    ]
+  },
+  {
+    query: "who r my best custmers this month",
+    corrected: "Who are my best customers this month",
+    response: "Your top 3 VIP customers this month:",
+    items: [
+      { name: "Sarah Johnson", price: "$1,247", icon: UserCheck },
+      { name: "Mike Chen", price: "$892", icon: UserCheck },
+      { name: "Emma Wilson", price: "$756", icon: UserCheck }
+    ]
+  },
+  {
+    query: "crete 20% off cupon for summer",
+    corrected: "Create 20% off coupon for summer",
+    response: "Coupon SUMMER20 created! Here's the summary:",
+    items: [
+      { name: "Discount: 20% off", price: "Active", icon: Percent },
+      { name: "Code: SUMMER20", price: "Ready", icon: Tag },
+      { name: "No expiry set", price: "Edit?", icon: Clock }
+    ]
+  },
+  {
+    query: "how much did we make today",
+    corrected: "How much did we make today",
+    response: "Today's revenue breakdown:",
+    items: [
+      { name: "Total Revenue", price: "$2,847", icon: DollarSign },
+      { name: "Orders: 34", price: "+12%", icon: ShoppingCart },
+      { name: "Avg Order: $83.74", price: "+5%", icon: TrendingUp }
+    ]
+  }
+];
 
 // FAQ Data with Schema
 const homeFaq = [

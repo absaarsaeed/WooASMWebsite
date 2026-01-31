@@ -471,13 +471,13 @@ const HomePage = () => {
           <div className="container-wide">
             <div className="text-center mb-16">
               <span className="inline-block px-4 py-1 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 text-sm font-medium mb-4">
-                The Brain of Your Store
+                Works Like Magic
               </span>
               <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-                An AI That <span className="text-purple-600">Actually Understands</span> You
+                Type Messy. <span className="text-purple-600">Get Perfect Results.</span>
               </h2>
               <p className="text-lg text-gray-600 dark:text-gray-400">
-                No more rigid commands. Just talk naturally — typos and all.
+                No special commands. No learning curve. Just talk like you would to a helpful colleague.
               </p>
             </div>
 
@@ -491,20 +491,20 @@ const HomePage = () => {
                 className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700"
               >
                 <div className="mb-4">
-                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">You type:</span>
+                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">You type (typos and all):</span>
                   <p className="text-lg text-gray-900 dark:text-white font-mono bg-gray-100 dark:bg-gray-700 px-3 py-2 rounded mt-1">
                     "shwo me prodcts under 50 dolars"
                   </p>
                 </div>
                 <div className="mb-4">
-                  <span className="text-xs font-medium text-purple-600 uppercase tracking-wide">AI understands:</span>
+                  <span className="text-xs font-medium text-purple-600 uppercase tracking-wide">WooASM figures it out:</span>
                   <p className="text-lg text-gray-700 dark:text-gray-300 mt-1">
                     "Show me products under $50"
                   </p>
                 </div>
                 <div className="flex items-center gap-2 text-green-600">
                   <Check className="w-5 h-5" />
-                  <span className="font-medium">Found 24 products under $50</span>
+                  <span className="font-medium">Boom - 24 products, sorted by bestsellers</span>
                 </div>
               </motion.div>
 
@@ -516,21 +516,21 @@ const HomePage = () => {
                 className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700"
               >
                 <div className="mb-4">
-                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">You type:</span>
+                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">You ask for two things at once:</span>
                   <p className="text-lg text-gray-900 dark:text-white font-mono bg-gray-100 dark:bg-gray-700 px-3 py-2 rounded mt-1">
                     "show low stock and make a 10% coupon for VIPs"
                   </p>
                 </div>
                 <div className="mb-4">
-                  <span className="text-xs font-medium text-purple-600 uppercase tracking-wide">AI handles both:</span>
+                  <span className="text-xs font-medium text-purple-600 uppercase tracking-wide">WooASM handles both:</span>
                   <div className="mt-2 space-y-2">
                     <div className="flex items-center gap-2">
                       <span className="w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center text-sm font-bold text-purple-600">1</span>
-                      <span className="text-gray-700 dark:text-gray-300">Gets low stock products</span>
+                      <span className="text-gray-700 dark:text-gray-300">Pulls your low stock report</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center text-sm font-bold text-purple-600">2</span>
-                      <span className="text-gray-700 dark:text-gray-300">Creates VIP10 coupon</span>
+                      <span className="text-gray-700 dark:text-gray-300">Creates your VIP10 coupon, ready to activate</span>
                     </div>
                   </div>
                 </div>

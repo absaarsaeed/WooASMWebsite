@@ -91,15 +91,22 @@ function AppRoutes() {
       <Routes>
         {/* Main Pages */}
         <Route path="/" element={<HomePage />} />
-        <Route path="/features" element={<FeaturesPage />} />
-        <Route path="/features/:featureId" element={<FeatureDetailPage />} />
+        <Route path="/features" element={<FeaturesHubPage />} />
+        <Route path="/features/:slug" element={<FeaturePage />} />
         <Route path="/pricing" element={<PricingPage />} />
         <Route path="/docs" element={<DocsPage />} />
         <Route path="/blog" element={<BlogPage />} />
+        <Route path="/blog/:slug" element={<BlogPostPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/changelog" element={<ChangelogPage />} />
         <Route path="/roadmap" element={<RoadmapPage />} />
+        
+        {/* Comparison Pages */}
+        <Route path="/compare/:slug" element={<ComparePage />} />
+        
+        {/* Use Case Pages */}
+        <Route path="/use-cases/:slug" element={<UseCasePage />} />
         
         {/* Legal Pages */}
         <Route path="/privacy" element={<PrivacyPage />} />

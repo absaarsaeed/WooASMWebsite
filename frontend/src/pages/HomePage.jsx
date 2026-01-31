@@ -307,6 +307,211 @@ const testimonials = [
   }
 ];
 
+// Animated Chat Demo Component
+const ChatDemo = () => {
+  const [currentConvo, setCurrentConvo] = useState(0);
+  const [typedText, setTypedText] = useState('');
+  const [showResponse, setShowResponse] = useState(false);
+  const [showItems, setShowItems] = useState(false);
+  const [isTyping, setIsTyping] = useState(true);
+
+  const conversation = chatConversations[currentConvo];
+
+  // Typing animation
+  useEffect(() => {
+    setTypedText('');
+    setShowResponse(false);
+    setShowItems(false);
+    setIsTyping(true);
+
+    let charIndex = 0;
+    const query = conversation.query;
+
+    const typeInterval = setInterval(() => {
+      if (charIndex < query.length) {
+        setTypedText(query.slice(0, charIndex + 1));
+        charIndex++;
+      } else {
+        clearInterval(typeInterval);
+        setIsTyping(false);
+        // Show response after typing completes
+        setTimeout(() => setShowResponse(true), 500);
+        setTimeout(() => setShowItems(true), 1000);
+        // Move to next conversation
+        setTimeout(() => {
+          setCurrentConvo((prev) => (prev + 1) % chatConversations.length);
+        }, 5000);
+      }
+    }, 50);
+
+    return () => clearInterval(typeInterval);
+  }, [currentConvo, conversation.query]);
+
+  return (
+    <div className="relative bg-white/10 backdrop-blur-xl rounded-3xl border border-white/20 overflow-hidden shadow-2xl">
+      {/* Card Header */}
+      <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-white/5">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+            <Bot className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <span className="font-semibold text-white">Your Store Assistant</span>
+            <div className="flex items-center gap-1 text-xs text-green-400">
+              <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+              Online
+            </div>
+          </div>
+        </div>
+        <div className="flex gap-1.5">
+          <div className="w-3 h-3 rounded-full bg-red-400" />
+          <div className="w-3 h-3 rounded-full bg-yellow-400" />
+          <div className="w-3 h-3 rounded-full bg-green-400" />
+        </div>
+      </div>
+      
+      {/* Chat Messages */}
+      <div className="p-6 space-y-4 min-h-[280px]">
+        {/* User Message with typing animation */}
+        <div className="flex gap-3">
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-cyan-400 flex items-center justify-center flex-shrink-0">
+            <span className="text-xs font-bold text-white">You</span>
+          </div>
+          <div className="bg-white/10 backdrop-blur rounded-2xl rounded-tl-none px-4 py-3 max-w-[280px]">
+            <span className="text-white/90 font-mono text-sm">
+              {typedText}
+              {isTyping && (
+                <motion.span
+                  animate={{ opacity: [1, 0] }}
+                  transition={{ duration: 0.5, repeat: Infinity }}
+                  className="inline-block w-0.5 h-4 bg-purple-400 ml-0.5 align-middle"
+                />
+              )}
+            </span>
+          </div>
+        </div>
+        
+        {/* AI Response */}
+        <AnimatePresence mode="wait">
+          {showResponse && (
+            <motion.div
+              key={currentConvo}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="flex gap-3 justify-end"
+            >
+              <div className="bg-gradient-to-br from-purple-600/40 to-pink-600/40 backdrop-blur rounded-2xl rounded-tr-none px-4 py-3 max-w-[320px] border border-purple-400/30">
+                <div className="text-xs text-purple-300 mb-2 flex items-center gap-1">
+                  <Check className="w-3 h-3" />
+                  Got it! &ldquo;{conversation.corrected}&rdquo;
+                </div>
+                <span className="text-white">{conversation.response}</span>
+                
+                {/* Dynamic items */}
+                <AnimatePresence>
+                  {showItems && (
+                    <div className="mt-3 space-y-2">
+                      {conversation.items.map((item, i) => {
+                        const ItemIcon = item.icon;
+                        return (
+                          <motion.div
+                            key={item.name}
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: i * 0.1 }}
+                            className="flex items-center gap-2 text-sm text-white/80 bg-white/5 rounded-lg px-3 py-2"
+                          >
+                            <ItemIcon className="w-4 h-4 text-purple-400" />
+                            {item.name}
+                            <span className="ml-auto text-green-400">{item.price}</span>
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </AnimatePresence>
+              </div>
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center flex-shrink-0">
+                <Bot className="w-4 h-4 text-white" />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+        
+        {/* Typing indicator when waiting for response */}
+        <AnimatePresence>
+          {!isTyping && !showResponse && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="flex gap-3 justify-end"
+            >
+              <div className="bg-gradient-to-br from-purple-600/20 to-pink-600/20 rounded-2xl rounded-tr-none px-4 py-3 border border-purple-400/20">
+                <div className="flex gap-1">
+                  <motion.span
+                    animate={{ opacity: [0.4, 1, 0.4] }}
+                    transition={{ duration: 1, repeat: Infinity, delay: 0 }}
+                    className="w-2 h-2 bg-purple-400 rounded-full"
+                  />
+                  <motion.span
+                    animate={{ opacity: [0.4, 1, 0.4] }}
+                    transition={{ duration: 1, repeat: Infinity, delay: 0.2 }}
+                    className="w-2 h-2 bg-purple-400 rounded-full"
+                  />
+                  <motion.span
+                    animate={{ opacity: [0.4, 1, 0.4] }}
+                    transition={{ duration: 1, repeat: Infinity, delay: 0.4 }}
+                    className="w-2 h-2 bg-purple-400 rounded-full"
+                  />
+                </div>
+              </div>
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center flex-shrink-0">
+                <Bot className="w-4 h-4 text-white" />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+      
+      {/* Input Area */}
+      <div className="px-6 py-4 border-t border-white/10 bg-white/5">
+        <div className="flex items-center gap-3 bg-white/10 rounded-xl px-4 py-3">
+          <input 
+            type="text" 
+            placeholder="Ask anything about your store..." 
+            className="flex-1 bg-transparent text-white placeholder-white/40 outline-none text-sm"
+            disabled
+          />
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            className="w-8 h-8 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center"
+          >
+            <ArrowRight className="w-4 h-4 text-white" />
+          </motion.button>
+        </div>
+      </div>
+      
+      {/* Conversation indicator dots */}
+      <div className="absolute bottom-20 left-1/2 -translate-x-1/2 flex gap-2">
+        {chatConversations.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setCurrentConvo(i)}
+            className={`w-2 h-2 rounded-full transition-all ${
+              i === currentConvo 
+                ? 'bg-purple-400 w-4' 
+                : 'bg-white/30 hover:bg-white/50'
+            }`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
 const HomePage = () => {
   const [activeDashboard, setActiveDashboard] = useState('insights');
   const [openFaq, setOpenFaq] = useState(null);

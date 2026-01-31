@@ -573,7 +573,7 @@ const HomePage = () => {
                 12 Dashboards, <span className="text-purple-600">Zero Guesswork</span>
               </h2>
               <p className="text-lg text-gray-600 dark:text-gray-400">
-                Finally, a bird's eye view of your business - without hiring an analyst
+                Finally, a bird&apos;s eye view of your business - without hiring an analyst
               </p>
             </div>
 

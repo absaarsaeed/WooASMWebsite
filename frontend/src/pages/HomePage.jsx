@@ -685,7 +685,7 @@ const HomePage = () => {
           <div className="container-wide">
             <div className="text-center mb-12">
               <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-                Loved by WooCommerce Store Owners
+                Why Store Owners Love It
               </h2>
             </div>
 
@@ -693,15 +693,15 @@ const HomePage = () => {
             <div className="flex flex-wrap justify-center gap-8 lg:gap-16 mb-16 p-8 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700">
               <div className="text-center">
                 <div className="text-4xl font-bold text-purple-600">5,000+</div>
-                <div className="text-gray-500 dark:text-gray-400">Active Stores</div>
+                <div className="text-gray-500 dark:text-gray-400">Happy Stores</div>
               </div>
               <div className="text-center">
                 <div className="text-4xl font-bold text-purple-600">2M+</div>
-                <div className="text-gray-500 dark:text-gray-400">AI Queries Processed</div>
+                <div className="text-gray-500 dark:text-gray-400">Questions Answered</div>
               </div>
               <div className="text-center">
                 <div className="text-4xl font-bold text-purple-600">4.9/5</div>
-                <div className="text-gray-500 dark:text-gray-400">Average Rating</div>
+                <div className="text-gray-500 dark:text-gray-400">Store Owner Rating</div>
               </div>
             </div>
 

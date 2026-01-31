@@ -573,10 +573,40 @@ const HomePage = () => {
                 </motion.div>
               </motion.div>
             </div>
+            
+            {/* Trusted By Section - at bottom of hero */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 2.2 }}
+              className="mt-16 lg:mt-24 text-center"
+            >
+              <p className="text-sm text-gray-500 uppercase tracking-wider mb-6">
+                Trusted by store owners worldwide
+              </p>
+              <div className="flex flex-wrap justify-center items-center gap-8 lg:gap-12 opacity-60">
+                {/* Mock brand logos - represented as styled text */}
+                {['Fashion Co.', 'Tech Store', 'Home Goods', 'Organic Life', 'Pet Paradise', 'Sports Hub'].map((brand, i) => (
+                  <motion.div
+                    key={brand}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 2.4 + i * 0.1 }}
+                    className="text-lg lg:text-xl font-bold text-white/40 hover:text-white/60 transition-colors"
+                  >
+                    {brand}
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
           </div>
           
-          {/* Bottom gradient fade */}
-          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white dark:from-gray-900 to-transparent" />
+          {/* Bottom wave transition */}
+          <div className="absolute bottom-0 left-0 right-0">
+            <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto">
+              <path d="M0 120L60 110C120 100 240 80 360 70C480 60 600 60 720 65C840 70 960 80 1080 85C1200 90 1320 90 1380 90L1440 90V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" className="fill-gray-50 dark:fill-gray-800"/>
+            </svg>
+          </div>
         </section>
 
         {/* ==================== FEATURES SECTION ==================== */}

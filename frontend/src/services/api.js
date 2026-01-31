@@ -47,8 +47,20 @@ class ApiService {
         };
       }
 
-      // Handle unauthorized - try to refresh token
+      // Handle unauthorized (401)
       if (response.status === 401) {
+        // For auth endpoints, don't try to refresh - just return the error
+        const isAuthEndpoint = endpoint.includes('/auth/login') || 
+                               endpoint.includes('/auth/register') ||
+                               endpoint.includes('/admin/login');
+        
+        if (isAuthEndpoint) {
+          // Return the actual backend response for auth endpoints
+          const data = await response.json();
+          return data;
+        }
+        
+        // For other endpoints, try to refresh token
         const refreshed = await this.refreshToken();
         if (refreshed) {
           // Retry the request with new token
@@ -58,7 +70,7 @@ class ApiService {
             return retryResponse.json();
           }
         }
-        // Return the original 401 response
+        // Return session expired for non-auth endpoints
         return {
           success: false,
           error: 'unauthorized',

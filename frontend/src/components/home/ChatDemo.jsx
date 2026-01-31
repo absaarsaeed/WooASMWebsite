@@ -1,38 +1,38 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Bot, User, Package, AlertTriangle } from 'lucide-react';
+
+const demoConversations = [
+  {
+    user: "Show me products running low on stock",
+    ai: "I found 8 products below your restock threshold. Your best seller \"Blue Widget\" only has 3 units left and will likely run out in 2 days based on current sales velocity.",
+    products: [
+      { name: 'Blue Widget', stock: 3, daysLeft: 2, urgent: true },
+      { name: 'Red Gadget', stock: 5, daysLeft: 4, urgent: true },
+      { name: 'Green Tool', stock: 8, daysLeft: 7, urgent: false }
+    ]
+  },
+  {
+    user: "What's my revenue this week?",
+    ai: "Your revenue this week is $4,230 — that's a 12% increase from last week! You've had 67 orders with an average order value of $63.13. Your top seller was the Wireless Headphones Pro.",
+    stats: [
+      { label: 'Revenue', value: '$4,230', change: '+12%' },
+      { label: 'Orders', value: '67', change: '+8%' },
+      { label: 'AOV', value: '$63.13', change: '+4%' }
+    ]
+  },
+  {
+    user: "Create a 20% off coupon for VIP customers",
+    ai: "I'll create a coupon with these settings:\n\nCode: VIP20OFF\nDiscount: 20% off entire order\nFor: VIP segment (156 customers)\nValid: 7 days\n\nReady to create this coupon?",
+    action: true
+  }
+];
 
 const ChatDemo = () => {
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
   const [currentDemo, setCurrentDemo] = useState(0);
   const chatContainerRef = useRef(null);
-
-  const demoConversations = [
-    {
-      user: "Show me products running low on stock",
-      ai: "I found 8 products below your restock threshold. Your best seller \"Blue Widget\" only has 3 units left and will likely run out in 2 days based on current sales velocity.",
-      products: [
-        { name: 'Blue Widget', stock: 3, daysLeft: 2, urgent: true },
-        { name: 'Red Gadget', stock: 5, daysLeft: 4, urgent: true },
-        { name: 'Green Tool', stock: 8, daysLeft: 7, urgent: false }
-      ]
-    },
-    {
-      user: "What's my revenue this week?",
-      ai: "Your revenue this week is $4,230 — that's a 12% increase from last week! You've had 67 orders with an average order value of $63.13. Your top seller was the Wireless Headphones Pro.",
-      stats: [
-        { label: 'Revenue', value: '$4,230', change: '+12%' },
-        { label: 'Orders', value: '67', change: '+8%' },
-        { label: 'AOV', value: '$63.13', change: '+4%' }
-      ]
-    },
-    {
-      user: "Create a 20% off coupon for VIP customers",
-      ai: "I'll create a coupon with these settings:\n\nCode: VIP20OFF\nDiscount: 20% off entire order\nFor: VIP segment (156 customers)\nValid: 7 days\n\nReady to create this coupon?",
-      action: true
-    }
-  ];
 
   useEffect(() => {
     let isMounted = true;

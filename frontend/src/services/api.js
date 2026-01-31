@@ -304,7 +304,15 @@ class ApiService {
 
   // POST /billing/portal
   async getBillingPortal() {
-    return this.request('/billing/portal', { method: 'POST' });
+    const response = await this.request('/billing/portal', { method: 'POST' });
+    // Fix any localhost URLs in the portal URL
+    if (response.data?.portalUrl) {
+      response.data.portalUrl = fixLocalhostUrls(response.data.portalUrl);
+    }
+    if (response.data?.url) {
+      response.data.url = fixLocalhostUrls(response.data.url);
+    }
+    return response;
   }
 
   // GET /billing/invoices

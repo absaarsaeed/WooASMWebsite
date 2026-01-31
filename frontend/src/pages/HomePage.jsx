@@ -241,19 +241,19 @@ const useCases = [
 // Testimonials Data
 const testimonials = [
   {
-    quote: "I used to spend hours checking inventory and updating prices. Now I just ask WooASM. It's like having a smart assistant who knows my entire store.",
+    quote: "I used to spend my mornings digging through reports and checking inventory. Now I just ask and get answers. It's like having a business partner who never sleeps.",
     author: "Sarah M.",
     role: "Fashion Boutique Owner",
     avatar: "S"
   },
   {
-    quote: "The customer segments feature is gold. I found 47 VIP customers who hadn't ordered in 60 days. One win-back campaign later, I recovered $8,000 in sales.",
+    quote: "Found 47 loyal customers who hadn't bought in 2 months. Sent one win-back email, recovered $8,000. Paid for the whole year in one afternoon.",
     author: "Mike R.",
     role: "Electronics Store",
     avatar: "M"
   },
   {
-    quote: "Being able to type 'shwo low stok' and have it understand me is incredible. No more clicking through endless WooCommerce menus.",
+    quote: "I can type 'shwo low stok' at midnight and it just works. No more digging through endless WooCommerce menus trying to find what I need.",
     author: "Lisa K.",
     role: "Home Goods Store",
     avatar: "L"

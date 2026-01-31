@@ -2,6 +2,8 @@ import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Check, ArrowRight, ChevronRight, Store, TrendingUp, Users, Package, DollarSign, RefreshCw } from 'lucide-react';
+import Header from '../components/layout/Header';
+import Footer from '../components/layout/Footer';
 import SEO from '../components/SEO';
 
 const useCases = {

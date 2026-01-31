@@ -267,9 +267,9 @@ const HomePage = () => {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       <SEO
-        title="ChatGPT for WooCommerce | AI Store Manager - 101 AI Abilities"
-        description="Manage your WooCommerce store with AI. 101 abilities for products, orders, coupons, customers & analytics. Understands typos, handles multiple requests, remembers context. Start free trial."
-        keywords="WooCommerce AI, ChatGPT WooCommerce, AI store manager, WooCommerce assistant, WooCommerce automation, inventory management, AI chatbot WooCommerce"
+        title="WooASM - Run Your WooCommerce Store Just By Asking"
+        description="Stop clicking through endless menus. Just tell WooASM what you need and watch it happen. 101 things your store assistant can do - from stock alerts to customer insights. Start free."
+        keywords="WooCommerce plugin, AI store assistant, WooCommerce automation, inventory management, ecommerce AI, smart store management"
         url="https://wooasm.com"
         faq={homeFaq}
       />
@@ -290,7 +290,7 @@ const HomePage = () => {
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 text-sm font-medium mb-8"
               >
                 <Zap className="w-4 h-4" />
-                <span>v28 - 101 AI Abilities</span>
+                <span>Trusted by 5,000+ Store Owners</span>
               </motion.div>
 
               {/* Main Headline */}
@@ -300,9 +300,9 @@ const HomePage = () => {
                 transition={{ delay: 0.1 }}
                 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight"
               >
-                ChatGPT for Your{' '}
+                Run Your Store{' '}
                 <span className="bg-gradient-to-r from-purple-600 to-purple-400 bg-clip-text text-transparent">
-                  WooCommerce Store
+                  Just By Asking
                 </span>
               </motion.h1>
 
@@ -313,8 +313,8 @@ const HomePage = () => {
                 transition={{ delay: 0.2 }}
                 className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 mb-10 max-w-2xl mx-auto"
               >
-                The AI store manager that understands typos, handles multiple requests at once, 
-                and knows your products, orders, and customers inside out.
+                Stop clicking through endless menus. Type what you need in plain English - 
+                even with typos - and watch it happen. Like having a brilliant assistant who knows your entire store.
               </motion.p>
 
               {/* Stats */}
@@ -326,15 +326,15 @@ const HomePage = () => {
               >
                 <div className="text-center">
                   <div className="text-3xl sm:text-4xl font-bold text-purple-600">101</div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">AI Abilities</div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">Things It Can Do</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl sm:text-4xl font-bold text-purple-600">12</div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">Smart Dashboards</div>
+                  <div className="text-3xl sm:text-4xl font-bold text-purple-600">35+</div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">Hours Saved Weekly</div>
                 </div>
                 <div className="text-center">
                   <div className="text-3xl sm:text-4xl font-bold text-purple-600">1-Click</div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">Undo Actions</div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">Undo Any Mistake</div>
                 </div>
               </motion.div>
 

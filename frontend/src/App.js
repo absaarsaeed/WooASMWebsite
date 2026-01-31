@@ -7,15 +7,18 @@ import { AuthProvider, useAuth } from "./context/AuthContext";
 
 // Pages
 import HomePage from "./pages/HomePage";
-import FeaturesPage from "./pages/FeaturesPage";
-import FeatureDetailPage from "./pages/FeatureDetailPage";
+import FeaturesHubPage from "./pages/FeaturesHubPage";
+import FeaturePage from "./pages/FeaturePage";
 import PricingPage from "./pages/PricingPage";
 import DocsPage from "./pages/DocsPage";
 import BlogPage from "./pages/BlogPage";
+import BlogPostPage from "./pages/BlogPostPage";
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
 import ChangelogPage from "./pages/ChangelogPage";
 import RoadmapPage from "./pages/RoadmapPage";
+import ComparePage from "./pages/ComparePage";
+import UseCasePage from "./pages/UseCasePage";
 
 // Legal Pages
 import PrivacyPage from "./pages/PrivacyPage";

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Zap, Check, X, Loader } from 'lucide-react';
@@ -15,16 +15,7 @@ const VerifyEmailPage = () => {
   
   const { verifyEmail } = useAuth();
 
-  useEffect(() => {
-    if (token) {
-      handleVerify();
-    } else {
-      setLoading(false);
-      setError('Invalid verification link');
-    }
-  }, [token]);
-
-  const handleVerify = async () => {
+  const handleVerify = useCallback(async () => {
     const result = await verifyEmail(token);
     
     if (result.success) {
@@ -34,7 +25,16 @@ const VerifyEmailPage = () => {
     }
     
     setLoading(false);
-  };
+  }, [token, verifyEmail]);
+
+  useEffect(() => {
+    if (token) {
+      handleVerify();
+    } else {
+      setLoading(false);
+      setError('Invalid verification link');
+    }
+  }, [token, handleVerify]);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-8">

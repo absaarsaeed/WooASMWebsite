@@ -247,53 +247,54 @@ const Header = () => {
                 className="lg:hidden absolute top-full left-0 right-0 z-50 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 shadow-xl"
               >
                 <div className="container-wide py-4 space-y-2">
-                <Link
-                  to="/features"
-                  className="block px-4 py-3 rounded-lg text-gray-900 dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800"
-                >
-                  Features
-                </Link>
-                <Link
-                  to="/pricing"
-                  className="block px-4 py-3 rounded-lg text-gray-900 dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800"
-                >
-                  Pricing
-                </Link>
-                <Link
-                  to="/docs"
-                  className="block px-4 py-3 rounded-lg text-gray-900 dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800"
-                >
-                  Docs
-                </Link>
-                <Link
-                  to="/blog"
-                  className="block px-4 py-3 rounded-lg text-gray-900 dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800"
-                >
-                  Blog
-                </Link>
-                <div className="pt-4 space-y-2">
-                  {isAuthenticated ? (
-                    <>
-                      <Link to="/dashboard" className="btn-primary w-full justify-center">
-                        Dashboard
-                      </Link>
-                      <button 
-                        onClick={handleLogout}
-                        className="w-full px-4 py-3 rounded-lg text-gray-600 dark:text-gray-400 font-medium hover:bg-gray-100 dark:hover:bg-gray-800"
-                      >
-                        Logout
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <Link to="/login" className="block px-4 py-3 rounded-lg text-gray-900 dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800 text-center">
-                        Login
-                      </Link>
-                      <Link to="/signup" className="btn-primary w-full justify-center">
-                        Get Started Free
-                      </Link>
-                    </>
-                  )}
+                  <Link
+                    to="/features"
+                    className="block px-4 py-3 rounded-lg text-gray-900 dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800"
+                  >
+                    Features
+                  </Link>
+                  <Link
+                    to="/pricing"
+                    className="block px-4 py-3 rounded-lg text-gray-900 dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800"
+                  >
+                    Pricing
+                  </Link>
+                  <Link
+                    to="/docs"
+                    className="block px-4 py-3 rounded-lg text-gray-900 dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800"
+                  >
+                    Docs
+                  </Link>
+                  <Link
+                    to="/blog"
+                    className="block px-4 py-3 rounded-lg text-gray-900 dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800"
+                  >
+                    Blog
+                  </Link>
+                  <div className="pt-4 space-y-2">
+                    {isAuthenticated ? (
+                      <>
+                        <Link to="/dashboard" className="btn-primary w-full justify-center">
+                          Dashboard
+                        </Link>
+                        <button 
+                          onClick={handleLogout}
+                          className="w-full px-4 py-3 rounded-lg text-gray-600 dark:text-gray-400 font-medium hover:bg-gray-100 dark:hover:bg-gray-800"
+                        >
+                          Logout
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <Link to="/login" className="block px-4 py-3 rounded-lg text-gray-900 dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800 text-center">
+                          Login
+                        </Link>
+                        <Link to="/signup" className="btn-primary w-full justify-center">
+                          Get Started Free
+                        </Link>
+                      </>
+                    )}
+                  </div>
                 </div>
               </motion.div>
             </>

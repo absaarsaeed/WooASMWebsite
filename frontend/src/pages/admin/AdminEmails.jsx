@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Mail, 
@@ -84,11 +84,7 @@ const AdminEmails = () => {
     pending: 0
   });
 
-  useEffect(() => {
-    fetchEmails();
-  }, [statusFilter, templateFilter]);
-
-  const fetchEmails = async () => {
+  const fetchEmails = useCallback(async () => {
     setLoading(true);
     setError('');
     try {

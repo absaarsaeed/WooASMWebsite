@@ -132,7 +132,12 @@ All responses from backend follow this structure:
 - Forms are functional
 - Navigation works
 - API service properly structured with all required methods
-- Note: API calls fail in preview environment due to CORS (production backend doesn't allow preview domain)
+- Note: API calls may fail in preview environment due to CORS (production backend doesn't allow preview domain)
+- Mobile menu improved with proper overlay/backdrop
+
+### Known Issues (Backend - Outside Scope)
+- **CRITICAL**: Backend `/api/v1/billing/create-checkout` returns `localhost:3000` in checkoutUrl - needs backend fix
+- Stripe configuration on backend uses localhost for success/cancel URLs
 
 ## Roadmap
 

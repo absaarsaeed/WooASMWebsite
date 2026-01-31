@@ -3,6 +3,16 @@
 // All field names use camelCase to match NestJS backend
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
+const PRODUCTION_DOMAIN = 'https://wooasm.com';
+
+// Helper to fix localhost URLs in API responses
+const fixLocalhostUrls = (url) => {
+  if (!url || typeof url !== 'string') return url;
+  return url
+    .replace(/http:\/\/localhost:3000/g, PRODUCTION_DOMAIN)
+    .replace(/http:\/\/localhost:\d+/g, PRODUCTION_DOMAIN)
+    .replace(/http:\/\/localhost/g, PRODUCTION_DOMAIN);
+};
 
 class ApiService {
   constructor() {

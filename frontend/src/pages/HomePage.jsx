@@ -518,7 +518,7 @@ const HomePage = () => {
                 <div className="mb-4">
                   <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">You ask for two things at once:</span>
                   <p className="text-lg text-gray-900 dark:text-white font-mono bg-gray-100 dark:bg-gray-700 px-3 py-2 rounded mt-1">
-                    "show low stock and make a 10% coupon for VIPs"
+                    &ldquo;show low stock and make a 10% coupon for VIPs&rdquo;
                   </p>
                 </div>
                 <div className="mb-4">

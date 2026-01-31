@@ -274,7 +274,7 @@ const FeaturePageTemplate = ({
         <section className="py-16 lg:py-24">
           <div className="container-wide">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8">
-              Related Features
+              You Might Also Like
             </h2>
             <div className="grid md:grid-cols-3 gap-6">
               {relatedFeatures.map((feature, index) => (
@@ -295,6 +295,8 @@ const FeaturePageTemplate = ({
           </div>
         </section>
       )}
+      
+      <Footer />
     </div>
   );
 };

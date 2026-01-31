@@ -16,9 +16,9 @@ const SEO = ({
   breadcrumbs,
   faq
 }) => {
-  const siteTitle = 'WooASM - AI Store Manager for WooCommerce';
+  const siteTitle = 'WooASM - Run Your Store Just By Asking';
   const fullTitle = title ? `${title} | WooASM` : siteTitle;
-  const defaultDescription = 'The most powerful AI assistant for WooCommerce. Get instant insights, automate inventory, create content, and boost sales — all by just asking.';
+  const defaultDescription = 'Stop clicking through endless menus. Just tell WooASM what you need and watch it happen. Manage products, orders, customers, and inventory - all by asking in plain English.';
   const metaDescription = description || defaultDescription;
   const canonicalUrl = url || 'https://wooasm.com';
 

@@ -397,7 +397,7 @@ const HomePage = () => {
                   </div>
                   <div className="flex gap-3 justify-end">
                     <div className="bg-purple-100 dark:bg-purple-900/40 rounded-2xl rounded-tr-none px-4 py-2 max-w-md">
-                      <div className="text-xs text-purple-600 dark:text-purple-400 mb-1">Got it! "Show me products under $50"</div>
+                      <div className="text-xs text-purple-600 dark:text-purple-400 mb-1">Got it! &ldquo;Show me products under $50&rdquo;</div>
                       <span className="text-gray-800 dark:text-gray-200">Found <strong>24 products</strong> under $50. Here are your top sellers:</span>
                     </div>
                     <div className="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center flex-shrink-0">

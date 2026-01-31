@@ -567,13 +567,13 @@ const HomePage = () => {
           <div className="container-wide">
             <div className="text-center mb-12">
               <span className="inline-block px-4 py-1 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 text-sm font-medium mb-4">
-                12 Powerful Dashboards
+                See Everything That Matters
               </span>
               <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-                Every Tool You Need, <span className="text-purple-600">One Plugin</span>
+                12 Dashboards, <span className="text-purple-600">Zero Guesswork</span>
               </h2>
               <p className="text-lg text-gray-600 dark:text-gray-400">
-                From daily insights to fraud detection — all in your WordPress admin
+                Finally, a bird's eye view of your business - without hiring an analyst
               </p>
             </div>
 

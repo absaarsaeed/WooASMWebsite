@@ -148,6 +148,13 @@ All responses from backend follow this structure:
 - Modern gradient CTA buttons with hover effects
 - Responsive design works beautifully on mobile
 - Trust badges with green checkmarks
+- **"Trusted by store owners worldwide"** logo strip with wave transition
+- **Unified dark header** across all pages for design consistency
+  - Dark slate background with subtle purple gradient line
+  - Glass-morphism dropdowns
+  - Consistent styling whether scrolled or at top
+  - Gradient CTA button in header
+  - Fully responsive mobile menu
 
 ### Testing Status
 - All frontend pages load correctly without JavaScript errors

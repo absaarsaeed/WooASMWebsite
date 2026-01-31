@@ -116,80 +116,80 @@ const features = [
 const dashboards = [
   {
     id: 'insights',
-    name: 'Store Insights',
+    name: 'Daily Snapshot',
     icon: BarChart3,
-    description: 'See exactly how your store is performing at a glance.',
+    description: 'See exactly how your store did today vs yesterday - in seconds.',
     features: [
-      { label: 'Today vs Yesterday', desc: 'Revenue, orders, AOV comparison' },
-      { label: 'Week over Week', desc: 'Trend analysis with % change' },
-      { label: 'Top Products', desc: 'Best performers by revenue & units' },
-      { label: 'Smart Alerts', desc: 'Stockout risks, refund spikes, revenue drops' },
-      { label: 'Next Best Actions', desc: 'AI-recommended actions to take' }
+      { label: 'Today vs Yesterday', desc: 'Sales, orders, average order at a glance' },
+      { label: 'Week Comparison', desc: 'Trends that show if you\'re growing' },
+      { label: 'Bestsellers', desc: 'What\'s flying off the shelves' },
+      { label: 'Warning Signs', desc: 'Problems spotted before they hurt' },
+      { label: 'What To Do Next', desc: 'Suggested actions for today' }
     ]
   },
   {
     id: 'health',
-    name: 'Health Score',
+    name: 'Business Health',
     icon: Activity,
-    description: 'A clear 0-100 score showing your store\'s overall health.',
+    description: 'One number that tells you if your store is thriving.',
     features: [
-      { label: 'Revenue Health', desc: 'Sales trends & growth rate' },
-      { label: 'Inventory Health', desc: 'Stock levels & turnover' },
-      { label: 'Customer Health', desc: 'Retention & satisfaction' },
-      { label: 'Operations Health', desc: 'Order fulfillment & issues' },
-      { label: 'What\'s Hurting Your Score', desc: 'Top issues to fix' }
+      { label: 'Revenue Check', desc: 'Are sales trending up or down?' },
+      { label: 'Stock Check', desc: 'Inventory levels and turnover' },
+      { label: 'Customer Check', desc: 'Are people coming back?' },
+      { label: 'Operations Check', desc: 'Orders fulfilled smoothly?' },
+      { label: 'Fix This First', desc: 'What\'s dragging your score down' }
     ]
   },
   {
     id: 'inventory',
-    name: 'Inventory',
+    name: 'Stock Watch',
     icon: Package,
-    description: 'AI-powered inventory management and predictions.',
+    description: 'Never hear "out of stock" complaints again.',
     features: [
-      { label: 'Low Stock Alerts', desc: 'Products running low' },
-      { label: 'Stockout Risk', desc: 'Predict stockouts before they happen' },
-      { label: 'Dead Stock', desc: 'Products that haven\'t sold' },
-      { label: 'Overstock', desc: 'Excess inventory tying up cash' },
-      { label: 'Restock Recommendations', desc: 'AI-calculated reorder quantities' }
+      { label: 'Running Low', desc: 'Products that need restocking' },
+      { label: 'About To Run Out', desc: 'Predict stockouts before they happen' },
+      { label: 'Sitting Still', desc: 'Products that aren\'t selling' },
+      { label: 'Too Much', desc: 'Excess stock tying up your cash' },
+      { label: 'Order This Many', desc: 'Smart restock quantities' }
     ]
   },
   {
     id: 'customers',
-    name: 'Customers',
+    name: 'Customer Insights',
     icon: Users,
-    description: 'Know your customers better than ever.',
+    description: 'Know who loves you, who\'s leaving, and how to keep them.',
     features: [
-      { label: 'VIP Customers', desc: 'Your top spenders (Platinum/Gold/Silver)' },
-      { label: 'Repeat Buyers', desc: 'Loyal customers with multiple orders' },
-      { label: 'At-Risk', desc: 'Customers who haven\'t ordered recently' },
-      { label: 'Churned', desc: 'Lost customers (180+ days inactive)' },
-      { label: 'New Customers', desc: 'Recent signups to nurture' }
+      { label: 'Your VIPs', desc: 'Top spenders who deserve attention' },
+      { label: 'Loyal Buyers', desc: 'Customers who keep coming back' },
+      { label: 'Slipping Away', desc: 'Haven\'t bought recently' },
+      { label: 'Gone Quiet', desc: '6+ months since last order' },
+      { label: 'New Faces', desc: 'Recent signups to welcome' }
     ]
   },
   {
     id: 'content',
-    name: 'Content Studio',
+    name: 'Content Helper',
     icon: FileText,
-    description: 'Generate professional content in seconds.',
+    description: 'Product descriptions that sell, in seconds not hours.',
     features: [
-      { label: 'Product Descriptions', desc: 'SEO-optimized descriptions' },
-      { label: 'Short Descriptions', desc: 'Punchy product summaries' },
-      { label: 'SEO Meta', desc: 'Titles & meta descriptions' },
-      { label: 'Email Campaigns', desc: 'Marketing emails & newsletters' },
-      { label: 'Social Posts', desc: 'Ready-to-post social content' }
+      { label: 'Product Stories', desc: 'Descriptions that convert' },
+      { label: 'Quick Summaries', desc: 'Punchy product one-liners' },
+      { label: 'Search Friendly', desc: 'SEO titles and descriptions' },
+      { label: 'Email Campaigns', desc: 'Marketing that gets opened' },
+      { label: 'Social Ready', desc: 'Posts for Instagram, Facebook' }
     ]
   },
   {
     id: 'logs',
-    name: 'Activity Logs',
+    name: 'Safety Net',
     icon: RefreshCw,
-    description: 'Full transparency and peace of mind.',
+    description: 'Every change tracked. Any mistake reversed.',
     features: [
-      { label: 'Every Action Logged', desc: 'Who did what, when' },
-      { label: 'Before/After', desc: 'See exactly what changed' },
-      { label: 'One-Click Undo', desc: 'Reverse mistakes instantly' },
-      { label: 'CSV Export', desc: 'Download logs for records' },
-      { label: 'Filter & Search', desc: 'Find specific actions quickly' }
+      { label: 'Everything Logged', desc: 'Who changed what, when' },
+      { label: 'Before & After', desc: 'See exactly what was different' },
+      { label: 'Instant Undo', desc: 'One click to reverse mistakes' },
+      { label: 'Download Records', desc: 'Export for your files' },
+      { label: 'Find Anything', desc: 'Search through all activity' }
     ]
   }
 ];

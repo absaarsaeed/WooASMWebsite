@@ -817,7 +817,7 @@ const HomePage = () => {
             </Link>
 
             <p className="mt-6 text-purple-200">
-              Questions? <Link to="/contact" className="text-white underline hover:no-underline">We're here to help</Link> or{' '}
+              Questions? <Link to="/contact" className="text-white underline hover:no-underline">We&apos;re here to help</Link> or{' '}
               <Link to="/features" className="text-white underline hover:no-underline">see all 101 features</Link>
             </p>
           </div>

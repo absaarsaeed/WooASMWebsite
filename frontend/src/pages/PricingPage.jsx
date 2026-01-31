@@ -297,8 +297,12 @@ const PricingPage = () => {
       const response = await api.createCheckout(plan.id, isYearly ? 'yearly' : 'monthly');
       
       if (response.success && response.data?.checkoutUrl) {
+        // Fix localhost URLs from backend - replace with production domain
+        let checkoutUrl = response.data.checkoutUrl;
+        checkoutUrl = checkoutUrl.replace('http://localhost:3000', 'https://wooasm.com');
+        checkoutUrl = checkoutUrl.replace('http://localhost', 'https://wooasm.com');
         // Redirect to Stripe Checkout
-        window.location.href = response.data.checkoutUrl;
+        window.location.href = checkoutUrl;
       } else {
         alert(response.message || 'Failed to create checkout. Please try again.');
       }

@@ -513,11 +513,11 @@ const UseCasePage = () => {
             Ready to transform your store?
           </h2>
           <p className="text-xl text-purple-100 mb-8">
-            Join hundreds of stores already using WooASM.
+            Join thousands of store owners who now run their business smarter.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link to="/signup" className="px-8 py-4 bg-white text-purple-600 font-semibold rounded-xl hover:bg-gray-100 transition-colors">
-              Start Free Trial
+              Start Free - No Card Needed
             </Link>
             <Link to="/pricing" className="px-8 py-4 bg-purple-700 text-white font-semibold rounded-xl hover:bg-purple-800 transition-colors border border-purple-500">
               View Pricing
@@ -525,6 +525,8 @@ const UseCasePage = () => {
           </div>
         </div>
       </section>
+      
+      <Footer />
     </div>
   );
 };

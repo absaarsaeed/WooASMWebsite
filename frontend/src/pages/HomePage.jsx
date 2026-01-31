@@ -721,7 +721,7 @@ const HomePage = () => {
                       <Star key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
                     ))}
                   </div>
-                  <p className="text-gray-700 dark:text-gray-300 mb-6">"{testimonial.quote}"</p>
+                  <p className="text-gray-700 dark:text-gray-300 mb-6">&ldquo;{testimonial.quote}&rdquo;</p>
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center text-purple-600 font-bold">
                       {testimonial.avatar}

@@ -128,7 +128,11 @@ const AdminEmails = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [statusFilter, templateFilter]);
+
+  useEffect(() => {
+    fetchEmails();
+  }, [fetchEmails]);
 
   const handleResend = async (emailId) => {
     setResending(emailId);

@@ -190,11 +190,39 @@ export const AuthProvider = ({ children }) => {
         };
       }
       
-      return { success: false, error: response.message || 'Registration failed' };
+      // Map registration errors to user-friendly messages
+      const errorMessage = mapRegisterError(response);
+      return { success: false, error: errorMessage };
     } catch (error) {
       console.error('Registration error:', error);
       return { success: false, error: 'Connection error. Please try again.' };
     }
+  };
+
+  // Helper function to map registration errors to user-friendly messages
+  const mapRegisterError = (response) => {
+    const message = response.message?.toLowerCase() || '';
+    const error = response.error?.toLowerCase() || '';
+    
+    if (message.includes('already exists') || message.includes('already registered') ||
+        message.includes('email in use') || message.includes('duplicate') ||
+        error.includes('duplicate') || error.includes('exists')) {
+      return 'This email is already registered. Please log in or use a different email.';
+    }
+    
+    if (message.includes('invalid email') || error.includes('invalid_email')) {
+      return 'Please enter a valid email address.';
+    }
+    
+    if (message.includes('password') && (message.includes('weak') || message.includes('short') || message.includes('requirements'))) {
+      return 'Password is too weak. Please use at least 8 characters with a mix of letters and numbers.';
+    }
+    
+    if (message.includes('name') && (message.includes('required') || message.includes('invalid'))) {
+      return 'Please enter a valid name.';
+    }
+    
+    return response.message || 'Registration failed. Please try again.';
   };
 
   const logout = async () => {

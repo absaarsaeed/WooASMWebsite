@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Search, ChevronLeft, ChevronRight, User, Mail, Calendar, Globe } from 'lucide-react';
 import api from '../../services/api';
@@ -12,11 +12,7 @@ const AdminUsers = () => {
   const [search, setSearch] = useState('');
   const [planFilter, setPlanFilter] = useState('');
 
-  useEffect(() => {
-    fetchUsers();
-  }, [page, planFilter]);
-
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     setLoading(true);
     try {
       const filters = {};
@@ -34,12 +30,15 @@ const AdminUsers = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, planFilter, search]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
 
   const handleSearch = (e) => {
     e.preventDefault();
     setPage(1);
-    fetchUsers();
   };
 
   const formatDate = (dateStr) => {

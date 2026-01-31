@@ -257,13 +257,18 @@ class ApiService {
   
   // POST /billing/create-checkout
   async createCheckout(plan, billingCycle) {
-    return this.request('/billing/create-checkout', {
+    const response = await this.request('/billing/create-checkout', {
       method: 'POST',
       body: JSON.stringify({ 
         plan,           // 'starter' | 'professional'
         billingCycle    // 'monthly' | 'yearly' (camelCase!)
       }),
     });
+    // Fix any localhost URLs in the response
+    if (response.data?.checkoutUrl) {
+      response.data.checkoutUrl = fixLocalhostUrls(response.data.checkoutUrl);
+    }
+    return response;
   }
 
   // GET /billing/checkout/status/:sessionId

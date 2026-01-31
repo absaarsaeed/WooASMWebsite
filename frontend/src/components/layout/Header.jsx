@@ -24,11 +24,14 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
-    setIsMobileMenuOpen(false);
-    setIsFeatureDropdownOpen(false);
-    setIsUserDropdownOpen(false);
-  }, [location]);
+  // Close menus on route change - use callback ref pattern
+  const prevLocation = React.useRef(location);
+  if (prevLocation.current !== location) {
+    prevLocation.current = location;
+    if (isMobileMenuOpen) setIsMobileMenuOpen(false);
+    if (isFeatureDropdownOpen) setIsFeatureDropdownOpen(false);
+    if (isUserDropdownOpen) setIsUserDropdownOpen(false);
+  }
 
   const handleLogout = () => {
     logout();

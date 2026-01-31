@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, ChevronDown, Sun, Moon, Zap, User, LogOut, LayoutDashboard } from 'lucide-react';
@@ -15,7 +15,6 @@ const Header = () => {
   const { user, isAuthenticated, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-  const prevPathRef = useRef(location.pathname);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,18 +24,19 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close menus on route change
+  // Close menus on route change - using a timeout to avoid sync setState in effect
   const closeMenus = useCallback(() => {
     setIsMobileMenuOpen(false);
     setIsFeatureDropdownOpen(false);
     setIsUserDropdownOpen(false);
   }, []);
   
-  useLayoutEffect(() => {
-    if (prevPathRef.current !== location.pathname) {
-      prevPathRef.current = location.pathname;
+  useEffect(() => {
+    // Using requestAnimationFrame to batch state updates outside the effect
+    const frameId = requestAnimationFrame(() => {
       closeMenus();
-    }
+    });
+    return () => cancelAnimationFrame(frameId);
   }, [location.pathname, closeMenus]);
 
   const handleLogout = () => {

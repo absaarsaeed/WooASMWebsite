@@ -648,7 +648,7 @@ const HomePage = () => {
                 Real Questions, <span className="text-purple-600">Instant Answers</span>
               </h2>
               <p className="text-lg text-gray-600 dark:text-gray-400">
-                Here's what store owners are asking every day
+                Here&apos;s what store owners are asking every day
               </p>
             </div>
 
@@ -664,7 +664,7 @@ const HomePage = () => {
                 >
                   <div className="mb-4">
                     <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Store owner asks:</span>
-                    <p className="text-gray-900 dark:text-white font-medium mt-1">"{useCase.query}"</p>
+                    <p className="text-gray-900 dark:text-white font-medium mt-1">&ldquo;{useCase.query}&rdquo;</p>
                   </div>
                   <div className="mb-4">
                     <span className="text-xs font-medium text-purple-600 uppercase tracking-wide">And gets:</span>

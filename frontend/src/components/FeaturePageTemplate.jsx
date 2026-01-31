@@ -40,7 +40,7 @@ const FeaturePageTemplate = ({
       <Header />
 
       {/* Breadcrumb */}
-      <div className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+      <div className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 pt-20">
         <div className="container-wide py-3">
           <nav className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
             <Link to="/" className="hover:text-purple-600">Home</Link>

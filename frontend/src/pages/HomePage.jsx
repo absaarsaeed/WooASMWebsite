@@ -786,38 +786,39 @@ const HomePage = () => {
         <section className="py-20 lg:py-28 bg-gradient-to-r from-purple-600 to-purple-800">
           <div className="container-wide text-center">
             <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
-              Ready to Work Smarter?
+              Ready to Stop Fighting Your Store?
             </h2>
             <p className="text-xl text-purple-100 mb-8 max-w-2xl mx-auto">
-              Join 5,000+ store owners who manage their WooCommerce stores with AI
+              Join 5,000+ store owners who now spend their time growing their business, not wrestling with WooCommerce
             </p>
 
             <div className="flex flex-wrap justify-center gap-4 sm:gap-6 mb-8">
               <span className="flex items-center gap-2 text-purple-100">
                 <Check className="w-5 h-5 text-green-400" />
-                14-day free trial
+                Free for 14 days
               </span>
               <span className="flex items-center gap-2 text-purple-100">
                 <Check className="w-5 h-5 text-green-400" />
-                No credit card required
+                No credit card needed
               </span>
               <span className="flex items-center gap-2 text-purple-100">
                 <Check className="w-5 h-5 text-green-400" />
-                Setup in 2 minutes
+                Working in 2 minutes
               </span>
             </div>
 
             <Link
               to="/signup"
               className="inline-flex items-center gap-2 px-8 py-4 bg-white text-purple-600 font-semibold rounded-xl hover:bg-gray-100 transition-all transform hover:scale-105"
+              data-testid="final-cta-start-free"
             >
-              Start Your Free Trial
+              Start Free - See The Difference
               <ArrowRight className="w-5 h-5" />
             </Link>
 
             <p className="mt-6 text-purple-200">
-              Questions? <Link to="/contact" className="text-white underline hover:no-underline">Talk to our team</Link> or{' '}
-              <Link to="/features" className="text-white underline hover:no-underline">watch a demo</Link>
+              Questions? <Link to="/contact" className="text-white underline hover:no-underline">We're here to help</Link> or{' '}
+              <Link to="/features" className="text-white underline hover:no-underline">see all 101 features</Link>
             </p>
           </div>
         </section>

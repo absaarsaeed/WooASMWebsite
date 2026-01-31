@@ -1,308 +1,166 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { Check, X, Loader2 } from 'lucide-react';
+import { Check, X, Zap, Shield, ArrowRight } from 'lucide-react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import SEO from '../components/SEO';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
-import { faqs } from '../data/mock';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '../components/ui/accordion';
 
-// Default pricing plans (fallback if API fails)
-const defaultPricingPlans = [
+// Pricing Plans
+const pricingPlans = [
   {
     id: 'free',
-    name: 'Free',
-    priceMonthly: 0,
-    priceYearly: 0,
-    description: 'Perfect for trying WooASM',
+    name: 'Free Trial',
+    price: 0,
+    period: '14 days',
+    description: 'Try WooASM risk-free',
     features: [
-      'AI Assistant (300 queries/month)',
-      'Basic Health Score',
-      'Basic Store Insights',
-      'Customer Chatbot (50 msg/month)',
-      'Activity Logs (7 days)',
-      'Content Studio (10/month)',
-      '1 site'
+      { text: 'AI Assistant (20 queries/day)', included: true },
+      { text: 'Basic product search', included: true },
+      { text: 'Order viewing', included: true },
+      { text: 'Coupon listing', included: true },
+      { text: 'Write operations', included: false },
+      { text: 'Bulk actions', included: false },
+      { text: 'Advanced insights', included: false },
     ],
-    notIncluded: [
-      'Inventory Autopilot',
-      'Customer Intelligence',
-      'Growth Experiments',
-      'Advanced Analytics',
-      'Competitor Watch',
-      'Fraud Detection'
-    ],
-    cta: 'Get Started Free',
+    cta: 'Start Free Trial',
+    ctaStyle: 'outline',
     popular: false
   },
   {
     id: 'starter',
     name: 'Starter',
-    priceMonthly: 2900,
-    priceYearly: 29000,
-    description: 'For growing stores',
+    price: 29,
+    period: 'month',
+    description: 'For small stores getting started',
     features: [
-      'AI Assistant (5,000 queries/month)',
-      'Full Health Score',
-      'Full Store Insights',
-      'Customer Chatbot (2,000 msg/month)',
-      'Activity Logs (30 days)',
-      'AI Memory (10 items)',
-      'Content Studio (100/month)',
-      'Review Monitor',
-      'Support Aggregator',
-      'Customer Intelligence (basic)',
-      '1 site'
+      { text: 'AI Assistant (100 queries/day)', included: true },
+      { text: 'MAGIC Dashboard', included: true },
+      { text: 'Product & order search', included: true },
+      { text: 'Customer lookup', included: true },
+      { text: 'Sales summary', included: true },
+      { text: '1 site', included: true },
+      { text: 'Write operations', included: false },
+      { text: 'Bulk actions', included: false },
     ],
-    notIncluded: [
-      'Inventory Autopilot',
-      'Growth Experiments',
-      'Advanced Analytics',
-      'Competitor Watch',
-      'Fraud Detection'
-    ],
-    cta: 'Subscribe Now',
-    popular: true
+    cta: 'Get Started',
+    ctaStyle: 'primary',
+    popular: false
   },
   {
     id: 'professional',
     name: 'Professional',
-    priceMonthly: 7900,
-    priceYearly: 79000,
-    description: 'For serious store owners',
+    price: 79,
+    period: 'month',
+    description: 'For growing stores that need power',
     features: [
-      'AI Assistant (20,000 queries/month)',
-      'Customer Chatbot (10,000 msg/month)',
-      'Activity Logs (unlimited + restore)',
-      'AI Memory (unlimited)',
-      'Content Studio (1,000/month)',
-      'Inventory Autopilot',
-      'Full Customer Intelligence',
-      'Growth Experiments',
-      'Google Analytics Integration',
-      'Competitor Price Watch',
-      'Fraud Detection',
-      'Priority Support',
-      'Export Everything',
-      '5 sites'
+      { text: 'AI Assistant (1,000 queries/day)', included: true },
+      { text: 'All 12 dashboards', included: true },
+      { text: 'Update prices & stock', included: true, highlight: true },
+      { text: 'Create & manage coupons', included: true, highlight: true },
+      { text: 'Bulk operations (100 items)', included: true, highlight: true },
+      { text: 'Store Insights + Alerts', included: true, highlight: true },
+      { text: 'Inventory Intelligence', included: true, highlight: true },
+      { text: 'Customer Segments', included: true, highlight: true },
+      { text: 'AI Content Studio (100/mo)', included: true, highlight: true },
+      { text: 'Activity Logs + Undo', included: true, highlight: true },
+      { text: '3 sites', included: true },
+      { text: 'Priority support', included: true },
     ],
-    notIncluded: [],
-    cta: 'Subscribe Now',
+    cta: 'Get Started',
+    ctaStyle: 'primary',
+    popular: true
+  },
+  {
+    id: 'agency',
+    name: 'Agency',
+    price: 199,
+    period: 'month',
+    description: 'For agencies & large stores',
+    features: [
+      { text: 'Unlimited AI queries', included: true, highlight: true },
+      { text: 'All 101 abilities', included: true, highlight: true },
+      { text: 'All 12 dashboards', included: true },
+      { text: 'Bulk operations (500 items)', included: true },
+      { text: 'A/B Experiments', included: true },
+      { text: 'Fraud Alerts', included: true },
+      { text: 'Review Management', included: true },
+      { text: 'AI Content (500/mo)', included: true },
+      { text: '10 sites', included: true },
+      { text: 'White-label (coming soon)', included: true },
+      { text: 'Dedicated support', included: true },
+    ],
+    cta: 'Contact Sales',
+    ctaStyle: 'outline',
     popular: false
   }
 ];
 
-// Helper function to format limit for display
-const formatLimit = (value) => {
-  if (value === null || value === -1) return 'Unlimited';
-  return value.toLocaleString();
-};
-
-// Helper to generate feature list from API data
-const generateFeatures = (planData, planKey) => {
-  if (!planData) return [];
-  
-  const features = [];
-  
-  // AI Assistant
-  if (planData.assistantMonthly === null || planData.assistantMonthly === -1) {
-    features.push('AI Assistant (Unlimited)');
-  } else if (planData.assistantMonthly) {
-    features.push(`AI Assistant (${formatLimit(planData.assistantMonthly)}/month)`);
+// Pricing FAQ
+const pricingFaq = [
+  {
+    question: "What happens after my free trial?",
+    answer: "Your free trial lasts 14 days. After that, you can choose to upgrade to a paid plan or continue with limited free features. We'll never charge you without your explicit consent."
+  },
+  {
+    question: "Can I change plans anytime?",
+    answer: "Yes! You can upgrade or downgrade your plan at any time. When upgrading, you'll get immediate access to new features. When downgrading, changes take effect at the end of your billing cycle."
+  },
+  {
+    question: "What's the difference between plans?",
+    answer: "The main differences are: query limits (how many times you can ask the AI), write permissions (ability to update products, create coupons), bulk operation limits, and number of sites supported."
+  },
+  {
+    question: "Do you offer annual billing?",
+    answer: "Yes! Annual billing saves you 20% compared to monthly billing. All plans are available with annual billing."
+  },
+  {
+    question: "What payment methods do you accept?",
+    answer: "We accept all major credit cards (Visa, MasterCard, American Express) through our secure payment processor Stripe."
+  },
+  {
+    question: "Is there a money-back guarantee?",
+    answer: "Yes! We offer a 30-day money-back guarantee on all paid plans. If WooASM isn't right for you, just contact us for a full refund — no questions asked."
+  },
+  {
+    question: "Can I use WooASM on multiple sites?",
+    answer: "Yes, depending on your plan. Starter includes 1 site, Professional includes 3 sites, and Agency includes 10 sites. Need more? Contact us for custom enterprise pricing."
+  },
+  {
+    question: "What counts as an AI query?",
+    answer: "Each message you send to the AI assistant counts as one query. Viewing dashboards and browsing features doesn't count against your query limit."
   }
-  
-  // Content Studio
-  if (planData.contentMonthly === null || planData.contentMonthly === -1) {
-    features.push('Content Studio (Unlimited)');
-  } else if (planData.contentMonthly) {
-    features.push(`Content Studio (${formatLimit(planData.contentMonthly)}/month)`);
-  }
-  
-  // Chatbot
-  if (planData.chatbotMonthly === null || planData.chatbotMonthly === -1) {
-    features.push('Customer Chatbot (Unlimited)');
-  } else if (planData.chatbotMonthly) {
-    features.push(`Customer Chatbot (${formatLimit(planData.chatbotMonthly)} msg/month)`);
-  }
-  
-  // Insights
-  if (planData.insightsMonthly === null || planData.insightsMonthly === -1) {
-    features.push('Insights (Unlimited refreshes)');
-  } else if (planData.insightsMonthly) {
-    features.push(`Insights (${formatLimit(planData.insightsMonthly)} refreshes/month)`);
-  }
-  
-  // Sites
-  if (planData.maxSites) {
-    features.push(`${planData.maxSites} ${planData.maxSites === 1 ? 'site' : 'sites'}`);
-  }
-  
-  // Feature flags
-  if (planData.features) {
-    if (planData.features.inventoryAutopilot) features.push('Inventory Autopilot');
-    if (planData.features.customerInsights) features.push('Customer Intelligence');
-    if (planData.features.growthExperiments) features.push('Growth Experiments');
-    if (planData.features.fraudDetection) features.push('Fraud Detection');
-    if (planData.features.competitorWatch) features.push('Competitor Price Watch');
-    if (planData.features.reviewMonitor) features.push('Review Monitor');
-    if (planData.features.supportAggregator) features.push('Support Aggregator');
-  }
-  
-  return features;
-};
-
-// Helper to generate not-included features
-const generateNotIncluded = (planData) => {
-  if (!planData || !planData.features) return [];
-  
-  const notIncluded = [];
-  
-  if (!planData.features.inventoryAutopilot) notIncluded.push('Inventory Autopilot');
-  if (!planData.features.customerInsights) notIncluded.push('Customer Intelligence');
-  if (!planData.features.growthExperiments) notIncluded.push('Growth Experiments');
-  if (!planData.features.fraudDetection) notIncluded.push('Fraud Detection');
-  if (!planData.features.competitorWatch) notIncluded.push('Competitor Watch');
-  
-  return notIncluded;
-};
+];
 
 const PricingPage = () => {
   const [isYearly, setIsYearly] = useState(false);
   const [loadingPlan, setLoadingPlan] = useState(null);
-  const [pricingPlans, setPricingPlans] = useState(defaultPricingPlans);
-  const [loadingPlans, setLoadingPlans] = useState(true);
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
-  // Fetch dynamic pricing from API
-  useEffect(() => {
-    const fetchPricing = async () => {
-      try {
-        const response = await api.getAllPlansForPricing();
-        
-        if (response.success && response.data) {
-          const apiPlans = response.data;
-          
-          // Transform API data to display format
-          const transformedPlans = [];
-          
-          // Free plan
-          if (apiPlans.free) {
-            transformedPlans.push({
-              id: 'free',
-              name: apiPlans.free.name || 'Free',
-              priceMonthly: apiPlans.free.priceMonthly || 0,
-              priceYearly: apiPlans.free.priceYearly || 0,
-              description: 'Perfect for trying WooASM',
-              features: generateFeatures(apiPlans.free, 'free'),
-              notIncluded: generateNotIncluded(apiPlans.free),
-              cta: 'Get Started Free',
-              popular: false
-            });
-          }
-          
-          // Starter plan
-          if (apiPlans.starter) {
-            transformedPlans.push({
-              id: 'starter',
-              name: apiPlans.starter.name || 'Starter',
-              priceMonthly: apiPlans.starter.priceMonthly || 2900,
-              priceYearly: apiPlans.starter.priceYearly || 29000,
-              description: 'For growing stores',
-              features: generateFeatures(apiPlans.starter, 'starter'),
-              notIncluded: generateNotIncluded(apiPlans.starter),
-              cta: 'Subscribe Now',
-              popular: true
-            });
-          }
-          
-          // Professional plan
-          if (apiPlans.professional) {
-            transformedPlans.push({
-              id: 'professional',
-              name: apiPlans.professional.name || 'Professional',
-              priceMonthly: apiPlans.professional.priceMonthly || 7900,
-              priceYearly: apiPlans.professional.priceYearly || 79000,
-              description: 'For serious store owners',
-              features: generateFeatures(apiPlans.professional, 'professional'),
-              notIncluded: generateNotIncluded(apiPlans.professional),
-              cta: 'Subscribe Now',
-              popular: false
-            });
-          }
-          
-          if (transformedPlans.length > 0) {
-            setPricingPlans(transformedPlans);
-          }
-        }
-      } catch (error) {
-        console.error('Failed to fetch pricing:', error);
-        // Keep default plans on error
-      } finally {
-        setLoadingPlans(false);
-      }
-    };
-
-    fetchPricing();
-  }, []);
-
-  // Format price from cents to dollars
-  const formatPrice = (cents) => {
-    if (cents === 0) return '0';
-    return (cents / 100).toFixed(0);
-  };
-
-  // Get display price (monthly or yearly equivalent)
-  const getDisplayPrice = (plan) => {
-    if (isYearly && plan.priceYearly > 0) {
-      // Show monthly equivalent for yearly billing
-      return formatPrice(Math.round(plan.priceYearly / 12));
-    }
-    return formatPrice(plan.priceMonthly);
-  };
-
   const handleSelectPlan = async (plan) => {
-    // Free plan - redirect to signup
     if (plan.id === 'free') {
-      if (isAuthenticated) {
-        navigate('/dashboard');
-      } else {
-        navigate('/signup');
-      }
-      return;
-    }
-
-    // Paid plans - need to be logged in first
-    if (!isAuthenticated) {
-      // Store intent and redirect to signup
-      sessionStorage.setItem('checkout_intent', JSON.stringify({
-        plan: plan.id,
-        billingCycle: isYearly ? 'yearly' : 'monthly'
-      }));
       navigate('/signup');
       return;
     }
 
-    // User is logged in - create Stripe checkout
+    if (!isAuthenticated) {
+      navigate('/signup');
+      return;
+    }
+
+    if (plan.id === 'agency') {
+      navigate('/contact');
+      return;
+    }
+
     setLoadingPlan(plan.id);
     try {
       const response = await api.createCheckout(plan.id, isYearly ? 'yearly' : 'monthly');
-      
       if (response.success && response.data?.checkoutUrl) {
-        // Fix localhost URLs from backend - replace with production domain
-        let checkoutUrl = response.data.checkoutUrl;
-        checkoutUrl = checkoutUrl.replace('http://localhost:3000', 'https://wooasm.com');
-        checkoutUrl = checkoutUrl.replace('http://localhost', 'https://wooasm.com');
-        // Redirect to Stripe Checkout
-        window.location.href = checkoutUrl;
+        window.location.href = response.data.checkoutUrl;
       } else {
         alert(response.message || 'Failed to create checkout. Please try again.');
       }
@@ -314,255 +172,288 @@ const PricingPage = () => {
     }
   };
 
+  const getPrice = (plan) => {
+    if (plan.price === 0) return '$0';
+    const price = isYearly ? Math.round(plan.price * 0.8) : plan.price;
+    return `$${price}`;
+  };
+
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-white dark:bg-gray-900">
       <SEO
-        title="Pricing - WooASM | Simple, Transparent Plans for WooCommerce AI"
-        description="Choose the perfect WooASM plan for your WooCommerce store. Start with our free tier or upgrade for advanced AI features. Monthly and yearly billing available. No hidden fees."
-        keywords="WooASM pricing, WooCommerce AI pricing, ecommerce AI cost, store manager pricing, WooCommerce plugin pricing"
+        title="Pricing - Simple, Transparent Plans"
+        description="WooASM pricing plans for every store size. Start free, upgrade when you need more. 14-day free trial, no credit card required. 30-day money-back guarantee."
+        keywords="WooASM pricing, WooCommerce AI pricing, store manager cost, WooASM plans"
         url="https://wooasm.com/pricing"
+        faq={pricingFaq}
       />
       <Header />
-      <main>
+
+      <main className="pt-8">
         {/* Hero */}
-        <section className="pt-32 pb-16 gradient-bg">
-          <div className="container-wide">
-            <div className="text-center max-w-3xl mx-auto">
-              <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-6"
-              >
-                Simple, <span className="gradient-text">Transparent</span> Pricing
-              </motion.h1>
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className="text-xl text-gray-700 dark:text-gray-400 mb-10"
-              >
-                Start free, upgrade when you're ready. No hidden fees.
-              </motion.p>
+        <section className="py-16 lg:py-20">
+          <div className="container-wide text-center">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+              <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+                Simple, <span className="text-purple-600">Transparent</span> Pricing
+              </h1>
+              <p className="text-xl text-gray-600 dark:text-gray-400 mb-8">
+                Start free, upgrade when you need more
+              </p>
 
               {/* Billing Toggle */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="inline-flex items-center gap-3 p-1.5 rounded-full bg-gray-100 dark:bg-gray-800"
-              >
-                <button
-                  onClick={() => setIsYearly(false)}
-                  className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${
-                    !isYearly
-                      ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
-                      : 'text-gray-600 dark:text-gray-400'
-                  }`}
-                >
+              <div className="flex items-center justify-center gap-4 mb-12">
+                <span className={`font-medium ${!isYearly ? 'text-gray-900 dark:text-white' : 'text-gray-500'}`}>
                   Monthly
-                </button>
+                </span>
                 <button
-                  onClick={() => setIsYearly(true)}
-                  className={`px-6 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2 ${
-                    isYearly
-                      ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
-                      : 'text-gray-600 dark:text-gray-400'
+                  onClick={() => setIsYearly(!isYearly)}
+                  className={`relative w-14 h-7 rounded-full transition-colors ${
+                    isYearly ? 'bg-purple-600' : 'bg-gray-300 dark:bg-gray-600'
                   }`}
                 >
+                  <span
+                    className={`absolute top-1 w-5 h-5 bg-white rounded-full transition-transform ${
+                      isYearly ? 'translate-x-8' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
+                <span className={`font-medium ${isYearly ? 'text-gray-900 dark:text-white' : 'text-gray-500'}`}>
                   Yearly
-                  <span className="px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-xs font-semibold">
+                </span>
+                {isYearly && (
+                  <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-sm font-medium rounded">
                     Save 20%
                   </span>
-                </button>
-              </motion.div>
-            </div>
-          </div>
-        </section>
-
-        {/* Pricing Cards */}
-        <section className="py-16 bg-white dark:bg-gray-900">
-          <div className="container-wide">
-            {loadingPlans ? (
-              <div className="flex justify-center py-12">
-                <Loader2 className="w-8 h-8 text-purple-500 animate-spin" />
-              </div>
-            ) : (
-              <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                {pricingPlans.map((plan, index) => (
-                  <motion.div
-                    key={plan.id}
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    className={`relative rounded-2xl p-8 ${
-                      plan.popular
-                        ? 'bg-purple-600 text-white ring-4 ring-purple-300 dark:ring-purple-700'
-                        : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700'
-                    }`}
-                  >
-                    {plan.popular && (
-                      <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-amber-400 text-amber-900 text-sm font-semibold">
-                        Most Popular
-                      </div>
-                    )}
-
-                    <div className="mb-6">
-                      <h3 className={`text-xl font-bold mb-2 ${
-                        plan.popular ? 'text-white' : 'text-gray-900 dark:text-white'
-                      }`}>
-                        {plan.name}
-                      </h3>
-                      <p className={`text-sm ${
-                        plan.popular ? 'text-purple-200' : 'text-gray-600 dark:text-gray-400'
-                      }`}>
-                        {plan.description}
-                      </p>
-                    </div>
-
-                    <div className="mb-6">
-                      <div className="flex items-baseline gap-1">
-                        <span className={`text-4xl font-bold ${
-                          plan.popular ? 'text-white' : 'text-gray-900 dark:text-white'
-                        }`}>
-                          ${getDisplayPrice(plan)}
-                        </span>
-                        {plan.priceMonthly > 0 && (
-                          <span className={`text-sm ${
-                            plan.popular ? 'text-purple-200' : 'text-gray-500 dark:text-gray-400'
-                          }`}>
-                            /month
-                          </span>
-                        )}
-                      </div>
-                      {isYearly && plan.priceYearly > 0 && (
-                        <p className={`text-sm mt-1 ${
-                          plan.popular ? 'text-purple-200' : 'text-gray-500 dark:text-gray-400'
-                        }`}>
-                          Billed annually (${formatPrice(plan.priceYearly)}/year)
-                        </p>
-                      )}
-                    </div>
-
-                    <button
-                      onClick={() => handleSelectPlan(plan)}
-                      disabled={loadingPlan === plan.id}
-                      data-testid={`pricing-btn-${plan.id}`}
-                      className={`w-full py-3 rounded-xl font-semibold transition-all mb-8 flex items-center justify-center gap-2 disabled:opacity-70 ${
-                        plan.popular
-                          ? 'bg-white text-purple-700 hover:bg-purple-50'
-                          : 'bg-purple-600 text-white hover:bg-purple-700'
-                      }`}
-                    >
-                      {loadingPlan === plan.id ? (
-                        <>
-                          <Loader2 className="w-5 h-5 animate-spin" />
-                          Processing...
-                        </>
-                      ) : (
-                        plan.cta
-                      )}
-                    </button>
-
-                    <div className="space-y-3">
-                      {plan.features.map((feature, i) => (
-                        <div key={i} className="flex items-start gap-3">
-                          <Check className={`w-5 h-5 flex-shrink-0 ${
-                            plan.popular ? 'text-purple-200' : 'text-emerald-500'
-                          }`} />
-                          <span className={`text-sm ${
-                            plan.popular ? 'text-purple-100' : 'text-gray-700 dark:text-gray-300'
-                          }`}>
-                            {feature}
-                          </span>
-                        </div>
-                      ))}
-                      {plan.notIncluded.map((feature, i) => (
-                        <div key={i} className="flex items-start gap-3 opacity-50">
-                          <X className={`w-5 h-5 flex-shrink-0 ${
-                            plan.popular ? 'text-purple-300' : 'text-gray-400'
-                          }`} />
-                          <span className={`text-sm ${
-                            plan.popular ? 'text-purple-200' : 'text-gray-500 dark:text-gray-500'
-                          }`}>
-                            {feature}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            )}
-
-            {/* Enterprise Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="mt-8 max-w-6xl mx-auto"
-            >
-              <div className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-8 border border-gray-200 dark:border-gray-700 flex flex-col md:flex-row items-center justify-between gap-6">
-                <div>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                    Enterprise
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    For large stores & agencies. Custom pricing with multiple stores, white-label options, and dedicated support.
-                  </p>
-                </div>
-                <Link 
-                  to="/contact"
-                  className="btn-secondary whitespace-nowrap"
-                >
-                  Contact Sales
-                </Link>
+                )}
               </div>
             </motion.div>
           </div>
         </section>
 
-        {/* FAQ */}
-        <section className="py-20 bg-gray-50 dark:bg-gray-800/50">
+        {/* Pricing Cards */}
+        <section className="pb-20 lg:pb-28">
           <div className="container-wide">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white text-center mb-12">
-              Frequently Asked Questions
-            </h2>
-            <div className="max-w-3xl mx-auto">
-              <Accordion type="single" collapsible className="space-y-4">
-                {faqs.slice(0, 6).map((faq, index) => (
-                  <AccordionItem
-                    key={index}
-                    value={`item-${index}`}
-                    className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 px-6 overflow-hidden"
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {pricingPlans.map((plan, index) => (
+                <motion.div
+                  key={plan.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className={`relative rounded-2xl p-6 ${
+                    plan.popular
+                      ? 'bg-gradient-to-b from-purple-50 to-white dark:from-purple-900/20 dark:to-gray-800 border-2 border-purple-500 shadow-xl'
+                      : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700'
+                  }`}
+                >
+                  {plan.popular && (
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                      <span className="px-4 py-1 bg-purple-600 text-white text-sm font-medium rounded-full">
+                        Most Popular
+                      </span>
+                    </div>
+                  )}
+
+                  <div className="mb-6">
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                      {plan.name}
+                    </h3>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-4xl font-bold text-gray-900 dark:text-white">
+                        {getPrice(plan)}
+                      </span>
+                      <span className="text-gray-500 dark:text-gray-400">/{plan.period}</span>
+                    </div>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                      {plan.description}
+                    </p>
+                  </div>
+
+                  <ul className="space-y-3 mb-6">
+                    {plan.features.map((feature, i) => (
+                      <li key={i} className="flex items-start gap-2">
+                        {feature.included ? (
+                          <Check className={`w-5 h-5 flex-shrink-0 mt-0.5 ${feature.highlight ? 'text-purple-600' : 'text-green-500'}`} />
+                        ) : (
+                          <X className="w-5 h-5 text-gray-300 flex-shrink-0 mt-0.5" />
+                        )}
+                        <span className={`text-sm ${
+                          feature.included 
+                            ? feature.highlight 
+                              ? 'text-gray-900 dark:text-white font-medium' 
+                              : 'text-gray-600 dark:text-gray-400'
+                            : 'text-gray-400 dark:text-gray-500'
+                        }`}>
+                          {feature.text}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <button
+                    onClick={() => handleSelectPlan(plan)}
+                    disabled={loadingPlan === plan.id}
+                    className={`w-full py-3 rounded-xl font-semibold transition-all ${
+                      plan.ctaStyle === 'primary'
+                        ? 'bg-purple-600 hover:bg-purple-700 text-white'
+                        : 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 hover:border-purple-500'
+                    } ${loadingPlan === plan.id ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
-                    <AccordionTrigger className="py-5 text-left text-gray-900 dark:text-white font-semibold hover:no-underline">
-                      {faq.question}
-                    </AccordionTrigger>
-                    <AccordionContent className="pb-5 text-gray-600 dark:text-gray-400">
-                      {faq.answer}
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
+                    {loadingPlan === plan.id ? 'Loading...' : plan.cta}
+                  </button>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Guarantee */}
+            <div className="text-center mt-12">
+              <div className="inline-flex items-center gap-2 px-6 py-3 bg-green-50 dark:bg-green-900/20 rounded-full">
+                <Shield className="w-5 h-5 text-green-600" />
+                <span className="text-green-700 dark:text-green-400 font-medium">
+                  30-day money-back guarantee • No questions asked
+                </span>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Money Back Guarantee */}
-        <section className="py-16 bg-white dark:bg-gray-900">
+        {/* Feature Comparison */}
+        <section className="py-20 lg:py-28 bg-gray-50 dark:bg-gray-800">
           <div className="container-wide">
-            <div className="max-w-3xl mx-auto text-center">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                30-Day Money-Back Guarantee
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+                Compare Plans
               </h2>
               <p className="text-gray-600 dark:text-gray-400">
-                Try WooASM risk-free. If you're not completely satisfied within 30 days, 
-                we'll refund your payment in full. No questions asked.
+                See what's included in each plan
               </p>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[800px]">
+                <thead>
+                  <tr className="border-b border-gray-200 dark:border-gray-700">
+                    <th className="text-left py-4 px-4 font-semibold text-gray-900 dark:text-white">Feature</th>
+                    <th className="text-center py-4 px-4 font-semibold text-gray-600 dark:text-gray-400">Free</th>
+                    <th className="text-center py-4 px-4 font-semibold text-gray-600 dark:text-gray-400">Starter</th>
+                    <th className="text-center py-4 px-4 font-semibold text-purple-600">Professional</th>
+                    <th className="text-center py-4 px-4 font-semibold text-gray-600 dark:text-gray-400">Agency</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-gray-100 dark:border-gray-700">
+                    <td className="py-4 px-4 text-gray-900 dark:text-white">AI Queries</td>
+                    <td className="py-4 px-4 text-center text-gray-600 dark:text-gray-400">20/day</td>
+                    <td className="py-4 px-4 text-center text-gray-600 dark:text-gray-400">100/day</td>
+                    <td className="py-4 px-4 text-center text-purple-600 font-medium">1,000/day</td>
+                    <td className="py-4 px-4 text-center text-gray-600 dark:text-gray-400">Unlimited</td>
+                  </tr>
+                  <tr className="border-b border-gray-100 dark:border-gray-700">
+                    <td className="py-4 px-4 text-gray-900 dark:text-white">Write Operations</td>
+                    <td className="py-4 px-4 text-center"><X className="w-5 h-5 text-gray-300 mx-auto" /></td>
+                    <td className="py-4 px-4 text-center"><X className="w-5 h-5 text-gray-300 mx-auto" /></td>
+                    <td className="py-4 px-4 text-center"><Check className="w-5 h-5 text-green-500 mx-auto" /></td>
+                    <td className="py-4 px-4 text-center"><Check className="w-5 h-5 text-green-500 mx-auto" /></td>
+                  </tr>
+                  <tr className="border-b border-gray-100 dark:border-gray-700">
+                    <td className="py-4 px-4 text-gray-900 dark:text-white">Bulk Operations</td>
+                    <td className="py-4 px-4 text-center"><X className="w-5 h-5 text-gray-300 mx-auto" /></td>
+                    <td className="py-4 px-4 text-center"><X className="w-5 h-5 text-gray-300 mx-auto" /></td>
+                    <td className="py-4 px-4 text-center text-purple-600 font-medium">100 items</td>
+                    <td className="py-4 px-4 text-center text-gray-600 dark:text-gray-400">500 items</td>
+                  </tr>
+                  <tr className="border-b border-gray-100 dark:border-gray-700">
+                    <td className="py-4 px-4 text-gray-900 dark:text-white">Dashboards</td>
+                    <td className="py-4 px-4 text-center text-gray-600 dark:text-gray-400">Basic</td>
+                    <td className="py-4 px-4 text-center text-gray-600 dark:text-gray-400">MAGIC only</td>
+                    <td className="py-4 px-4 text-center text-purple-600 font-medium">All 12</td>
+                    <td className="py-4 px-4 text-center text-gray-600 dark:text-gray-400">All 12</td>
+                  </tr>
+                  <tr className="border-b border-gray-100 dark:border-gray-700">
+                    <td className="py-4 px-4 text-gray-900 dark:text-white">Sites Included</td>
+                    <td className="py-4 px-4 text-center text-gray-600 dark:text-gray-400">1</td>
+                    <td className="py-4 px-4 text-center text-gray-600 dark:text-gray-400">1</td>
+                    <td className="py-4 px-4 text-center text-purple-600 font-medium">3</td>
+                    <td className="py-4 px-4 text-center text-gray-600 dark:text-gray-400">10</td>
+                  </tr>
+                  <tr className="border-b border-gray-100 dark:border-gray-700">
+                    <td className="py-4 px-4 text-gray-900 dark:text-white">AI Content Studio</td>
+                    <td className="py-4 px-4 text-center"><X className="w-5 h-5 text-gray-300 mx-auto" /></td>
+                    <td className="py-4 px-4 text-center"><X className="w-5 h-5 text-gray-300 mx-auto" /></td>
+                    <td className="py-4 px-4 text-center text-purple-600 font-medium">100/mo</td>
+                    <td className="py-4 px-4 text-center text-gray-600 dark:text-gray-400">500/mo</td>
+                  </tr>
+                  <tr className="border-b border-gray-100 dark:border-gray-700">
+                    <td className="py-4 px-4 text-gray-900 dark:text-white">Activity Logs + Undo</td>
+                    <td className="py-4 px-4 text-center"><X className="w-5 h-5 text-gray-300 mx-auto" /></td>
+                    <td className="py-4 px-4 text-center"><X className="w-5 h-5 text-gray-300 mx-auto" /></td>
+                    <td className="py-4 px-4 text-center"><Check className="w-5 h-5 text-green-500 mx-auto" /></td>
+                    <td className="py-4 px-4 text-center"><Check className="w-5 h-5 text-green-500 mx-auto" /></td>
+                  </tr>
+                  <tr className="border-b border-gray-100 dark:border-gray-700">
+                    <td className="py-4 px-4 text-gray-900 dark:text-white">Priority Support</td>
+                    <td className="py-4 px-4 text-center"><X className="w-5 h-5 text-gray-300 mx-auto" /></td>
+                    <td className="py-4 px-4 text-center"><X className="w-5 h-5 text-gray-300 mx-auto" /></td>
+                    <td className="py-4 px-4 text-center"><Check className="w-5 h-5 text-green-500 mx-auto" /></td>
+                    <td className="py-4 px-4 text-center text-gray-600 dark:text-gray-400">Dedicated</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </section>
+
+        {/* FAQ */}
+        <section className="py-20 lg:py-28">
+          <div className="container-wide">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+                Frequently Asked Questions
+              </h2>
+            </div>
+
+            <div className="max-w-3xl mx-auto space-y-4">
+              {pricingFaq.map((faq, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700"
+                >
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                    {faq.question}
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-400">
+                    {faq.answer}
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section className="py-20 lg:py-28 bg-gradient-to-r from-purple-600 to-purple-800">
+          <div className="container-wide text-center">
+            <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
+              Ready to get started?
+            </h2>
+            <p className="text-xl text-purple-100 mb-8">
+              Try WooASM free for 14 days. No credit card required.
+            </p>
+            <Link
+              to="/signup"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-white text-purple-600 font-semibold rounded-xl hover:bg-gray-100 transition-all"
+            >
+              Start Your Free Trial
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          </div>
+        </section>
       </main>
+
       <Footer />
     </div>
   );

@@ -29,36 +29,40 @@ import SEO from '../components/SEO';
 // FAQ Data with Schema
 const homeFaq = [
   {
-    question: "What makes WooASM different from other WooCommerce plugins?",
-    answer: "WooASM is the only plugin that lets you manage your entire store through natural conversation. It understands typos, handles multiple requests at once, remembers context, and has 101 built-in abilities covering products, orders, coupons, customers, and analytics."
+    question: "How is WooASM different from other WooCommerce plugins?",
+    answer: "WooASM is the only plugin that lets you run your entire store just by talking to it. No menus, no confusion - just ask for what you need. It understands typos, handles multiple tasks at once, and knows your products, orders, and customers inside out."
   },
   {
-    question: "Will WooASM work with my theme and other plugins?",
-    answer: "Yes! WooASM works with any WordPress theme and is compatible with all major WooCommerce extensions. It uses native WooCommerce data and APIs."
+    question: "Will it work with my existing setup?",
+    answer: "Yes! WooASM plays nicely with any WordPress theme and all your existing WooCommerce plugins. It connects directly to your store data - no migrations or imports needed."
   },
   {
-    question: "Is my data safe?",
-    answer: "Absolutely. WooASM processes everything through our secure API. We never store your product data or customer information. All AI queries are processed in real-time and not logged."
+    question: "Is my store data safe?",
+    answer: "100%. Your data stays in your store - we never store your products or customer info. All AI processing happens in real-time through secure connections, and nothing is logged."
   },
   {
-    question: "Can WooASM mess up my store?",
-    answer: "We've built multiple safety features: confirmation required for all write actions, preview before bulk operations, one-click undo for mistakes, and activity logs showing exactly what changed. You're always in control."
+    question: "Can it accidentally break my store?",
+    answer: "We've made sure that's nearly impossible. Every change needs your confirmation first. Bulk updates show you exactly what will happen before it does. And if anything goes wrong, one click reverses it instantly."
   },
   {
-    question: "How does the AI understand typos?",
-    answer: "Our AI is trained to understand common typing mistakes, shorthand, and natural language. 'shwo prodcts' becomes 'show products', 'ordr 1234' becomes 'order #1234'. It learns context too — 'update that one' refers to the last item shown."
+    question: "I'm not tech-savvy. Can I still use this?",
+    answer: "That's exactly who we built this for! If you can send a text message, you can use WooASM. Just type what you want in plain English - even with typos - and it figures out the rest."
   },
   {
-    question: "What happens if I hit my daily limit?",
-    answer: "You'll see a friendly message with your remaining quota and when it resets (midnight UTC). You can upgrade anytime for higher limits, or wait until the next day for your quota to refresh."
+    question: "What if I type something wrong?",
+    answer: "No worries! WooASM understands messy typing. 'shwo me prodcts under 50' becomes 'show me products under $50' automatically. It also remembers what you were just talking about, so you can say 'update that one' and it knows exactly what you mean."
   },
   {
-    question: "Can I undo actions I've taken?",
-    answer: "Yes! The Activity Logs page shows every action with before/after values. For supported actions (price changes, stock updates, order status, coupons), you can click 'Undo' to instantly reverse the change."
+    question: "What happens when I reach my daily limit?",
+    answer: "You'll see a friendly heads-up with your remaining queries and when they reset (midnight UTC). You can upgrade instantly for more, or just wait until tomorrow - your data isn't going anywhere."
   },
   {
-    question: "Do you offer refunds?",
-    answer: "Yes, we offer a 30-day money-back guarantee on all paid plans. If WooASM isn't right for you, just contact us for a full refund — no questions asked."
+    question: "Can I reverse something I did by accident?",
+    answer: "Absolutely! Every action is logged with before-and-after details. For things like price changes, stock updates, or order status changes, just click 'Undo' and it's like it never happened."
+  },
+  {
+    question: "What if it's not right for my store?",
+    answer: "No problem at all. Try it free for 14 days, and if you upgrade and change your mind, we offer a 30-day money-back guarantee. No hoops to jump through, no questions asked."
   }
 ];
 

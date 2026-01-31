@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Check, ArrowRight, ChevronRight } from 'lucide-react';
+import Header from '../components/layout/Header';
+import Footer from '../components/layout/Footer';
 import SEO from '../components/SEO';
 
 const FeaturePageTemplate = ({
@@ -26,15 +28,16 @@ const FeaturePageTemplate = ({
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-white dark:bg-gray-900">
       <SEO
-        title={`${title} - WooCommerce AI Feature`}
+        title={`${title} - Run Your Store Smarter`}
         description={description}
         keywords={keywords}
         url={`https://wooasm.com/features/${slug}`}
         breadcrumbs={breadcrumbs}
         faq={faq}
       />
+      <Header />
 
       {/* Breadcrumb */}
       <div className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">

@@ -149,18 +149,17 @@ All responses from backend follow this structure:
 - Responsive design works beautifully on mobile
 - Trust badges with green checkmarks
 - **"Trusted by store owners worldwide"** logo strip with wave transition
-- **Unified dark header** across all pages for design consistency
-  - Dark slate background with subtle purple gradient line
-  - Glass-morphism dropdowns
-  - Consistent styling whether scrolled or at top
-  - Gradient CTA button in header
-  - Fully responsive mobile menu
+- **Smart adaptive header** that shows white text on dark hero, dark text on light pages
 - **Animated typing chat demo** with multiple conversation examples
   - Real-time character-by-character typing animation
   - Cycles through 4 different queries (products, customers, coupons, revenue)
   - Shows AI "thinking" dots before response
   - Smooth transitions between conversations
   - Clickable conversation dots to manually switch
+- **Modern typography update**
+  - Plus Jakarta Sans for headings (bold, modern feel)
+  - Inter for body text (clean, readable)
+  - Tighter letter-spacing for professional look
 
 ### Testing Status
 - All frontend pages load correctly without JavaScript errors

@@ -127,11 +127,15 @@ const ComparePage = () => {
 
   if (!comparison) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Comparison not found</h1>
-          <Link to="/" className="text-purple-600 hover:underline">Go back home</Link>
+      <div className="min-h-screen bg-white dark:bg-gray-900">
+        <Header />
+        <div className="min-h-[60vh] flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Comparison not found</h1>
+            <Link to="/" className="text-purple-600 hover:underline">Go back home</Link>
+          </div>
         </div>
+        <Footer />
       </div>
     );
   }
@@ -143,7 +147,7 @@ const ComparePage = () => {
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-white dark:bg-gray-900">
       <SEO
         title={comparison.title}
         description={comparison.description}
@@ -152,9 +156,10 @@ const ComparePage = () => {
         breadcrumbs={breadcrumbs}
         faq={comparison.faq}
       />
+      <Header />
 
       {/* Breadcrumb */}
-      <div className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+      <div className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 pt-20">
         <div className="container-wide py-3">
           <nav className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
             <Link to="/" className="hover:text-purple-600">Home</Link>

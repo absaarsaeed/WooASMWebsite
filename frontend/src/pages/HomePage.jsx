@@ -277,137 +277,306 @@ const HomePage = () => {
       
       <main>
         {/* ==================== HERO SECTION ==================== */}
-        <section className="relative pt-20 pb-24 lg:pt-28 lg:pb-32 overflow-hidden">
-          {/* Background gradient */}
-          <div className="absolute inset-0 bg-gradient-to-b from-purple-50 via-white to-white dark:from-gray-900 dark:via-gray-900 dark:to-gray-800" />
-          
-          <div className="container-wide relative z-10">
-            <div className="max-w-4xl mx-auto text-center">
-              {/* Badge */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 text-sm font-medium mb-8"
-              >
-                <Zap className="w-4 h-4" />
-                <span>Trusted by 5,000+ Store Owners</span>
-              </motion.div>
-
-              {/* Main Headline */}
-              <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight"
-              >
-                Run Your Store{' '}
-                <span className="bg-gradient-to-r from-purple-600 to-purple-400 bg-clip-text text-transparent">
-                  Just By Asking
-                </span>
-              </motion.h1>
-
-              {/* Subtitle */}
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 mb-10 max-w-2xl mx-auto"
-              >
-                Stop clicking through endless menus. Type what you need in plain English - 
-                even with typos - and watch it happen. Like having a brilliant assistant who knows your entire store.
-              </motion.p>
-
-              {/* Stats */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="flex flex-wrap justify-center gap-8 sm:gap-12 mb-10"
-              >
-                <div className="text-center">
-                  <div className="text-3xl sm:text-4xl font-bold text-purple-600">101</div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">Things It Can Do</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl sm:text-4xl font-bold text-purple-600">35+</div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">Hours Saved Weekly</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl sm:text-4xl font-bold text-purple-600">1-Click</div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">Undo Any Mistake</div>
-                </div>
-              </motion.div>
-
-              {/* CTAs */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-                className="flex flex-wrap justify-center gap-4 mb-6"
-              >
-                <Link
-                  to="/signup"
-                  className="px-8 py-4 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-xl transition-all transform hover:scale-105 flex items-center gap-2"
-                  data-testid="hero-cta-start-trial"
-                >
-                  Start Free - No Card Needed
-                  <ArrowRight className="w-5 h-5" />
-                </Link>
-                <Link
-                  to="/features"
-                  className="px-8 py-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-semibold rounded-xl border border-gray-200 dark:border-gray-700 hover:border-purple-500 transition-all"
-                  data-testid="hero-cta-see-features"
-                >
-                  See What It Can Do
-                </Link>
-              </motion.div>
-
-              {/* Trust badges */}
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
-                className="text-sm text-gray-500 dark:text-gray-400"
-              >
-                Works in 2 minutes • No coding needed • Cancel anytime
-              </motion.p>
-            </div>
-
-            {/* Hero Chat Demo */}
+        <section className="relative min-h-[90vh] flex items-center overflow-hidden">
+          {/* Animated Background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950">
+            {/* Grid Pattern */}
+            <div 
+              className="absolute inset-0 opacity-20"
+              style={{
+                backgroundImage: `linear-gradient(rgba(139, 92, 246, 0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(139, 92, 246, 0.3) 1px, transparent 1px)`,
+                backgroundSize: '60px 60px'
+              }}
+            />
+            
+            {/* Animated Gradient Orbs */}
             <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-              className="mt-16 max-w-3xl mx-auto"
-            >
-              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden">
-                <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center gap-2">
-                  <Bot className="w-5 h-5 text-purple-600" />
-                  <span className="font-medium text-gray-900 dark:text-white">Your Store Assistant</span>
-                </div>
-                <div className="p-4 space-y-4">
-                  {/* Typo Example */}
-                  <div className="flex gap-3">
-                    <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
-                      <span className="text-sm font-medium text-gray-600 dark:text-gray-300">You</span>
-                    </div>
-                    <div className="bg-gray-100 dark:bg-gray-700 rounded-2xl rounded-tl-none px-4 py-2">
-                      <span className="text-gray-800 dark:text-gray-200">shwo me prodcts under 50 dolars</span>
-                    </div>
-                  </div>
-                  <div className="flex gap-3 justify-end">
-                    <div className="bg-purple-100 dark:bg-purple-900/40 rounded-2xl rounded-tr-none px-4 py-2 max-w-md">
-                      <div className="text-xs text-purple-600 dark:text-purple-400 mb-1">Got it! &ldquo;Show me products under $50&rdquo;</div>
-                      <span className="text-gray-800 dark:text-gray-200">Found <strong>24 products</strong> under $50. Here are your top sellers:</span>
-                    </div>
-                    <div className="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center flex-shrink-0">
-                      <Bot className="w-4 h-4 text-white" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
+              animate={{ 
+                scale: [1, 1.2, 1],
+                opacity: [0.3, 0.5, 0.3]
+              }}
+              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute top-1/4 -left-32 w-96 h-96 bg-purple-600/40 rounded-full blur-3xl"
+            />
+            <motion.div
+              animate={{ 
+                scale: [1.2, 1, 1.2],
+                opacity: [0.2, 0.4, 0.2]
+              }}
+              transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute top-1/3 right-0 w-[500px] h-[500px] bg-violet-600/30 rounded-full blur-3xl"
+            />
+            <motion.div
+              animate={{ 
+                scale: [1, 1.3, 1],
+                opacity: [0.2, 0.35, 0.2]
+              }}
+              transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute -bottom-32 left-1/3 w-[600px] h-[600px] bg-fuchsia-600/25 rounded-full blur-3xl"
+            />
+            
+            {/* Floating Particles */}
+            <div className="absolute inset-0 overflow-hidden">
+              {[...Array(20)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="absolute w-1 h-1 bg-purple-400/60 rounded-full"
+                  style={{
+                    left: `${Math.random() * 100}%`,
+                    top: `${Math.random() * 100}%`,
+                  }}
+                  animate={{
+                    y: [0, -30, 0],
+                    opacity: [0.2, 0.8, 0.2],
+                  }}
+                  transition={{
+                    duration: 3 + Math.random() * 4,
+                    repeat: Infinity,
+                    delay: Math.random() * 2,
+                  }}
+                />
+              ))}
+            </div>
+            
+            {/* Radial glow from center */}
+            <div className="absolute inset-0 bg-gradient-radial from-purple-600/10 via-transparent to-transparent" />
           </div>
+          
+          <div className="container-wide relative z-10 pt-20 pb-16 lg:pt-28 lg:pb-24">
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+              {/* Left Content */}
+              <div className="text-center lg:text-left">
+                {/* Badge */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-purple-200 text-sm font-medium mb-8"
+                >
+                  <motion.div
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  >
+                    <Zap className="w-4 h-4 text-yellow-400" />
+                  </motion.div>
+                  <span>Trusted by 5,000+ Store Owners</span>
+                  <div className="flex -space-x-1">
+                    {[...Array(4)].map((_, i) => (
+                      <div key={i} className="w-5 h-5 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 border border-white/30" />
+                    ))}
+                  </div>
+                </motion.div>
+
+                {/* Main Headline */}
+                <motion.h1
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 }}
+                  className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-6 leading-[1.1]"
+                >
+                  Run Your Store{' '}
+                  <span className="relative">
+                    <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
+                      Just By Asking
+                    </span>
+                    <motion.span
+                      className="absolute -inset-1 bg-gradient-to-r from-purple-400/20 to-pink-400/20 blur-lg"
+                      animate={{ opacity: [0.5, 0.8, 0.5] }}
+                      transition={{ duration: 3, repeat: Infinity }}
+                    />
+                  </span>
+                </motion.h1>
+
+                {/* Subtitle */}
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="text-lg sm:text-xl text-gray-300 mb-10 max-w-xl mx-auto lg:mx-0"
+                >
+                  Stop clicking through endless menus. Type what you need in plain English - 
+                  even with typos - and watch it happen.
+                </motion.p>
+
+                {/* CTAs */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="flex flex-wrap justify-center lg:justify-start gap-4 mb-8"
+                >
+                  <Link
+                    to="/signup"
+                    className="group relative px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-2xl transition-all transform hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/30 flex items-center gap-2 overflow-hidden"
+                    data-testid="hero-cta-start-trial"
+                  >
+                    <span className="relative z-10">Start Free - No Card Needed</span>
+                    <ArrowRight className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </Link>
+                  <Link
+                    to="/features"
+                    className="px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-2xl border border-white/20 hover:bg-white/20 hover:border-white/30 transition-all"
+                    data-testid="hero-cta-see-features"
+                  >
+                    See What It Can Do
+                  </Link>
+                </motion.div>
+
+                {/* Trust badges */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.4 }}
+                  className="flex flex-wrap justify-center lg:justify-start gap-6 text-sm text-gray-400"
+                >
+                  <span className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-green-400" />
+                    Works in 2 minutes
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-green-400" />
+                    No coding needed
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-green-400" />
+                    Cancel anytime
+                  </span>
+                </motion.div>
+              </div>
+
+              {/* Right - Chat Demo Card */}
+              <motion.div
+                initial={{ opacity: 0, x: 40 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.5, duration: 0.8 }}
+                className="relative"
+              >
+                {/* Glow effect behind card */}
+                <div className="absolute -inset-4 bg-gradient-to-r from-purple-600/30 to-pink-600/30 rounded-3xl blur-2xl" />
+                
+                {/* Main Chat Card */}
+                <div className="relative bg-white/10 backdrop-blur-xl rounded-3xl border border-white/20 overflow-hidden shadow-2xl">
+                  {/* Card Header */}
+                  <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-white/5">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                        <Bot className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <span className="font-semibold text-white">Your Store Assistant</span>
+                        <div className="flex items-center gap-1 text-xs text-green-400">
+                          <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                          Online
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex gap-1.5">
+                      <div className="w-3 h-3 rounded-full bg-red-400" />
+                      <div className="w-3 h-3 rounded-full bg-yellow-400" />
+                      <div className="w-3 h-3 rounded-full bg-green-400" />
+                    </div>
+                  </div>
+                  
+                  {/* Chat Messages */}
+                  <div className="p-6 space-y-4">
+                    {/* User Message */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.8 }}
+                      className="flex gap-3"
+                    >
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-cyan-400 flex items-center justify-center flex-shrink-0">
+                        <span className="text-xs font-bold text-white">You</span>
+                      </div>
+                      <div className="bg-white/10 backdrop-blur rounded-2xl rounded-tl-none px-4 py-3 max-w-[280px]">
+                        <span className="text-white/90 font-mono text-sm">shwo me prodcts under 50 dolars</span>
+                      </div>
+                    </motion.div>
+                    
+                    {/* AI Response */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 1.2 }}
+                      className="flex gap-3 justify-end"
+                    >
+                      <div className="bg-gradient-to-br from-purple-600/40 to-pink-600/40 backdrop-blur rounded-2xl rounded-tr-none px-4 py-3 max-w-[320px] border border-purple-400/30">
+                        <div className="text-xs text-purple-300 mb-2 flex items-center gap-1">
+                          <Check className="w-3 h-3" />
+                          Got it! &ldquo;Show me products under $50&rdquo;
+                        </div>
+                        <span className="text-white">Found <strong className="text-purple-300">24 products</strong> under $50. Here are your top sellers:</span>
+                        
+                        {/* Mini product cards */}
+                        <div className="mt-3 space-y-2">
+                          {['Organic Coffee Blend', 'Wireless Earbuds', 'Canvas Tote Bag'].map((product, i) => (
+                            <motion.div
+                              key={product}
+                              initial={{ opacity: 0, x: -10 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: 1.5 + i * 0.1 }}
+                              className="flex items-center gap-2 text-sm text-white/80 bg-white/5 rounded-lg px-3 py-2"
+                            >
+                              <Package className="w-4 h-4 text-purple-400" />
+                              {product}
+                              <span className="ml-auto text-green-400">${29 + i * 8}</span>
+                            </motion.div>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center flex-shrink-0">
+                        <Bot className="w-4 h-4 text-white" />
+                      </div>
+                    </motion.div>
+                  </div>
+                  
+                  {/* Input Area */}
+                  <div className="px-6 py-4 border-t border-white/10 bg-white/5">
+                    <div className="flex items-center gap-3 bg-white/10 rounded-xl px-4 py-3">
+                      <input 
+                        type="text" 
+                        placeholder="Ask anything about your store..." 
+                        className="flex-1 bg-transparent text-white placeholder-white/40 outline-none text-sm"
+                        disabled
+                      />
+                      <motion.button
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="w-8 h-8 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center"
+                      >
+                        <ArrowRight className="w-4 h-4 text-white" />
+                      </motion.button>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Floating Stats Cards */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.8 }}
+                  className="absolute -bottom-6 -left-6 bg-white/10 backdrop-blur-xl rounded-2xl px-5 py-4 border border-white/20 shadow-xl"
+                >
+                  <div className="text-3xl font-bold text-white">101</div>
+                  <div className="text-xs text-gray-400">Things it can do</div>
+                </motion.div>
+                
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 2 }}
+                  className="absolute -top-4 -right-4 bg-white/10 backdrop-blur-xl rounded-2xl px-5 py-4 border border-white/20 shadow-xl"
+                >
+                  <div className="text-3xl font-bold text-green-400">35+</div>
+                  <div className="text-xs text-gray-400">Hours saved weekly</div>
+                </motion.div>
+              </motion.div>
+            </div>
+          </div>
+          
+          {/* Bottom gradient fade */}
+          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white dark:from-gray-900 to-transparent" />
         </section>
 
         {/* ==================== FEATURES SECTION ==================== */}

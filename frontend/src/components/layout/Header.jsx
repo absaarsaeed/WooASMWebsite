@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, ChevronDown, Sun, Moon, Zap, User, LogOut, LayoutDashboard } from 'lucide-react';
@@ -15,6 +15,7 @@ const Header = () => {
   const { user, isAuthenticated, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  const prevPathRef = useRef(location.pathname);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -24,14 +25,19 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close menus on route change - use callback ref pattern
-  const prevLocation = React.useRef(location);
-  if (prevLocation.current !== location) {
-    prevLocation.current = location;
-    if (isMobileMenuOpen) setIsMobileMenuOpen(false);
-    if (isFeatureDropdownOpen) setIsFeatureDropdownOpen(false);
-    if (isUserDropdownOpen) setIsUserDropdownOpen(false);
-  }
+  // Close menus on route change
+  const closeMenus = useCallback(() => {
+    setIsMobileMenuOpen(false);
+    setIsFeatureDropdownOpen(false);
+    setIsUserDropdownOpen(false);
+  }, []);
+  
+  useLayoutEffect(() => {
+    if (prevPathRef.current !== location.pathname) {
+      prevPathRef.current = location.pathname;
+      closeMenus();
+    }
+  }, [location.pathname, closeMenus]);
 
   const handleLogout = () => {
     logout();

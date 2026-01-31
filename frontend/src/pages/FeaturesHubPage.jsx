@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
+import Header from '../components/layout/Header';
+import Footer from '../components/layout/Footer';
 import SEO from '../components/SEO';
 import { featuresData } from '../data/featuresData';
 
@@ -18,31 +20,32 @@ const FeaturesHubPage = () => {
   const faq = [
     {
       question: 'What makes WooASM different from other WooCommerce plugins?',
-      answer: 'WooASM is the only AI-powered store manager that lets you control your entire store through natural language. Instead of clicking through menus, you just ask for what you need.'
+      answer: 'WooASM is the only store manager that lets you control everything through natural language. Instead of clicking through endless menus, you just ask for what you need - in plain English, typos and all.'
     },
     {
-      question: 'Do I need technical knowledge to use these features?',
-      answer: 'No! WooASM is designed for store owners, not developers. Just describe what you want in plain English, and the AI handles the rest.'
+      question: 'Do I need to be tech-savvy to use these features?',
+      answer: 'Not at all! WooASM is designed for store owners who want results, not technical complexity. If you can send a text message, you can use WooASM.'
     },
     {
       question: 'Are all features included in every plan?',
-      answer: 'Core features like the AI Assistant and basic analytics are included in all plans. Advanced features like Inventory Autopilot and Fraud Detection are available on higher-tier plans.'
+      answer: 'Core features like asking questions and basic analytics are available on all plans. Advanced features like automatic inventory alerts and bulk operations are available on higher-tier plans.'
     },
     {
       question: 'Can I try features before upgrading?',
-      answer: 'Yes! Our Free plan includes limited access to most features, so you can try before you buy. You can upgrade anytime to unlock full functionality.'
+      answer: 'Yes! Our free trial gives you access to try most features for 14 days. You can upgrade anytime to unlock full functionality.'
     }
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-white dark:bg-gray-900">
       <SEO
-        title="Features - AI-Powered WooCommerce Store Management"
-        description="Discover all WooASM features: AI assistant, inventory management, analytics, fraud protection, and more. Everything you need to manage your WooCommerce store smarter."
-        keywords="WooCommerce features, AI store management, inventory automation, store analytics, WooCommerce plugin features"
+        title="Features - Everything Your Store Needs to Thrive"
+        description="Discover what WooASM can do: smart store assistant, inventory management, customer insights, fraud protection, and more. Everything you need to run your WooCommerce store smarter."
+        keywords="WooCommerce features, store management, inventory automation, store analytics, WooCommerce plugin features"
         url="https://wooasm.com/features"
         faq={faq}
       />
+      <Header />
 
       {/* Hero Section */}
       <section className="py-16 lg:py-24 bg-gradient-to-b from-purple-50 to-white dark:from-gray-900 dark:to-gray-800">

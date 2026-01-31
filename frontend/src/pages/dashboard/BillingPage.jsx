@@ -40,7 +40,11 @@ const BillingPage = () => {
       
       // Backend returns: { success: true, data: { checkoutUrl, sessionId } }
       if (response.success && response.data?.checkoutUrl) {
-        window.location.href = response.data.checkoutUrl;
+        // Fix localhost URLs from backend - replace with production domain
+        let checkoutUrl = response.data.checkoutUrl;
+        checkoutUrl = checkoutUrl.replace('http://localhost:3000', 'https://wooasm.com');
+        checkoutUrl = checkoutUrl.replace('http://localhost', 'https://wooasm.com');
+        window.location.href = checkoutUrl;
       } else {
         alert(response.message || 'Failed to create checkout');
       }

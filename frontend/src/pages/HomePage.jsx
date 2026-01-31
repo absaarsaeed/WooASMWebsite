@@ -207,34 +207,34 @@ const abilities = [
 // Use Cases Data
 const useCases = [
   {
-    query: "What products are selling well but running low on stock?",
-    result: "Shows hot sellers with <10 units, sorted by sales velocity, with restock recommendations.",
+    query: "What's selling fast but running low on stock?",
+    result: "Shows your hot sellers with less than 10 units left, sorted by how fast they're moving, plus exactly how many to reorder.",
     time: "2 seconds"
   },
   {
-    query: "Create a 15% off coupon for VIP customers, minimum $100 order",
-    result: "Creates coupon VIP15, 15% discount, $100 minimum. Shows preview, waits for confirmation.",
+    query: "Make a special 15% off code for my best customers, $100 minimum",
+    result: "Creates your VIP15 coupon, sets all the rules, shows you a preview. One click to go live.",
     time: "3 seconds"
   },
   {
-    query: "Show me customers who spent over $500 but haven't ordered in 60 days",
-    result: "Lists at-risk VIP customers with total spend, last order date, and win-back suggestions.",
+    query: "Who spent big money but hasn't come back in 2 months?",
+    result: "Lists your at-risk VIPs with their spending history, last order date, and ideas to win them back.",
     time: "2 seconds"
   },
   {
-    query: "How did we do this week compared to last week?",
-    result: 'Revenue up 12%, orders up 8%, AOV up 3.5%. Top performer was "Blue Widget" (+45%).',
+    query: "How'd we do this week compared to last week?",
+    result: 'Revenue up 12%, orders up 8%, average order up 3.5%. Your Blue Widget was the star performer (+45%).',
     time: "1 second"
   },
   {
-    query: "Mark all processing orders from today as completed",
-    result: 'Found 12 orders. Shows list with order numbers. "Confirm to update all?"',
-    time: "Bulk action with safety"
+    query: "Mark today's processing orders as completed",
+    result: 'Found 12 orders. Shows you the list. "Ready to update all 12?" - you stay in control.',
+    time: "Safe & simple"
   },
   {
-    query: "Write a product description for the new organic coffee blend",
-    result: "Generates SEO-optimized description with benefits, features, and call-to-action.",
-    time: "AI Content Studio"
+    query: "Write something catchy for our new organic coffee blend",
+    result: "Creates a scroll-stopping description highlighting what makes it special, with a clear call to buy.",
+    time: "Content that converts"
   }
 ];
 

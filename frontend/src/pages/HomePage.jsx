@@ -493,13 +493,13 @@ const HomePage = () => {
                 <div className="mb-4">
                   <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">You type (typos and all):</span>
                   <p className="text-lg text-gray-900 dark:text-white font-mono bg-gray-100 dark:bg-gray-700 px-3 py-2 rounded mt-1">
-                    "shwo me prodcts under 50 dolars"
+                    &ldquo;shwo me prodcts under 50 dolars&rdquo;
                   </p>
                 </div>
                 <div className="mb-4">
                   <span className="text-xs font-medium text-purple-600 uppercase tracking-wide">WooASM figures it out:</span>
                   <p className="text-lg text-gray-700 dark:text-gray-300 mt-1">
-                    "Show me products under $50"
+                    &ldquo;Show me products under $50&rdquo;
                   </p>
                 </div>
                 <div className="flex items-center gap-2 text-green-600">

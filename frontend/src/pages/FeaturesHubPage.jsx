@@ -153,14 +153,14 @@ const FeaturesHubPage = () => {
       <section className="py-16 lg:py-24 bg-gradient-to-r from-purple-600 to-purple-800">
         <div className="container-wide text-center">
           <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6">
-            Ready to transform your store?
+            Ready to see what all the fuss is about?
           </h2>
           <p className="text-xl text-purple-100 mb-8 max-w-2xl mx-auto">
-            Join 500+ WooCommerce store owners who save 35+ hours every week with WooASM.
+            Join 5,000+ store owners who now spend less time in WooCommerce and more time growing their business.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link to="/signup" className="px-8 py-4 bg-white text-purple-600 font-semibold rounded-xl hover:bg-gray-100 transition-colors">
-              Start Free Trial
+              Start Free - No Card Needed
             </Link>
             <Link to="/pricing" className="px-8 py-4 bg-purple-700 text-white font-semibold rounded-xl hover:bg-purple-800 transition-colors border border-purple-500">
               View Pricing
@@ -168,6 +168,8 @@ const FeaturesHubPage = () => {
           </div>
         </div>
       </section>
+      
+      <Footer />
     </div>
   );
 };

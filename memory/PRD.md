@@ -154,23 +154,31 @@ All responses from backend follow this structure:
 
 ### P0 - Critical
 - [x] Complete API alignment with backend spec
+- [x] Website copy overhaul (non-technical, conversion-focused)
 
 ### P1 - High Priority
 - [ ] Implement token refresh interceptor (auto-refresh on 401)
 - [ ] Add loading states for all async operations
 - [ ] Error boundary for React components
+- [ ] Populate all SEO stub pages with full content
+- [ ] Make sitemap.xml auto-generated during build
 
 ### P2 - Medium Priority
 - [ ] Add toast notifications for success/error states
 - [ ] Implement invoice history view
 - [ ] Add usage charts/graphs
 - [ ] Optimize mobile responsiveness
+- [ ] Site speed optimization (Lighthouse audit)
+- [ ] GA4 conversion tracking for CTAs
 
 ### P3 - Low Priority / Enhancements
 - [ ] Dark mode toggle
 - [ ] User avatar upload
 - [ ] Export usage data to CSV
 - [ ] Add keyboard shortcuts
+- [ ] Create downloadable PDF lead magnets
+- [ ] Implement A/B testing
+- [ ] Build white-label feature for Agency plan
 
 ## Key Files Reference
 ```

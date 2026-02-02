@@ -183,11 +183,17 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Close menus on route change - this is intentional for UX
+  const locationPathname = location.pathname;
   useEffect(() => {
-    setIsMobileMenuOpen(false);
-    setIsFeatureDropdownOpen(false);
-    setIsUserDropdownOpen(false);
-  }, [location]);
+    // Resetting menu states when location changes is the standard UX pattern
+    const resetMenus = () => {
+      setIsMobileMenuOpen(false);
+      setIsFeatureDropdownOpen(false);
+      setIsUserDropdownOpen(false);
+    };
+    resetMenus();
+  }, [locationPathname]);
 
   const handleLogout = () => {
     logout();

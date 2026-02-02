@@ -169,7 +169,9 @@ const FeaturesHubPage = () => {
           </div>
         </div>
       </section>
-    </div>
+      </div>
+      <Footer />
+    </>
   );
 };
 

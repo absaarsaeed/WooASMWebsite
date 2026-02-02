@@ -37,8 +37,10 @@ const FeaturesHubPage = () => {
   ];
 
   return (
-    <div className="min-h-screen">
-      <SEO
+    <>
+      <Header />
+      <div className="min-h-screen pt-20">
+        <SEO
         title="Features - AI-Powered WooCommerce Store Management"
         description="Discover all WooASM features: AI assistant, inventory management, analytics, fraud protection, and more. Everything you need to manage your WooCommerce store smarter."
         keywords="WooCommerce features, AI store management, inventory automation, store analytics, WooCommerce plugin features"

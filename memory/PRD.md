@@ -9,9 +9,23 @@ WooASM.ai is a frontend-only React application for a SaaS platform that provides
 - **Plugin**: WordPress/WooCommerce plugin - separate project
 
 ## Current Status (February 2025)
-The website has undergone a comprehensive SEO and content overhaul with AI-era messaging. All major pages have been implemented with rich, SEO-optimized content.
+The website has undergone a comprehensive SEO and content overhaul with AI-era messaging. All major pages have been implemented with rich, SEO-optimized content. Performance optimizations have been applied including code splitting and deferred third-party scripts.
 
 ## What's Been Implemented
+
+### Performance Optimizations (Feb 2, 2025)
+- [x] React.lazy code splitting - 132 JS chunks for faster initial load
+- [x] Deferred third-party scripts (GA, PostHog, Iubenda load after page interactive)
+- [x] Preconnect hints for critical origins
+- [x] Async font loading with font-display: swap
+- [x] Critical CSS inlined in index.html
+- [x] Accessibility improvements (aria-labels, roles, expanded states)
+
+### Header & Navigation Improvements (Feb 2, 2025)
+- [x] Redesigned mega menu with categories sidebar and feature cards with icons/descriptions
+- [x] Fixed Features Hub page - added Header and Footer
+- [x] Fixed Single Feature pages - added Header and Footer
+- [x] Improved mobile navigation with collapsible category sections
 
 ### Marketing Website
 - [x] Homepage with AI-era messaging, rotating taglines, feature sections, testimonials, comparison tables, and multiple CTAs

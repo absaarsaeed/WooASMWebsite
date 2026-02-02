@@ -919,9 +919,11 @@ const HomePage = () => {
                   <button
                     onClick={() => setOpenFaq(openFaq === index ? null : index)}
                     className="w-full px-6 py-4 flex items-center justify-between text-left"
+                    aria-expanded={openFaq === index}
+                    aria-controls={`faq-answer-${index}`}
                   >
                     <h3 className="font-semibold text-gray-900 dark:text-white pr-4">{faq.question}</h3>
-                    <ChevronDown className={`w-5 h-5 text-gray-500 transition-transform flex-shrink-0 ${openFaq === index ? 'rotate-180' : ''}`} />
+                    <ChevronDown className={`w-5 h-5 text-gray-500 transition-transform flex-shrink-0 ${openFaq === index ? 'rotate-180' : ''}`} aria-hidden="true" />
                   </button>
                   <AnimatePresence>
                     {openFaq === index && (

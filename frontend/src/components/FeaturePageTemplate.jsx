@@ -28,8 +28,10 @@ const FeaturePageTemplate = ({
   ];
 
   return (
-    <div className="min-h-screen">
-      <SEO
+    <>
+      <Header />
+      <div className="min-h-screen pt-20">
+        <SEO
         title={`${title} - WooCommerce AI Feature`}
         description={description}
         keywords={keywords}

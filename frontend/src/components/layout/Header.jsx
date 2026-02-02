@@ -1,16 +1,175 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ChevronDown, Sun, Moon, Zap, User, LogOut, LayoutDashboard } from 'lucide-react';
+import { 
+  Menu, 
+  X, 
+  ChevronDown, 
+  ChevronRight,
+  Sun, 
+  Moon, 
+  Zap, 
+  User, 
+  LogOut, 
+  LayoutDashboard,
+  Bot,
+  BarChart3,
+  Heart,
+  Package,
+  Users,
+  PenTool,
+  Shield,
+  Activity,
+  Tag,
+  Star,
+  Eye,
+  TrendingUp,
+  FlaskConical,
+  ArrowRight,
+  Sparkles
+} from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
-import { features } from '../../data/mock';
+
+// Feature icons mapping
+const iconMap = {
+  'ai-store-assistant': Bot,
+  'store-health-score': Heart,
+  'store-insights-dashboard': BarChart3,
+  'inventory-autopilot': Package,
+  'customer-insights': Users,
+  'content-studio': PenTool,
+  'fraud-alerts': Shield,
+  'activity-logs': Activity,
+  'coupon-management': Tag,
+  'reviews-management': Star,
+  'price-watch': Eye,
+  'analytics-reports': TrendingUp,
+  'order-management': Package
+};
+
+// Mega menu data with categories and features
+const megaMenuData = {
+  categories: [
+    {
+      id: 'ai-automation',
+      label: 'AI & Automation',
+      icon: Sparkles,
+      color: 'purple',
+      features: [
+        { 
+          slug: 'ai-store-assistant', 
+          title: 'AI Store Assistant', 
+          desc: 'Chat with your store in plain English',
+          icon: Bot
+        },
+        { 
+          slug: 'content-studio', 
+          title: 'AI Content Studio', 
+          desc: 'Generate product descriptions instantly',
+          icon: PenTool
+        },
+        { 
+          slug: 'inventory-autopilot', 
+          title: 'Inventory Autopilot', 
+          desc: 'AI-powered demand forecasting',
+          icon: Package
+        }
+      ]
+    },
+    {
+      id: 'analytics',
+      label: 'Analytics & Insights',
+      icon: BarChart3,
+      color: 'blue',
+      features: [
+        { 
+          slug: 'store-health-score', 
+          title: 'Store Health Score', 
+          desc: 'Overall performance in one number',
+          icon: Heart
+        },
+        { 
+          slug: 'store-insights-dashboard', 
+          title: 'Store Insights', 
+          desc: 'Real-time analytics dashboard',
+          icon: BarChart3
+        },
+        { 
+          slug: 'analytics-reports', 
+          title: 'Analytics & Reports', 
+          desc: 'Detailed performance reports',
+          icon: TrendingUp
+        },
+        { 
+          slug: 'customer-insights', 
+          title: 'Customer Insights', 
+          desc: 'Deep customer analytics & LTV',
+          icon: Users
+        }
+      ]
+    },
+    {
+      id: 'operations',
+      label: 'Store Operations',
+      icon: Package,
+      color: 'green',
+      features: [
+        { 
+          slug: 'order-management', 
+          title: 'Order Management', 
+          desc: 'Streamline your order workflow',
+          icon: Package
+        },
+        { 
+          slug: 'coupon-management', 
+          title: 'Coupon Management', 
+          desc: 'Create & track promotions',
+          icon: Tag
+        },
+        { 
+          slug: 'reviews-management', 
+          title: 'Reviews Management', 
+          desc: 'Monitor & respond to reviews',
+          icon: Star
+        }
+      ]
+    },
+    {
+      id: 'security',
+      label: 'Security & Monitoring',
+      icon: Shield,
+      color: 'red',
+      features: [
+        { 
+          slug: 'fraud-alerts', 
+          title: 'Fraud Detection', 
+          desc: 'AI-powered fraud protection',
+          icon: Shield
+        },
+        { 
+          slug: 'activity-logs', 
+          title: 'Activity Logs', 
+          desc: 'Complete audit trail',
+          icon: Activity
+        },
+        { 
+          slug: 'price-watch', 
+          title: 'Price Watch', 
+          desc: 'Monitor competitor pricing',
+          icon: Eye
+        }
+      ]
+    }
+  ]
+};
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isFeatureDropdownOpen, setIsFeatureDropdownOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+  const [activeCategory, setActiveCategory] = useState('ai-automation');
   const { theme, toggleTheme } = useTheme();
   const { user, isAuthenticated, logout } = useAuth();
   const location = useLocation();
@@ -35,19 +194,13 @@ const Header = () => {
     navigate('/');
   };
 
-  const categories = [
-    { id: 'core', label: 'Core Intelligence' },
-    { id: 'customer', label: 'Customer Experience' },
-    { id: 'operations', label: 'Operations' },
-    { id: 'growth', label: 'Growth & Marketing' },
-    { id: 'content', label: 'Content & Analytics' }
-  ];
+  const activeCategoryData = megaMenuData.categories.find(c => c.id === activeCategory);
 
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? 'bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg shadow-lg shadow-gray-100/20 dark:shadow-none'
+          ? 'bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg shadow-lg shadow-gray-100/20 dark:shadow-none'
           : 'bg-transparent'
       }`}
     >
@@ -55,7 +208,7 @@ const Header = () => {
         <nav className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-purple-700 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-purple-700 flex items-center justify-center shadow-lg shadow-purple-500/20">
               <Zap className="w-6 h-6 text-white" />
             </div>
             <span className="text-xl font-bold text-gray-900 dark:text-white">WooASM</span>
@@ -63,59 +216,111 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-8">
-            {/* Features Dropdown */}
+            {/* Features Mega Menu */}
             <div
               className="relative"
               onMouseEnter={() => setIsFeatureDropdownOpen(true)}
               onMouseLeave={() => setIsFeatureDropdownOpen(false)}
             >
-              <button className="nav-link flex items-center gap-1">
+              <button 
+                className="nav-link flex items-center gap-1"
+                aria-expanded={isFeatureDropdownOpen}
+                aria-haspopup="true"
+              >
                 Features
-                <ChevronDown className={`w-4 h-4 transition-transform ${isFeatureDropdownOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isFeatureDropdownOpen ? 'rotate-180' : ''}`} />
               </button>
 
               <AnimatePresence>
                 {isFeatureDropdownOpen && (
                   <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 10 }}
-                    transition={{ duration: 0.2 }}
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                    transition={{ duration: 0.2, ease: 'easeOut' }}
                     className="absolute top-full left-1/2 -translate-x-1/2 pt-4"
                   >
-                    <div className="w-[700px] bg-white dark:bg-gray-800 rounded-2xl shadow-2xl shadow-gray-200/50 dark:shadow-none border border-gray-100 dark:border-gray-700 p-6">
-                      <div className="grid grid-cols-2 gap-6">
-                        {categories.map(category => (
-                          <div key={category.id}>
-                            <h4 className="text-sm font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-3">
-                              {category.label}
-                            </h4>
-                            <div className="space-y-1">
-                              {features
-                                .filter(f => f.category === category.id)
-                                .slice(0, 4)
-                                .map(feature => (
-                                  <Link
-                                    key={feature.id}
-                                    to={`/features/${feature.id}`}
-                                    className="block px-3 py-2 rounded-lg hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors"
-                                  >
-                                    <span className="text-gray-900 dark:text-white font-medium text-sm">
+                    <div className="w-[800px] bg-white dark:bg-gray-800 rounded-2xl shadow-2xl shadow-gray-200/50 dark:shadow-black/20 border border-gray-100 dark:border-gray-700 overflow-hidden">
+                      <div className="flex">
+                        {/* Left sidebar - Categories */}
+                        <div className="w-56 bg-gray-50 dark:bg-gray-900/50 p-4 border-r border-gray-100 dark:border-gray-700">
+                          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 px-3">
+                            Categories
+                          </p>
+                          {megaMenuData.categories.map((category) => {
+                            const CategoryIcon = category.icon;
+                            return (
+                              <button
+                                key={category.id}
+                                onMouseEnter={() => setActiveCategory(category.id)}
+                                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all ${
+                                  activeCategory === category.id
+                                    ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300'
+                                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
+                                }`}
+                              >
+                                <CategoryIcon className="w-4 h-4" />
+                                <span className="text-sm font-medium">{category.label}</span>
+                                <ChevronRight className={`w-4 h-4 ml-auto transition-transform ${activeCategory === category.id ? 'translate-x-0.5' : ''}`} />
+                              </button>
+                            );
+                          })}
+                        </div>
+
+                        {/* Right side - Features */}
+                        <div className="flex-1 p-6">
+                          <div className="flex items-center gap-2 mb-4">
+                            {activeCategoryData?.icon && (
+                              <activeCategoryData.icon className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                            )}
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                              {activeCategoryData?.label}
+                            </h3>
+                          </div>
+                          
+                          <div className="grid grid-cols-2 gap-3">
+                            {activeCategoryData?.features.map((feature) => {
+                              const FeatureIcon = feature.icon;
+                              return (
+                                <Link
+                                  key={feature.slug}
+                                  to={`/features/${feature.slug}`}
+                                  className="flex items-start gap-3 p-3 rounded-xl hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all group"
+                                >
+                                  <div className="w-10 h-10 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center flex-shrink-0 group-hover:bg-purple-200 dark:group-hover:bg-purple-800/50 transition-colors">
+                                    <FeatureIcon className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                                  </div>
+                                  <div>
+                                    <span className="block text-sm font-semibold text-gray-900 dark:text-white group-hover:text-purple-700 dark:group-hover:text-purple-300 transition-colors">
                                       {feature.title}
                                     </span>
-                                  </Link>
-                                ))}
-                            </div>
+                                    <span className="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                                      {feature.desc}
+                                    </span>
+                                  </div>
+                                </Link>
+                              );
+                            })}
                           </div>
-                        ))}
-                      </div>
-                      <div className="mt-6 pt-4 border-t border-gray-100 dark:border-gray-700">
-                        <Link
-                          to="/features"
-                          className="text-purple-600 dark:text-purple-400 font-medium hover:text-purple-700 dark:hover:text-purple-300 transition-colors"
-                        >
-                          View all 16 features →
-                        </Link>
+
+                          {/* Bottom CTA */}
+                          <div className="mt-6 pt-4 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between">
+                            <Link
+                              to="/features"
+                              className="inline-flex items-center gap-1.5 text-purple-600 dark:text-purple-400 font-medium text-sm hover:text-purple-700 dark:hover:text-purple-300 transition-colors"
+                            >
+                              View all 13 features
+                              <ArrowRight className="w-4 h-4" />
+                            </Link>
+                            <Link
+                              to="/signup"
+                              className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-colors"
+                            >
+                              Start Free Trial
+                              <Sparkles className="w-4 h-4" />
+                            </Link>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </motion.div>
@@ -151,14 +356,9 @@ const Header = () => {
                 onMouseLeave={() => setIsUserDropdownOpen(false)}
               >
                 <button className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                  <div className="w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
-                    <span className="text-purple-600 dark:text-purple-400 text-sm font-semibold">
-                      {user?.name?.charAt(0).toUpperCase()}
-                    </span>
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white text-sm font-medium">
+                    {user?.name?.charAt(0) || user?.email?.charAt(0) || 'U'}
                   </div>
-                  <span className="text-gray-700 dark:text-gray-300 font-medium hidden md:block">
-                    {user?.name?.split(' ')[0]}
-                  </span>
                   <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform ${isUserDropdownOpen ? 'rotate-180' : ''}`} />
                 </button>
 
@@ -168,55 +368,61 @@ const Header = () => {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 10 }}
-                      transition={{ duration: 0.2 }}
-                      className="absolute top-full right-0 pt-2"
+                      className="absolute right-0 top-full pt-2"
                     >
-                      <div className="w-48 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 py-2">
-                        <Link
-                          to="/dashboard"
-                          className="flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                        >
-                          <LayoutDashboard className="w-4 h-4" />
-                          Dashboard
-                        </Link>
-                        <Link
-                          to="/dashboard/settings"
-                          className="flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                        >
-                          <User className="w-4 h-4" />
-                          Account
-                        </Link>
-                        <hr className="my-2 border-gray-100 dark:border-gray-700" />
-                        <button
-                          onClick={handleLogout}
-                          className="flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 w-full"
-                        >
-                          <LogOut className="w-4 h-4" />
-                          Logout
-                        </button>
+                      <div className="w-56 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 py-2">
+                        <div className="px-4 py-2 border-b border-gray-100 dark:border-gray-700">
+                          <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                            {user?.name || 'User'}
+                          </p>
+                          <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+                        </div>
+                        <div className="py-1">
+                          <Link
+                            to="/dashboard"
+                            className="flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                          >
+                            <LayoutDashboard className="w-4 h-4" />
+                            <span className="text-sm">Dashboard</span>
+                          </Link>
+                          <Link
+                            to="/dashboard/settings"
+                            className="flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                          >
+                            <User className="w-4 h-4" />
+                            <span className="text-sm">Settings</span>
+                          </Link>
+                        </div>
+                        <div className="border-t border-gray-100 dark:border-gray-700 pt-1">
+                          <button
+                            onClick={handleLogout}
+                            className="flex items-center gap-3 px-4 py-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 w-full transition-colors"
+                          >
+                            <LogOut className="w-4 h-4" />
+                            <span className="text-sm">Logout</span>
+                          </button>
+                        </div>
                       </div>
                     </motion.div>
                   )}
                 </AnimatePresence>
               </div>
             ) : (
-              <>
-                {/* Login Link */}
-                <Link to="/login" className="hidden sm:block text-gray-700 dark:text-gray-300 font-medium hover:text-purple-600 dark:hover:text-purple-400 transition-colors">
+              <div className="hidden sm:flex items-center gap-3">
+                <Link to="/login" className="nav-link">
                   Login
                 </Link>
-                {/* CTA Button */}
-                <Link to="/signup" className="hidden sm:flex btn-primary">
-                  Get Started Free
+                <Link to="/signup" className="btn-primary">
+                  Get Started
                 </Link>
-              </>
+              </div>
             )}
 
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-              aria-label="Toggle menu"
+              aria-label="Toggle mobile menu"
             >
               {isMobileMenuOpen ? (
                 <X className="w-6 h-6 text-gray-900 dark:text-white" />
@@ -236,45 +442,74 @@ const Header = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+                className="fixed inset-0 bg-black/20 backdrop-blur-sm lg:hidden"
+                style={{ top: '80px' }}
                 onClick={() => setIsMobileMenuOpen(false)}
               />
+              
+              {/* Mobile Menu Panel */}
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.2 }}
-                className="lg:hidden absolute top-full left-0 right-0 z-50 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 shadow-xl"
+                className="absolute top-full left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 lg:hidden shadow-xl z-50"
               >
-                <div className="container-wide py-4 space-y-2">
-                  <Link
-                    to="/features"
-                    className="block px-4 py-3 rounded-lg text-gray-900 dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800"
-                  >
-                    Features
-                  </Link>
-                  <Link
-                    to="/pricing"
-                    className="block px-4 py-3 rounded-lg text-gray-900 dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800"
-                  >
-                    Pricing
-                  </Link>
-                  <Link
-                    to="/docs"
-                    className="block px-4 py-3 rounded-lg text-gray-900 dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800"
-                  >
-                    Docs
-                  </Link>
-                  <Link
-                    to="/blog"
-                    className="block px-4 py-3 rounded-lg text-gray-900 dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800"
-                  >
-                    Blog
-                  </Link>
-                  <div className="pt-4 space-y-2">
+                <div className="container-wide py-4">
+                  {/* Features Section */}
+                  <div className="mb-4">
+                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-4">
+                      Features
+                    </p>
+                    {megaMenuData.categories.map((category) => {
+                      const CategoryIcon = category.icon;
+                      return (
+                        <div key={category.id} className="mb-2">
+                          <div className="flex items-center gap-2 px-4 py-2 text-gray-900 dark:text-white font-medium">
+                            <CategoryIcon className="w-4 h-4 text-purple-600" />
+                            {category.label}
+                          </div>
+                          <div className="pl-10 space-y-1">
+                            {category.features.map((feature) => (
+                              <Link
+                                key={feature.slug}
+                                to={`/features/${feature.slug}`}
+                                className="block px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400"
+                              >
+                                {feature.title}
+                              </Link>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+                    <Link
+                      to="/features"
+                      className="flex items-center gap-2 px-4 py-2 text-purple-600 dark:text-purple-400 font-medium"
+                    >
+                      View all features
+                      <ArrowRight className="w-4 h-4" />
+                    </Link>
+                  </div>
+
+                  {/* Other Links */}
+                  <div className="border-t border-gray-100 dark:border-gray-800 pt-4 space-y-1">
+                    <Link to="/pricing" className="block px-4 py-3 rounded-lg text-gray-900 dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800">
+                      Pricing
+                    </Link>
+                    <Link to="/docs" className="block px-4 py-3 rounded-lg text-gray-900 dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800">
+                      Docs
+                    </Link>
+                    <Link to="/blog" className="block px-4 py-3 rounded-lg text-gray-900 dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800">
+                      Blog
+                    </Link>
+                  </div>
+
+                  {/* Auth Section */}
+                  <div className="border-t border-gray-100 dark:border-gray-800 pt-4 mt-4 space-y-2">
                     {isAuthenticated ? (
                       <>
-                        <Link to="/dashboard" className="btn-primary w-full justify-center">
+                        <Link to="/dashboard" className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-900 dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800">
+                          <LayoutDashboard className="w-5 h-5" />
                           Dashboard
                         </Link>
                         <button 

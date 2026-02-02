@@ -684,18 +684,22 @@ const HomePage = () => {
             </div>
 
             {/* Dashboard Tabs */}
-            <div className="flex flex-wrap justify-center gap-2 mb-8">
+            <div className="flex flex-wrap justify-center gap-2 mb-8" role="tablist" aria-label="Dashboard features">
               {dashboards.map((dashboard) => (
                 <button
                   key={dashboard.id}
                   onClick={() => setActiveDashboard(dashboard.id)}
+                  role="tab"
+                  aria-selected={activeDashboard === dashboard.id}
+                  aria-controls={`panel-${dashboard.id}`}
+                  aria-label={dashboard.name}
                   className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${
                     activeDashboard === dashboard.id
                       ? 'bg-purple-600 text-white'
                       : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-purple-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700'
                   }`}
                 >
-                  <dashboard.icon className="w-4 h-4" />
+                  <dashboard.icon className="w-4 h-4" aria-hidden="true" />
                   <span className="hidden sm:inline">{dashboard.name}</span>
                 </button>
               ))}

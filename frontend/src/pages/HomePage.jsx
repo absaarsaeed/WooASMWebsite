@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -20,11 +20,27 @@ import {
   TrendingUp,
   AlertTriangle,
   Clock,
-  Star
+  Star,
+  Play,
+  X,
+  Sparkles,
+  Target,
+  Rocket,
+  Timer,
+  Brain
 } from 'lucide-react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import SEO from '../components/SEO';
+
+// Rotating Headlines
+const rotatingHeadlines = [
+  "Ask your store anything.",
+  "AI insight in seconds, not hours.",
+  "Stop clicking. Start asking.",
+  "Automate what others do manually.",
+  "Be the store competitors fear."
+];
 
 // FAQ Data with Schema
 const homeFaq = [
@@ -49,8 +65,8 @@ const homeFaq = [
     answer: "Our AI is trained to understand common typing mistakes, shorthand, and natural language. 'shwo prodcts' becomes 'show products', 'ordr 1234' becomes 'order #1234'. It learns context too — 'update that one' refers to the last item shown."
   },
   {
-    question: "What happens if I hit my daily limit?",
-    answer: "You'll see a friendly message with your remaining quota and when it resets (midnight UTC). You can upgrade anytime for higher limits, or wait until the next day for your quota to refresh."
+    question: "Why should I adopt AI for my store now?",
+    answer: "AI adoption in ecommerce is accelerating rapidly. Stores using AI automation are seeing 3x faster growth, 40% time savings, and better customer experiences. Early adopters gain competitive advantages that compound over time."
   },
   {
     question: "Can I undo actions I've taken?",
@@ -62,50 +78,60 @@ const homeFaq = [
   }
 ];
 
-// Features Data
-const features = [
+// AI-First Benefits
+const aiBenefits = [
   {
-    icon: MessageSquare,
-    title: "AI Store Assistant",
-    description: "Talk to your store like you'd talk to a colleague. Ask questions, get instant answers, take action.",
-    highlights: ["Understands typos & messy input", "Handles multiple requests at once", "Remembers conversation context", "101 built-in abilities"],
-    link: "/features/ai-store-assistant"
-  },
-  {
-    icon: BarChart3,
-    title: "Store Insights",
-    description: "Know exactly how your store is performing with real-time comparisons and smart alerts.",
-    highlights: ["Today vs Yesterday", "Week over Week trends", "Smart alerts & warnings", "Next best actions"],
-    link: "/features/store-insights-dashboard"
+    icon: TrendingUp,
+    title: "Sell More With Less Effort",
+    description: "Get AI-optimized upsell recommendations and smart discount ideas that actually convert.",
+    stat: "32%",
+    statLabel: "avg. revenue increase"
   },
   {
     icon: Package,
-    title: "Inventory Intelligence",
-    description: "Never miss a stockout or waste money on dead inventory again.",
-    highlights: ["Stockout risk predictions", "Dead stock detection", "AI restock recommendations", "Overstock alerts"],
-    link: "/features/inventory-autopilot"
-  },
-  {
-    icon: Users,
-    title: "Customer Intelligence",
-    description: "Identify your VIPs, at-risk customers, and growth opportunities.",
-    highlights: ["VIP customer detection", "At-risk customer alerts", "Churn prediction", "Customer lifetime value"],
-    link: "/features/customer-insights"
-  },
-  {
-    icon: Activity,
-    title: "Store Health Score",
-    description: "Get a clear health score (0-100) with actionable recommendations.",
-    highlights: ["Revenue health", "Inventory health", "Customer health", "Operations health"],
-    link: "/features/store-health-score"
+    title: "Never Run Out of Stock Again",
+    description: "AI predicts restocks and stockout risks before they hurt revenue. Stay ahead, always.",
+    stat: "Zero",
+    statLabel: "missed sales from stockouts"
   },
   {
     icon: FileText,
-    title: "AI Content Studio",
-    description: "Generate product descriptions, SEO content, and marketing copy in seconds.",
-    highlights: ["Product descriptions", "SEO meta content", "Email campaigns", "Social media posts"],
-    link: "/features/content-studio"
+    title: "Scale Your Content Machine",
+    description: "Turn product data into high-ranking SEO pages, emails, and ads in seconds.",
+    stat: "10x",
+    statLabel: "faster content creation"
+  },
+  {
+    icon: BarChart3,
+    title: "Insights Without the Overwhelm",
+    description: "Instant analytics summaries — no spreadsheets, no confusion. Just ask.",
+    stat: "35+",
+    statLabel: "hours saved weekly"
+  },
+  {
+    icon: Users,
+    title: "Know Your Customers Deeply",
+    description: "AI identifies VIPs, at-risk churners, and growth opportunities automatically.",
+    stat: "2x",
+    statLabel: "repeat purchase rate"
+  },
+  {
+    icon: Shield,
+    title: "Protect Your Revenue",
+    description: "Fraud detection, pricing anomalies, and issue alerts before they become problems.",
+    stat: "24/7",
+    statLabel: "automated monitoring"
   }
+];
+
+// Comparison Data
+const comparisonData = [
+  { traditional: "Manual dashboards & reports", ai: "Conversational insights in seconds" },
+  { traditional: "Hours of clicking through menus", ai: "One sentence commands" },
+  { traditional: "Human guesswork on inventory", ai: "AI-backed predictions & alerts" },
+  { traditional: "Weeks writing product content", ai: "Instant SEO-optimized copy" },
+  { traditional: "Reactive problem solving", ai: "Proactive AI recommendations" },
+  { traditional: "Spreadsheet data analysis", ai: "Ask questions, get answers" }
 ];
 
 // Dashboard Tabs Data
@@ -221,51 +247,53 @@ const useCases = [
     query: "How did we do this week compared to last week?",
     result: 'Revenue up 12%, orders up 8%, AOV up 3.5%. Top performer was "Blue Widget" (+45%).',
     time: "1 second"
-  },
-  {
-    query: "Mark all processing orders from today as completed",
-    result: 'Found 12 orders. Shows list with order numbers. "Confirm to update all?"',
-    time: "Bulk action with safety"
-  },
-  {
-    query: "Write a product description for the new organic coffee blend",
-    result: "Generates SEO-optimized description with benefits, features, and call-to-action.",
-    time: "AI Content Studio"
   }
 ];
 
 // Testimonials Data
 const testimonials = [
   {
-    quote: "I used to spend hours checking inventory and updating prices. Now I just ask WooASM. It's like having a smart assistant who knows my entire store.",
+    quote: "We automated what used to take our team 4 hours every morning. Now I just ask WooASM and move on. Our competitors are still clicking through dashboards.",
     author: "Sarah M.",
     role: "Fashion Boutique Owner",
-    avatar: "S"
+    avatar: "S",
+    metric: "35 hrs/week saved"
   },
   {
     quote: "The customer segments feature is gold. I found 47 VIP customers who hadn't ordered in 60 days. One win-back campaign later, I recovered $8,000 in sales.",
     author: "Mike R.",
     role: "Electronics Store",
-    avatar: "M"
+    avatar: "M",
+    metric: "$8K recovered"
   },
   {
-    quote: "Being able to type 'shwo low stok' and have it understand me is incredible. No more clicking through endless WooCommerce menus.",
+    quote: "Being able to type 'shwo low stok' and have it understand me is incredible. This is what AI should feel like — invisible and instant.",
     author: "Lisa K.",
     role: "Home Goods Store",
-    avatar: "L"
+    avatar: "L",
+    metric: "Zero stockouts"
   }
 ];
 
 const HomePage = () => {
   const [activeDashboard, setActiveDashboard] = useState('insights');
   const [openFaq, setOpenFaq] = useState(null);
+  const [currentHeadline, setCurrentHeadline] = useState(0);
+
+  // Rotate headlines
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentHeadline((prev) => (prev + 1) % rotatingHeadlines.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       <SEO
         title="ChatGPT for WooCommerce | AI Store Manager - 101 AI Abilities"
-        description="Manage your WooCommerce store with AI. 101 abilities for products, orders, coupons, customers & analytics. Understands typos, handles multiple requests, remembers context. Start free trial."
-        keywords="WooCommerce AI, ChatGPT WooCommerce, AI store manager, WooCommerce assistant, WooCommerce automation, inventory management, AI chatbot WooCommerce"
+        description="AI is rewriting ecommerce. Manage your WooCommerce store with AI. 101 abilities for products, orders, coupons, customers & analytics. While others click, you ask. Start free trial."
+        keywords="WooCommerce AI, ChatGPT WooCommerce, AI store manager, WooCommerce assistant, WooCommerce automation, ecommerce AI, AI inventory management"
         url="https://wooasm.com"
         faq={homeFaq}
       />
@@ -274,19 +302,20 @@ const HomePage = () => {
       <main>
         {/* ==================== HERO SECTION ==================== */}
         <section className="relative pt-20 pb-24 lg:pt-28 lg:pb-32 overflow-hidden">
-          {/* Background gradient */}
+          {/* Background */}
           <div className="absolute inset-0 bg-gradient-to-b from-purple-50 via-white to-white dark:from-gray-900 dark:via-gray-900 dark:to-gray-800" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-purple-500/10 rounded-full blur-3xl" />
           
           <div className="container-wide relative z-10">
             <div className="max-w-4xl mx-auto text-center">
-              {/* Badge */}
+              {/* Urgency Badge */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 text-sm font-medium mb-8"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/40 dark:to-pink-900/40 text-purple-700 dark:text-purple-300 text-sm font-medium mb-8"
               >
-                <Zap className="w-4 h-4" />
-                <span>v28 - 101 AI Abilities</span>
+                <Sparkles className="w-4 h-4" />
+                <span>The AI era of ecommerce is here — don't get left behind</span>
               </motion.div>
 
               {/* Main Headline */}
@@ -296,9 +325,9 @@ const HomePage = () => {
                 transition={{ delay: 0.1 }}
                 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight"
               >
-                ChatGPT for Your{' '}
-                <span className="bg-gradient-to-r from-purple-600 to-purple-400 bg-clip-text text-transparent">
-                  WooCommerce Store
+                AI is Rewriting Ecommerce.{' '}
+                <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                  Are You Still Doing WooCommerce the Old Way?
                 </span>
               </motion.h1>
 
@@ -307,17 +336,37 @@ const HomePage = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 mb-10 max-w-2xl mx-auto"
+                className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 mb-6 max-w-2xl mx-auto"
               >
-                The AI store manager that understands typos, handles multiple requests at once, 
-                and knows your products, orders, and customers inside out.
+                While others are automating products, inventory, support, and growth — 
+                you're still clicking. <strong>Ask your store like you would a human</strong>, and watch it execute.
               </motion.p>
+
+              {/* Rotating Tagline */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+                className="h-8 mb-8"
+              >
+                <AnimatePresence mode="wait">
+                  <motion.p
+                    key={currentHeadline}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="text-purple-600 dark:text-purple-400 font-semibold"
+                  >
+                    "{rotatingHeadlines[currentHeadline]}"
+                  </motion.p>
+                </AnimatePresence>
+              </motion.div>
 
               {/* Stats */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
+                transition={{ delay: 0.4 }}
                 className="flex flex-wrap justify-center gap-8 sm:gap-12 mb-10"
               >
                 <div className="text-center">
@@ -329,30 +378,31 @@ const HomePage = () => {
                   <div className="text-sm text-gray-500 dark:text-gray-400">Smart Dashboards</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl sm:text-4xl font-bold text-purple-600">1-Click</div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">Undo Actions</div>
+                  <div className="text-3xl sm:text-4xl font-bold text-purple-600">35+</div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">Hours Saved/Week</div>
                 </div>
               </motion.div>
 
-              {/* CTAs */}
+              {/* CTAs - Dual Path */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-                className="flex flex-wrap justify-center gap-4 mb-6"
+                transition={{ delay: 0.5 }}
+                className="flex flex-col sm:flex-row justify-center gap-4 mb-6"
               >
                 <Link
                   to="/signup"
-                  className="px-8 py-4 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-xl transition-all transform hover:scale-105 flex items-center gap-2"
+                  className="px-8 py-4 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold rounded-xl transition-all transform hover:scale-105 flex items-center justify-center gap-2 shadow-lg shadow-purple-500/25"
                 >
-                  Start Free Trial
-                  <ArrowRight className="w-5 h-5" />
+                  <Rocket className="w-5 h-5" />
+                  Start Free 14-Day AI Trial
                 </Link>
                 <Link
                   to="/features"
-                  className="px-8 py-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-semibold rounded-xl border border-gray-200 dark:border-gray-700 hover:border-purple-500 transition-all"
+                  className="px-8 py-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-semibold rounded-xl border border-gray-200 dark:border-gray-700 hover:border-purple-500 transition-all flex items-center justify-center gap-2"
                 >
-                  Watch Demo
+                  <Play className="w-5 h-5" />
+                  See AI in Action
                 </Link>
               </motion.div>
 
@@ -360,10 +410,10 @@ const HomePage = () => {
               <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
+                transition={{ delay: 0.6 }}
                 className="text-sm text-gray-500 dark:text-gray-400"
               >
-                No credit card required • 14-day free trial • Cancel anytime
+                No credit card required • Setup in 2 minutes • 30-day money-back guarantee
               </motion.p>
             </div>
 
@@ -371,30 +421,39 @@ const HomePage = () => {
             <motion.div
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
+              transition={{ delay: 0.7 }}
               className="mt-16 max-w-3xl mx-auto"
             >
               <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden">
-                <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center gap-2">
+                <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center gap-2 bg-gray-50 dark:bg-gray-900">
                   <Bot className="w-5 h-5 text-purple-600" />
-                  <span className="font-medium text-gray-900 dark:text-white">WooASM Assistant</span>
+                  <span className="font-medium text-gray-900 dark:text-white">WooASM AI Assistant</span>
+                  <span className="ml-auto px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs rounded-full">Online</span>
                 </div>
                 <div className="p-4 space-y-4">
                   {/* Typo Example */}
                   <div className="flex gap-3">
                     <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
-                      <span className="text-sm font-medium text-gray-600 dark:text-gray-300">You</span>
+                      <span className="text-xs font-medium text-gray-600 dark:text-gray-300">You</span>
                     </div>
                     <div className="bg-gray-100 dark:bg-gray-700 rounded-2xl rounded-tl-none px-4 py-2">
-                      <span className="text-gray-800 dark:text-gray-200">shwo me prodcts under 50 dolars</span>
+                      <span className="text-gray-800 dark:text-gray-200">shwo me prodcts running low on stok</span>
                     </div>
                   </div>
                   <div className="flex gap-3 justify-end">
-                    <div className="bg-purple-100 dark:bg-purple-900/40 rounded-2xl rounded-tr-none px-4 py-2 max-w-md">
-                      <div className="text-xs text-purple-600 dark:text-purple-400 mb-1">AI understands: "Show me products under $50"</div>
-                      <span className="text-gray-800 dark:text-gray-200">Found <strong>24 products</strong> under $50. Here are your top sellers:</span>
+                    <div className="bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/40 dark:to-pink-900/40 rounded-2xl rounded-tr-none px-4 py-3 max-w-md">
+                      <div className="text-xs text-purple-600 dark:text-purple-400 mb-2 flex items-center gap-1">
+                        <Brain className="w-3 h-3" />
+                        Understood: "Show me products running low on stock"
+                      </div>
+                      <span className="text-gray-800 dark:text-gray-200">Found <strong>8 products</strong> below restock threshold. Your best seller "Blue Widget" only has 3 units left — will run out in 2 days at current velocity.</span>
+                      <div className="mt-2 flex gap-2">
+                        <span className="px-2 py-1 bg-white dark:bg-gray-800 rounded text-xs text-gray-600 dark:text-gray-400">Blue Widget (3)</span>
+                        <span className="px-2 py-1 bg-white dark:bg-gray-800 rounded text-xs text-gray-600 dark:text-gray-400">Red Gadget (5)</span>
+                        <span className="px-2 py-1 bg-white dark:bg-gray-800 rounded text-xs text-red-600">⚠️ Urgent</span>
+                      </div>
                     </div>
-                    <div className="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center flex-shrink-0">
                       <Bot className="w-4 h-4 text-white" />
                     </div>
                   </div>
@@ -404,160 +463,213 @@ const HomePage = () => {
           </div>
         </section>
 
-        {/* ==================== FEATURES SECTION ==================== */}
-        <section className="py-20 lg:py-28 bg-gray-50 dark:bg-gray-800">
+        {/* ==================== WHY AI MATTERS NOW ==================== */}
+        <section className="py-20 lg:py-28 bg-gradient-to-b from-gray-900 to-gray-800 text-white">
+          <div className="container-wide">
+            <div className="max-w-4xl mx-auto text-center mb-16">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/20 text-purple-300 text-sm font-medium mb-6"
+              >
+                <Timer className="w-4 h-4" />
+                <span>The Shift Is Happening Now</span>
+              </motion.div>
+              
+              <motion.h2
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="text-3xl lg:text-5xl font-bold mb-6"
+              >
+                The AI Transformation in Ecommerce{' '}
+                <span className="text-purple-400">Has Already Happened</span> — Are You In?
+              </motion.h2>
+              
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="text-xl text-gray-300 mb-12"
+              >
+                AI isn't coming. It's here — reshaping how stores optimize inventory, drive sales, and interact with customers.
+                <br />
+                <strong className="text-white">Smart ecommerce teams don't waste hours on manual tasks. They ask AI and act on data instantly.</strong>
+              </motion.p>
+
+              <div className="grid md:grid-cols-4 gap-6">
+                {[
+                  { icon: Package, text: "Automate inventory decisions and never run out of stock" },
+                  { icon: FileText, text: "Generate compelling SEO content at scale" },
+                  { icon: BarChart3, text: "See revenue trends in seconds, not hours" },
+                  { icon: MessageSquare, text: "Respond to reviews instantly with AI-assisted replies" }
+                ].map((item, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 }}
+                    className="p-6 rounded-2xl bg-white/5 backdrop-blur border border-white/10"
+                  >
+                    <item.icon className="w-8 h-8 text-purple-400 mb-4 mx-auto" />
+                    <p className="text-gray-300 text-sm">{item.text}</p>
+                  </motion.div>
+                ))}
+              </div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="mt-12"
+              >
+                <Link
+                  to="/features"
+                  className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300 font-medium"
+                >
+                  See Why AI Is a Must-Have for WooCommerce Stores
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
+        {/* ==================== AI-FIRST BENEFITS ==================== */}
+        <section className="py-20 lg:py-28">
           <div className="container-wide">
             <div className="text-center mb-16">
-              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-                Everything You Need to Run Your Store <span className="text-purple-600">Smarter</span>
-              </h2>
-              <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-                From inventory insights to customer intelligence — all powered by AI
-              </p>
+              <motion.span
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="inline-block px-4 py-1 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 text-sm font-medium mb-4"
+              >
+                AI-Powered Outcomes
+              </motion.span>
+              <motion.h2
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4"
+              >
+                Stop Managing. Start <span className="text-purple-600">Dominating</span>.
+              </motion.h2>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto"
+              >
+                Real outcomes from AI automation — not just features, but transformation
+              </motion.p>
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {features.map((feature, index) => (
+              {aiBenefits.map((benefit, index) => (
                 <motion.div
-                  key={feature.title}
+                  key={benefit.title}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
-                  className={`p-6 rounded-2xl border transition-all hover:shadow-lg ${
-                    index === 0
-                      ? 'bg-gradient-to-br from-purple-50 to-white dark:from-purple-900/20 dark:to-gray-800 border-purple-200 dark:border-purple-800'
-                      : 'bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 hover:border-purple-500'
-                  }`}
+                  className="group p-6 rounded-2xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-purple-500 hover:shadow-xl transition-all"
                 >
-                  <div className="w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mb-4">
-                    <feature.icon className="w-6 h-6 text-purple-600" />
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <benefit.icon className="w-6 h-6 text-purple-600" />
+                    </div>
+                    <div className="text-right">
+                      <div className="text-2xl font-bold text-purple-600">{benefit.stat}</div>
+                      <div className="text-xs text-gray-500">{benefit.statLabel}</div>
+                    </div>
                   </div>
                   <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                    {feature.title}
+                    {benefit.title}
                   </h3>
-                  <p className="text-gray-600 dark:text-gray-400 mb-4">
-                    {feature.description}
+                  <p className="text-gray-600 dark:text-gray-400">
+                    {benefit.description}
                   </p>
-                  <ul className="space-y-2 mb-4">
-                    {feature.highlights.map((highlight, i) => (
-                      <li key={i} className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                        <Check className="w-4 h-4 text-green-500 flex-shrink-0" />
-                        {highlight}
-                      </li>
-                    ))}
-                  </ul>
-                  <Link
-                    to={feature.link}
-                    className="inline-flex items-center text-purple-600 hover:text-purple-700 font-medium text-sm"
-                  >
-                    Learn more
-                    <ArrowRight className="w-4 h-4 ml-1" />
-                  </Link>
                 </motion.div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* ==================== AI ASSISTANT SECTION ==================== */}
-        <section className="py-20 lg:py-28">
+        {/* ==================== COMPETITIVE COMPARISON ==================== */}
+        <section className="py-20 lg:py-28 bg-gray-50 dark:bg-gray-800">
           <div className="container-wide">
             <div className="text-center mb-16">
-              <span className="inline-block px-4 py-1 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 text-sm font-medium mb-4">
-                The Brain of Your Store
-              </span>
-              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-                An AI That <span className="text-purple-600">Actually Understands</span> You
-              </h2>
-              <p className="text-lg text-gray-600 dark:text-gray-400">
-                No more rigid commands. Just talk naturally — typos and all.
-              </p>
+              <motion.h2
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4"
+              >
+                Most WooCommerce Stores Still <span className="text-red-500">Work the Hard Way</span>
+              </motion.h2>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="text-lg text-gray-600 dark:text-gray-400"
+              >
+                Which side are you on?
+              </motion.p>
             </div>
 
-            {/* Chat Examples */}
-            <div className="max-w-3xl mx-auto space-y-8 mb-16">
-              {/* Example 1 */}
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700"
-              >
-                <div className="mb-4">
-                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">You type:</span>
-                  <p className="text-lg text-gray-900 dark:text-white font-mono bg-gray-100 dark:bg-gray-700 px-3 py-2 rounded mt-1">
-                    "shwo me prodcts under 50 dolars"
-                  </p>
+            <div className="max-w-4xl mx-auto">
+              <div className="grid grid-cols-2 gap-4 mb-8">
+                <div className="text-center p-4 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+                  <X className="w-8 h-8 text-red-500 mx-auto mb-2" />
+                  <span className="font-semibold text-red-700 dark:text-red-400">Traditional Store</span>
                 </div>
-                <div className="mb-4">
-                  <span className="text-xs font-medium text-purple-600 uppercase tracking-wide">AI understands:</span>
-                  <p className="text-lg text-gray-700 dark:text-gray-300 mt-1">
-                    "Show me products under $50"
-                  </p>
+                <div className="text-center p-4 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
+                  <Check className="w-8 h-8 text-green-500 mx-auto mb-2" />
+                  <span className="font-semibold text-green-700 dark:text-green-400">AI-Powered Store</span>
                 </div>
-                <div className="flex items-center gap-2 text-green-600">
-                  <Check className="w-5 h-5" />
-                  <span className="font-medium">Found 24 products under $50</span>
-                </div>
-              </motion.div>
-
-              {/* Example 2 */}
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700"
-              >
-                <div className="mb-4">
-                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">You type:</span>
-                  <p className="text-lg text-gray-900 dark:text-white font-mono bg-gray-100 dark:bg-gray-700 px-3 py-2 rounded mt-1">
-                    "show low stock and make a 10% coupon for VIPs"
-                  </p>
-                </div>
-                <div className="mb-4">
-                  <span className="text-xs font-medium text-purple-600 uppercase tracking-wide">AI handles both:</span>
-                  <div className="mt-2 space-y-2">
-                    <div className="flex items-center gap-2">
-                      <span className="w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center text-sm font-bold text-purple-600">1</span>
-                      <span className="text-gray-700 dark:text-gray-300">Gets low stock products</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center text-sm font-bold text-purple-600">2</span>
-                      <span className="text-gray-700 dark:text-gray-300">Creates VIP10 coupon</span>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            </div>
-
-            {/* Abilities Counter */}
-            <div className="bg-gradient-to-r from-purple-600 to-purple-800 rounded-3xl p-8 lg:p-12">
-              <h3 className="text-2xl lg:text-3xl font-bold text-white text-center mb-8">
-                101 Built-in Abilities
-              </h3>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                {abilities.map((ability, index) => (
-                  <motion.div
-                    key={ability.category}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.05 }}
-                    className="bg-white/10 backdrop-blur rounded-xl p-4 text-center"
-                  >
-                    <ability.icon className="w-6 h-6 text-white mx-auto mb-2" />
-                    <div className="text-2xl font-bold text-white">{ability.count}</div>
-                    <div className="text-xs text-purple-200">{ability.category}</div>
-                  </motion.div>
-                ))}
               </div>
+
+              {comparisonData.map((row, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.05 }}
+                  className="grid grid-cols-2 gap-4 mb-3"
+                >
+                  <div className="p-4 rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400">
+                    {row.traditional}
+                  </div>
+                  <div className="p-4 rounded-xl bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-200 dark:border-purple-800 text-gray-900 dark:text-white font-medium">
+                    {row.ai}
+                  </div>
+                </motion.div>
+              ))}
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="mt-12 text-center"
+              >
+                <Link
+                  to="/signup"
+                  className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl hover:opacity-90 transition-all"
+                >
+                  Become an AI-Powered Store
+                  <ArrowRight className="w-5 h-5" />
+                </Link>
+              </motion.div>
             </div>
           </div>
         </section>
 
         {/* ==================== DASHBOARD SHOWCASE ==================== */}
-        <section className="py-20 lg:py-28 bg-gray-50 dark:bg-gray-800">
+        <section className="py-20 lg:py-28">
           <div className="container-wide">
             <div className="text-center mb-12">
               <span className="inline-block px-4 py-1 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 text-sm font-medium mb-4">
@@ -580,7 +692,7 @@ const HomePage = () => {
                   className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${
                     activeDashboard === dashboard.id
                       ? 'bg-purple-600 text-white'
-                      : 'bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-400 hover:bg-purple-50 dark:hover:bg-gray-700'
+                      : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-purple-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700'
                   }`}
                 >
                   <dashboard.icon className="w-4 h-4" />
@@ -598,15 +710,13 @@ const HomePage = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
-                    className="bg-white dark:bg-gray-900 rounded-2xl p-8 border border-gray-200 dark:border-gray-700"
+                    className="bg-white dark:bg-gray-800 rounded-2xl p-8 border border-gray-200 dark:border-gray-700"
                   >
                     <div className="grid lg:grid-cols-2 gap-8 items-center">
-                      {/* Preview */}
-                      <div className="aspect-video bg-gradient-to-br from-purple-100 to-purple-50 dark:from-purple-900/30 dark:to-gray-800 rounded-xl flex items-center justify-center">
+                      <div className="aspect-video bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 rounded-xl flex items-center justify-center">
                         <dashboard.icon className="w-24 h-24 text-purple-400" />
                       </div>
                       
-                      {/* Info */}
                       <div>
                         <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
                           {dashboard.name}
@@ -634,7 +744,48 @@ const HomePage = () => {
           </div>
         </section>
 
-        {/* ==================== USE CASES SECTION ==================== */}
+        {/* ==================== 101 ABILITIES ==================== */}
+        <section className="py-20 lg:py-28 bg-gradient-to-r from-purple-600 via-purple-700 to-pink-600">
+          <div className="container-wide">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
+                101 Things WooASM Can Do For You
+              </h2>
+              <p className="text-xl text-purple-100">
+                Every ability built-in, no coding required
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-12">
+              {abilities.map((ability, index) => (
+                <motion.div
+                  key={ability.category}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.05 }}
+                  className="bg-white/10 backdrop-blur rounded-xl p-4 text-center hover:bg-white/20 transition-colors"
+                >
+                  <ability.icon className="w-6 h-6 text-white mx-auto mb-2" />
+                  <div className="text-3xl font-bold text-white">{ability.count}</div>
+                  <div className="text-xs text-purple-200">{ability.category}</div>
+                </motion.div>
+              ))}
+            </div>
+
+            <div className="text-center">
+              <Link
+                to="/features"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-white text-purple-600 font-semibold rounded-xl hover:bg-gray-100 transition-all"
+              >
+                Explore All 101 Abilities
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* ==================== USE CASES ==================== */}
         <section className="py-20 lg:py-28">
           <div className="container-wide">
             <div className="text-center mb-16">
@@ -642,11 +793,11 @@ const HomePage = () => {
                 See WooASM <span className="text-purple-600">in Action</span>
               </h2>
               <p className="text-lg text-gray-600 dark:text-gray-400">
-                Real queries from real store owners
+                Real queries from real store owners — answered in seconds
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
               {useCases.map((useCase, index) => (
                 <motion.div
                   key={index}
@@ -664,7 +815,7 @@ const HomePage = () => {
                     <span className="text-xs font-medium text-purple-600 uppercase tracking-wide">WooASM responds:</span>
                     <p className="text-gray-600 dark:text-gray-400 mt-1">{useCase.result}</p>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-purple-600 font-medium">
+                  <div className="flex items-center gap-2 text-sm text-green-600 font-medium">
                     <Zap className="w-4 h-4" />
                     {useCase.time}
                   </div>
@@ -679,19 +830,26 @@ const HomePage = () => {
           <div className="container-wide">
             <div className="text-center mb-12">
               <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-                Loved by WooCommerce Store Owners
+                Forward-Thinking Stores Use WooASM to <span className="text-purple-600">Outpace Competition</span>
               </h2>
+              <p className="text-lg text-gray-600 dark:text-gray-400">
+                Stores with AI automation grow faster — don't let manual workflows slow you down
+              </p>
             </div>
 
             {/* Stats Bar */}
             <div className="flex flex-wrap justify-center gap-8 lg:gap-16 mb-16 p-8 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700">
               <div className="text-center">
                 <div className="text-4xl font-bold text-purple-600">5,000+</div>
-                <div className="text-gray-500 dark:text-gray-400">Active Stores</div>
+                <div className="text-gray-500 dark:text-gray-400">AI-Powered Stores</div>
               </div>
               <div className="text-center">
                 <div className="text-4xl font-bold text-purple-600">2M+</div>
                 <div className="text-gray-500 dark:text-gray-400">AI Queries Processed</div>
+              </div>
+              <div className="text-center">
+                <div className="text-4xl font-bold text-purple-600">3x</div>
+                <div className="text-gray-500 dark:text-gray-400">Faster Growth</div>
               </div>
               <div className="text-center">
                 <div className="text-4xl font-bold text-purple-600">4.9/5</div>
@@ -710,14 +868,19 @@ const HomePage = () => {
                   transition={{ delay: index * 0.1 }}
                   className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-200 dark:border-gray-700"
                 >
-                  <div className="flex gap-1 mb-4">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
-                    ))}
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex gap-1">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                      ))}
+                    </div>
+                    <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs font-medium rounded">
+                      {testimonial.metric}
+                    </span>
                   </div>
                   <p className="text-gray-700 dark:text-gray-300 mb-6">"{testimonial.quote}"</p>
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center text-purple-600 font-bold">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold">
                       {testimonial.avatar}
                     </div>
                     <div>
@@ -754,7 +917,7 @@ const HomePage = () => {
                     className="w-full px-6 py-4 flex items-center justify-between text-left"
                   >
                     <h3 className="font-semibold text-gray-900 dark:text-white pr-4">{faq.question}</h3>
-                    <ChevronDown className={`w-5 h-5 text-gray-500 transition-transform ${openFaq === index ? 'rotate-180' : ''}`} />
+                    <ChevronDown className={`w-5 h-5 text-gray-500 transition-transform flex-shrink-0 ${openFaq === index ? 'rotate-180' : ''}`} />
                   </button>
                   <AnimatePresence>
                     {openFaq === index && (
@@ -776,43 +939,83 @@ const HomePage = () => {
           </div>
         </section>
 
-        {/* ==================== FINAL CTA ==================== */}
-        <section className="py-20 lg:py-28 bg-gradient-to-r from-purple-600 to-purple-800">
+        {/* ==================== RACE BANNER ==================== */}
+        <section className="py-12 bg-gradient-to-r from-red-600 to-orange-500">
           <div className="container-wide text-center">
-            <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
-              Ready to Work Smarter?
-            </h2>
-            <p className="text-xl text-purple-100 mb-8 max-w-2xl mx-auto">
-              Join 5,000+ store owners who manage their WooCommerce stores with AI
-            </p>
-
-            <div className="flex flex-wrap justify-center gap-4 sm:gap-6 mb-8">
-              <span className="flex items-center gap-2 text-purple-100">
-                <Check className="w-5 h-5 text-green-400" />
-                14-day free trial
-              </span>
-              <span className="flex items-center gap-2 text-purple-100">
-                <Check className="w-5 h-5 text-green-400" />
-                No credit card required
-              </span>
-              <span className="flex items-center gap-2 text-purple-100">
-                <Check className="w-5 h-5 text-green-400" />
-                Setup in 2 minutes
-              </span>
-            </div>
-
-            <Link
-              to="/signup"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-white text-purple-600 font-semibold rounded-xl hover:bg-gray-100 transition-all transform hover:scale-105"
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
             >
-              Start Your Free Trial
-              <ArrowRight className="w-5 h-5" />
-            </Link>
+              <p className="text-xl lg:text-2xl font-semibold text-white mb-4">
+                More ecommerce brands are adopting AI every day.
+                <br />
+                <span className="text-red-100">Slow workflows today means lost revenue tomorrow.</span>
+              </p>
+              <Link
+                to="/signup"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-white text-red-600 font-semibold rounded-xl hover:bg-gray-100 transition-all"
+              >
+                Be an AI Store, Not a Legacy Store
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+            </motion.div>
+          </div>
+        </section>
 
-            <p className="mt-6 text-purple-200">
-              Questions? <Link to="/contact" className="text-white underline hover:no-underline">Talk to our team</Link> or{' '}
-              <Link to="/features" className="text-white underline hover:no-underline">watch a demo</Link>
-            </p>
+        {/* ==================== FINAL CTA ==================== */}
+        <section className="py-20 lg:py-28 bg-gradient-to-b from-gray-900 to-black text-white">
+          <div className="container-wide text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <Sparkles className="w-12 h-12 text-purple-400 mx-auto mb-6" />
+              <h2 className="text-3xl lg:text-5xl font-bold mb-4">
+                Ready to Join the AI Revolution?
+              </h2>
+              <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+                In the era where AI answers your questions… why is your store still behind?
+              </p>
+
+              <div className="flex flex-col sm:flex-row justify-center gap-4 mb-8">
+                <Link
+                  to="/signup"
+                  className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl transition-all transform hover:scale-105 flex items-center justify-center gap-2"
+                >
+                  <Rocket className="w-5 h-5" />
+                  Start Free 14-Day AI Trial
+                </Link>
+                <Link
+                  to="/features"
+                  className="px-8 py-4 bg-white/10 backdrop-blur text-white font-semibold rounded-xl border border-white/20 hover:bg-white/20 transition-all flex items-center justify-center gap-2"
+                >
+                  <Play className="w-5 h-5" />
+                  See AI in Action
+                </Link>
+              </div>
+
+              <div className="flex flex-wrap justify-center gap-4 sm:gap-6 mb-8">
+                <span className="flex items-center gap-2 text-gray-300">
+                  <Check className="w-5 h-5 text-green-400" />
+                  No credit card required
+                </span>
+                <span className="flex items-center gap-2 text-gray-300">
+                  <Check className="w-5 h-5 text-green-400" />
+                  Setup in 2 minutes
+                </span>
+                <span className="flex items-center gap-2 text-gray-300">
+                  <Check className="w-5 h-5 text-green-400" />
+                  30-day money-back guarantee
+                </span>
+              </div>
+
+              <p className="text-gray-400">
+                Questions? <Link to="/contact" className="text-purple-400 hover:underline">Talk to our team</Link> or{' '}
+                <Link to="/features" className="text-purple-400 hover:underline">explore all features</Link>
+              </p>
+            </motion.div>
           </div>
         </section>
       </main>

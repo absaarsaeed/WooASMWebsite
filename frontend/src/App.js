@@ -1,80 +1,85 @@
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { ThemeProvider } from "./context/ThemeContext";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 
-// Pages
+// Loading Spinner Component
+const LoadingSpinner = () => (
+  <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600" aria-label="Loading"></div>
+  </div>
+);
+
+// Critical path pages - load immediately
 import HomePage from "./pages/HomePage";
-import FeaturesHubPage from "./pages/FeaturesHubPage";
-import FeaturePage from "./pages/FeaturePage";
 import PricingPage from "./pages/PricingPage";
-import DocsPage from "./pages/DocsPage";
-import BlogPage from "./pages/BlogPage";
-import BlogPostPage from "./pages/BlogPostPage";
-import AboutPage from "./pages/AboutPage";
-import ContactPage from "./pages/ContactPage";
-import ChangelogPage from "./pages/ChangelogPage";
-import RoadmapPage from "./pages/RoadmapPage";
-import ComparePage from "./pages/ComparePage";
-import UseCasePage from "./pages/UseCasePage";
 
-// Legal Pages
-import PrivacyPage from "./pages/PrivacyPage";
-import TermsPage from "./pages/TermsPage";
-import CookiesPage from "./pages/CookiesPage";
-import GDPRPage from "./pages/GDPRPage";
+// Lazy load non-critical pages
+const FeaturesHubPage = lazy(() => import("./pages/FeaturesHubPage"));
+const FeaturePage = lazy(() => import("./pages/FeaturePage"));
+const DocsPage = lazy(() => import("./pages/DocsPage"));
+const BlogPage = lazy(() => import("./pages/BlogPage"));
+const BlogPostPage = lazy(() => import("./pages/BlogPostPage"));
+const AboutPage = lazy(() => import("./pages/AboutPage"));
+const ContactPage = lazy(() => import("./pages/ContactPage"));
+const ChangelogPage = lazy(() => import("./pages/ChangelogPage"));
+const RoadmapPage = lazy(() => import("./pages/RoadmapPage"));
+const ComparePage = lazy(() => import("./pages/ComparePage"));
+const UseCasePage = lazy(() => import("./pages/UseCasePage"));
 
-// Feature Request
-import RequestFeaturePage from "./pages/RequestFeaturePage";
+// Legal Pages - lazy loaded
+const PrivacyPage = lazy(() => import("./pages/PrivacyPage"));
+const TermsPage = lazy(() => import("./pages/TermsPage"));
+const CookiesPage = lazy(() => import("./pages/CookiesPage"));
+const GDPRPage = lazy(() => import("./pages/GDPRPage"));
 
-// Auth Pages
-import LoginPage from "./pages/auth/LoginPage";
-import SignupPage from "./pages/auth/SignupPage";
-import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
-import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
-import VerifyEmailPage from "./pages/auth/VerifyEmailPage";
+// Feature Request - lazy loaded
+const RequestFeaturePage = lazy(() => import("./pages/RequestFeaturePage"));
 
-// Dashboard Pages
-import DashboardLayout from "./pages/dashboard/DashboardLayout";
-import DashboardOverview from "./pages/dashboard/DashboardOverview";
-import LicensePage from "./pages/dashboard/LicensePage";
-import UsagePage from "./pages/dashboard/UsagePage";
-import SitesPage from "./pages/dashboard/SitesPage";
-import BillingPage from "./pages/dashboard/BillingPage";
-import SettingsPage from "./pages/dashboard/SettingsPage";
+// Auth Pages - lazy loaded
+const LoginPage = lazy(() => import("./pages/auth/LoginPage"));
+const SignupPage = lazy(() => import("./pages/auth/SignupPage"));
+const ForgotPasswordPage = lazy(() => import("./pages/auth/ForgotPasswordPage"));
+const ResetPasswordPage = lazy(() => import("./pages/auth/ResetPasswordPage"));
+const VerifyEmailPage = lazy(() => import("./pages/auth/VerifyEmailPage"));
 
-// Checkout Pages
-import CheckoutSuccessPage from "./pages/checkout/CheckoutSuccessPage";
-import CheckoutCancelPage from "./pages/checkout/CheckoutCancelPage";
-import CheckoutMockPage from "./pages/checkout/CheckoutMockPage";
+// Dashboard Pages - lazy loaded
+const DashboardLayout = lazy(() => import("./pages/dashboard/DashboardLayout"));
+const DashboardOverview = lazy(() => import("./pages/dashboard/DashboardOverview"));
+const LicensePage = lazy(() => import("./pages/dashboard/LicensePage"));
+const UsagePage = lazy(() => import("./pages/dashboard/UsagePage"));
+const SitesPage = lazy(() => import("./pages/dashboard/SitesPage"));
+const BillingPage = lazy(() => import("./pages/dashboard/BillingPage"));
+const SettingsPage = lazy(() => import("./pages/dashboard/SettingsPage"));
 
-// Admin Pages
-import AdminLoginPage from "./pages/admin/AdminLoginPage";
-import AdminLayout from "./pages/admin/AdminLayout";
-import AdminDashboard from "./pages/admin/AdminDashboard";
-import AdminUsers from "./pages/admin/AdminUsers";
-import AdminSubscriptions from "./pages/admin/AdminSubscriptions";
-import AdminSites from "./pages/admin/AdminSites";
-import AdminPlans from "./pages/admin/AdminPlans";
-import AdminFeatures from "./pages/admin/AdminFeatures";
-import AdminAbilities from "./pages/admin/AdminAbilities";
-import AdminEmails from "./pages/admin/AdminEmails";
+// Checkout Pages - lazy loaded
+const CheckoutSuccessPage = lazy(() => import("./pages/checkout/CheckoutSuccessPage"));
+const CheckoutCancelPage = lazy(() => import("./pages/checkout/CheckoutCancelPage"));
+const CheckoutMockPage = lazy(() => import("./pages/checkout/CheckoutMockPage"));
 
-// Components
-import TrustNotifications from "./components/TrustNotifications";
+// Admin Pages - lazy loaded
+const AdminLoginPage = lazy(() => import("./pages/admin/AdminLoginPage"));
+const AdminLayout = lazy(() => import("./pages/admin/AdminLayout"));
+const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
+const AdminUsers = lazy(() => import("./pages/admin/AdminUsers"));
+const AdminSubscriptions = lazy(() => import("./pages/admin/AdminSubscriptions"));
+const AdminSites = lazy(() => import("./pages/admin/AdminSites"));
+const AdminPlans = lazy(() => import("./pages/admin/AdminPlans"));
+const AdminFeatures = lazy(() => import("./pages/admin/AdminFeatures"));
+const AdminAbilities = lazy(() => import("./pages/admin/AdminAbilities"));
+const AdminEmails = lazy(() => import("./pages/admin/AdminEmails"));
+
+// Components - lazy load non-critical
+const TrustNotifications = lazy(() => import("./components/TrustNotifications"));
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
   
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
   
   if (!isAuthenticated) {
@@ -86,14 +91,18 @@ const ProtectedRoute = ({ children }) => {
 
 function AppRoutes() {
   return (
-    <>
+    <Suspense fallback={<LoadingSpinner />}>
       <TrustNotifications />
       <Routes>
-        {/* Main Pages */}
+        {/* Main Pages - Critical path */}
         <Route path="/" element={<HomePage />} />
+        <Route path="/pricing" element={<PricingPage />} />
+        
+        {/* Feature Pages */}
         <Route path="/features" element={<FeaturesHubPage />} />
         <Route path="/features/:slug" element={<FeaturePage />} />
-        <Route path="/pricing" element={<PricingPage />} />
+        
+        {/* Content Pages */}
         <Route path="/docs" element={<DocsPage />} />
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/blog/:slug" element={<BlogPostPage />} />
@@ -156,7 +165,7 @@ function AppRoutes() {
         {/* Fallback to home */}
         <Route path="*" element={<HomePage />} />
       </Routes>
-    </>
+    </Suspense>
   );
 }
 

@@ -296,7 +296,9 @@ const FeaturePageTemplate = ({
           </div>
         </section>
       )}
-    </div>
+      </div>
+      <Footer />
+    </>
   );
 };
 
